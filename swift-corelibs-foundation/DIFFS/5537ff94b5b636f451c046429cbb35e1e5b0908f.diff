@@ -1,0 +1,79 @@
+diff --git a/CoreFoundation/Base.subproj/SwiftRuntime/CoreFoundation.h b/CoreFoundation/Base.subproj/SwiftRuntime/CoreFoundation.h
+index 41eb6c1..ca5ef72 100644
+--- a/CoreFoundation/Base.subproj/SwiftRuntime/CoreFoundation.h
++++ b/CoreFoundation/Base.subproj/SwiftRuntime/CoreFoundation.h
+@@ -34,7 +34,9 @@
+ #include <setjmp.h>
+ #include <signal.h>
+ #include <stddef.h>
++#if !defined(__arm__)
+ #include <stdio.h>
++#endif
+ #include <stdlib.h>
+ #include <string.h>
+ #include <time.h>
+diff --git a/CoreFoundation/URL.subproj/CFURLSessionInterface.h b/CoreFoundation/URL.subproj/CFURLSessionInterface.h
+index 6655ea8..14a9cdc 100644
+--- a/CoreFoundation/URL.subproj/CFURLSessionInterface.h
++++ b/CoreFoundation/URL.subproj/CFURLSessionInterface.h
+@@ -27,7 +27,9 @@
+ #if !defined(__COREFOUNDATION_URLSESSIONINTERFACE__)
+ #define __COREFOUNDATION_URLSESSIONINTERFACE__ 1
+ 
++#if !defined(__arm__)
+ #include <stdio.h>
++#endif
+ 
+ CF_IMPLICIT_BRIDGING_ENABLED
+ CF_EXTERN_C_BEGIN
+diff --git a/Foundation/NSGeometry.swift b/Foundation/NSGeometry.swift
+index 073d906..528ed15 100644
+--- a/Foundation/NSGeometry.swift
++++ b/Foundation/NSGeometry.swift
+@@ -446,12 +446,12 @@ public func NSIntegralRectWithOptions(_ aRect: NSRect, _ opts: NSAlignmentOption
+         NSUnimplemented()
+     }
+ 
+-    var width = Double.nan
+-    var height = Double.nan
+-    var minX = Double.nan
+-    var minY = Double.nan
+-    var maxX = Double.nan
+-    var maxY = Double.nan
++    var width = CGFloat.NativeType.nan
++    var height = CGFloat.NativeType.nan
++    var minX = CGFloat.NativeType.nan
++    var minY = CGFloat.NativeType.nan
++    var maxX = CGFloat.NativeType.nan
++    var maxY = CGFloat.NativeType.nan
+ 
+     if aRect.size.height.native < 0 {
+         height = 0
+@@ -540,10 +540,10 @@ public func NSIntegralRectWithOptions(_ aRect: NSRect, _ opts: NSAlignmentOption
+         maxY = round(aRect.origin.y.native + aRect.size.height.native)
+     }
+     
+-    var resultOriginX = Double.nan
+-    var resultOriginY = Double.nan
+-    var resultWidth = Double.nan
+-    var resultHeight = Double.nan
++    var resultOriginX = CGFloat.NativeType.nan
++    var resultOriginY = CGFloat.NativeType.nan
++    var resultWidth = CGFloat.NativeType.nan
++    var resultHeight = CGFloat.NativeType.nan
+     
+     if !minX.isNaN {
+         resultOriginX = minX
+diff --git a/Foundation/NSXMLNode.swift b/Foundation/NSXMLNode.swift
+index aaf63c5..e5558ff 100644
+--- a/Foundation/NSXMLNode.swift
++++ b/Foundation/NSXMLNode.swift
+@@ -83,7 +83,7 @@ open class XMLNode: NSObject, NSCopying {
+         public static let nodePromoteSignificantWhitespace = Options(rawValue: 1 << 28)
+         public static let nodePreserveEmptyElements = Options([.nodeExpandEmptyElement, .nodeCompactEmptyElement])
+         public static let nodePreserveQuotes = Options([.nodeUseSingleQuotes, .nodeUseDoubleQuotes])
+-        public static let nodePreserveAll = Options(rawValue: Options([.nodePreserveNamespaceOrder, .nodePreserveAttributeOrder, .nodePreserveEntities, .nodePreservePrefixes, .nodePreserveCDATA, .nodePreserveEmptyElements, .nodePreserveQuotes, .nodePreserveWhitespace, .nodePreserveDTD, .nodePreserveCharacterReferences]).rawValue | UInt(bitPattern: 0xFFF00000))
++        public static let nodePreserveAll = Options([.nodePreserveNamespaceOrder, .nodePreserveAttributeOrder, .nodePreserveEntities, .nodePreservePrefixes, .nodePreserveCDATA, .nodePreserveEmptyElements, .nodePreserveQuotes, .nodePreserveWhitespace, .nodePreserveDTD, .nodePreserveCharacterReferences])
+     }
+ 
+     open override func copy() -> Any {
