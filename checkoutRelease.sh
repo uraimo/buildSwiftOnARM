@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BRANCH=swift-3.0.2-RELEASE
+BRANCH=swift-3.1-RELEASE
 
 find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "echo Cleaning '{}';cd '{}'; git reset --hard HEAD" \;
 find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "echo Updating '{}';cd '{}'; git pull; git fetch --tags" \;
