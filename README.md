@@ -3,7 +3,7 @@
 
 A few, very simple, bash scripts to clone, configure and build Swift on ARM devices. 
 
-Derived from [package-swift](https://github.com/iachievedit/package-swift) by [https://twitter.com/iachievedit](@iachievedit), some patches from [swift-arm](https://github.com/swift-arm/) by [https://twitter.com/hpux735](@hpux735).
+Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@iachievedit](https://twitter.com/iachievedit), some patches from [swift-arm](https://github.com/swift-arm/) by [@hpux735](https://twitter.com/hpux735).
 
 
 - clean.sh - Clean all build artifacts 
