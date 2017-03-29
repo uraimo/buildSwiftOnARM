@@ -26,7 +26,7 @@ Configure a swap file of at least 2Gb, on Ubuntu:
     sudo mkswap swapfile
     sudo swapon swapfile
 
-On Raspbian, edit `/etc/dphys-swapfile` and edit:
+On Raspbian, open `/etc/dphys-swapfile` and edit:
 
     CONF_SWAPSIZE=2048
     
@@ -39,7 +39,7 @@ Once this is done, install the required dependencies:
 
     sudo apt-get install git cmake ninja-build clang-3.7 python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev
     
-Additional step could be required in some cases (usually on a RaspberryPi 1) [https://uraimo.com](check my blog for additional info).
+Additional steps could be required in some cases (usually on a RaspberryPi 1) [check the latest posts on my blog for additional info](https://uraimo.com).
 
 Clone this repository and download apple/swift with all its dependecies with `clone.sh`.
 
