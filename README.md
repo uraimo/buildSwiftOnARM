@@ -3,15 +3,46 @@
 
 A few, very simple, bash scripts to clone, configure and build Swift on ARM devices. 
 
-Derived from [package-swift](https://github.com/iachievedit/package-swift) by @iachievedit, patches from [swift-arm](https://github.com/swift-arm/) by @hpux735.
+Derived from [package-swift](https://github.com/iachievedit/package-swift) by [https://twitter.com/iachievedit](@iachievedit), some patches from [swift-arm](https://github.com/swift-arm/) by [https://twitter.com/hpux735](@hpux735).
 
 
 - clean.sh - Clean all build artifacts 
 
 - clone.sh - Clone the main Swift repository and all the related projects
 
-- checkoutRelease.sh - Check out a specific tag from all the projects ad apply patches
+- checkoutRelease.sh - Reset all repos, updates them, check out a specific tag (3.1 at the moment) and apply the patches
 
 - build.sh - Build
 
 
+## Building instructions
+
+First of all, use a suitably sized sd-card, at least 16Gb in size.
+
+Configure a swap file of at least 2Gb, on Ubuntu:
+
+    sudo fallocate -l 2G swapfile
+    sudo chmod 600 swapfile
+    sudo mkswap swapfile
+    sudo swapon swapfile
+
+On Raspbian, edit `/etc/dphys-swapfile` and edit:
+
+    CONF_SWAPSIZE=2048
+    
+Save the file and:
+
+    sudo /etc/init.d/dphys-swapfile stop
+    sudo /etc/init.d/dphys-swapfile start
+    
+Once this is done, install the required dependencies:
+
+    sudo apt-get install git cmake ninja-build clang-3.7 python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev
+    
+Additional step could be required in some cases (usually on a RaspberryPi 1) [https://uraimo.com](check my blog for additional info).
+
+Clone this repository and download apple/swift with all its dependecies with `clone.sh`.
+
+Once done, start the build with `build.sh`.
+
+I recommend to compile in a background `tmux` session (`CTRL+B d` to detach from the session and `tmux a` to reattach to it when you ssh again into the RaspberryPi).
