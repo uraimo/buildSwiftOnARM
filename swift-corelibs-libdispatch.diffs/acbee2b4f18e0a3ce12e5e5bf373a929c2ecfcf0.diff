@@ -1,0 +1,25 @@
+diff --git a/src/internal.h b/src/internal.h
+index 743d0b2..173e6f7 100644
+--- a/src/internal.h
++++ b/src/internal.h
+@@ -624,9 +624,6 @@ _dispatch_fork_becomes_unsafe(void)
+ #define DISPATCH_PERF_MON 0
+ #endif
+ 
+-/* #includes dependent on internal.h */
+-#include "shims.h"
+-#include "event/event_internal.h"
+ 
+ // Older Mac OS X and iOS Simulator fallbacks
+ 
+@@ -939,6 +936,10 @@ _dispatch_ktrace_impl(uint32_t code, uint64_t a, uint64_t b,
+ 		free(_msg); \
+ 	} while (0)
+ 
++/* #includes dependent on internal.h */
++#include "shims.h"
++#include "event/event_internal.h"
++
+ #define DISPATCH_NO_VOUCHER ((voucher_t)(void*)~0ul)
+ #define DISPATCH_NO_PRIORITY ((pthread_priority_t)~0ul)
+ DISPATCH_ENUM(dispatch_thread_set_self, unsigned long,
