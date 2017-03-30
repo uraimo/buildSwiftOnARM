@@ -17,6 +17,8 @@ Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@
 
 ## Building instructions
 
+**Update 3/17:** Currently 3.1 builds only with Ubuntu 16.04, check out the 3.0.2 tag for the previous version.
+
 First of all, use a suitably sized sd-card, at least 16Gb in size.
 
 Configure a swap file of at least 2Gb, on Ubuntu:
