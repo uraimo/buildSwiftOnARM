@@ -39,12 +39,12 @@ Save the file and:
     
 Once this is done, install the required dependencies:
 
-    sudo apt-get install git cmake ninja-build clang-3.9 python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev
+    sudo apt-get install git cmake ninja-build clang-3.7 python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev
     
-Fix clang links (if 3.9 is not available try something else greater than 3.7):
+Fix clang links:
 
-    sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.9 100
-    sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.9 100
+    sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.7 100
+    sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.7 100
 
 Additional steps could be required in some cases (usually on a RaspberryPi 1) [check the latest posts on my blog for additional info](https://uraimo.com).
 
