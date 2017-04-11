@@ -35,6 +35,6 @@ index ac4e8f7..8f1d3f8 100644
  
  triple = Configuration.current.target.triple
 -if triple.endswith("-linux-gnu") or triple == "armv7-none-linux-androideabi":
-+if triple.endswith("linux") != -1:
++if triple.find("linux") != -1:
         foundation.LDFLAGS += '-lcurl '
  if triple == "armv7-none-linux-androideabi":
