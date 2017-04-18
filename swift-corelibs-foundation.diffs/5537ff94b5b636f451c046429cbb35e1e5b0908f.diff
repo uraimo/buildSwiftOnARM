@@ -1,5 +1,5 @@
 diff --git a/CoreFoundation/Base.subproj/SwiftRuntime/CoreFoundation.h b/CoreFoundation/Base.subproj/SwiftRuntime/CoreFoundation.h
-index 41eb6c1..ca5ef72 100644
+index 99c4d6d..02c0453 100644
 --- a/CoreFoundation/Base.subproj/SwiftRuntime/CoreFoundation.h
 +++ b/CoreFoundation/Base.subproj/SwiftRuntime/CoreFoundation.h
 @@ -34,7 +34,9 @@
@@ -27,14 +27,15 @@ index 6655ea8..14a9cdc 100644
  CF_IMPLICIT_BRIDGING_ENABLED
  CF_EXTERN_C_BEGIN
 diff --git a/build.py b/build.py
-index ac4e8f7..8f1d3f8 100644
+index ac4e8f7..152ec97 100644
 --- a/build.py
 +++ b/build.py
 @@ -81,7 +81,7 @@ if "XCTEST_BUILD_DIR" in Configuration.current.variables:
-        ]
+ 	]
  
  triple = Configuration.current.target.triple
 -if triple.endswith("-linux-gnu") or triple == "armv7-none-linux-androideabi":
 +if triple.find("linux") != -1:
-        foundation.LDFLAGS += '-lcurl '
+ 	foundation.LDFLAGS += '-lcurl '
+ 
  if triple == "armv7-none-linux-androideabi":
