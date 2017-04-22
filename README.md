@@ -17,7 +17,7 @@ Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@
 
 ## Building instructions
 
-**Update 3/17:** Currently 3.1 builds only with Ubuntu 16.04, check out the 3.0.2 tag for the previous version.
+**Update 3/17:** Currently 3.1 builds only with Ubuntu 16.04, check out the 3.0.2 tag for the previous version, that works on both Ubuntu and Raspbian. SPM will compile correctly only on Ubuntu.
 
 First of all, use a suitably sized sd-card, at least 16Gb in size.
 
