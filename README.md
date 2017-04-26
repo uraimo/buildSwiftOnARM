@@ -5,19 +5,21 @@ A few, very simple, bash scripts to clone, configure and build Swift on ARM devi
 
 Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@iachievedit](https://twitter.com/iachievedit), some patches from [swift-arm](https://github.com/swift-arm/) by [@hpux735](https://twitter.com/hpux735).
 
+Currently this project builds Swift 3.1 (see #4) but only on Ubuntu Mate 16.04, [check out the 3.0.2 tag](https://github.com/uraimo/buildSwiftOnARM/tree/3.0.2) for the previous version, that worked on both Ubuntu 16.04 and Raspbian.
+SPM will compile correctly only on Ubuntu.
 
-- clean.sh - Clean all build artifacts 
+The scripts:
 
-- clone.sh - Clone the main Swift repository and all the related projects
+- clone.sh - Install dependencies and clones the main Swift repository and all the related projects
 
-- checkoutRelease.sh - Reset all repos, updates them, check out a specific tag (3.1 at the moment) and apply the patches
+- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (3.1 at the moment) and apply the patches
 
 - build.sh - Build
 
+- clean.sh - Clean all build artifacts 
+
 
 ## Building instructions
-
-**Update 3/17:** Currently 3.1 builds only with Ubuntu 16.04, check out the 3.0.2 tag for the previous version, that works on both Ubuntu and Raspbian. SPM will compile correctly only on Ubuntu.
 
 First of all, use a suitably sized sd-card, at least 16Gb in size.
 
@@ -37,19 +39,16 @@ Save the file and:
     sudo /etc/init.d/dphys-swapfile stop
     sudo /etc/init.d/dphys-swapfile start
     
-Once this is done, install the required dependencies:
+Now, call the included scripts as follows:
 
-    sudo apt-get install git cmake ninja-build clang-3.7 python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev
-    
-Fix clang links:
+1. Launch `clone.sh` that will install the required dependencies (_git cmake ninja-build clang-3.7 python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev_), fix clang links and clone apple/swift with all its dependecies.
 
-    sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.7 100
-    sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.7 100
+2. Run `checkoutRelease.sh` that will select the current release (3.1) and apply the needed patches.
 
-Additional steps could be required in some cases (usually on a RaspberryPi 1) [check the latest posts on my blog for additional info](https://uraimo.com).
+3. Once done, start the build with `build.sh`.
 
-Clone this repository and download apple/swift with all its dependecies with `clone.sh`.
+4. Once the build completes a few hours later, you'll have a `swift-3.1.tgz` archive containing the whole Swift compiler distribution. Once decompressed you'll find the Swift binaries under `usr/bin`.
 
-Once done, start the build with `build.sh`.
+I recommend to perform all these operations in a permanent background `tmux` or `screen` session (`CTRL+B d` to detach from the session and `tmux a` to reattach to it when you ssh again into the RaspberryPi).
 
-I recommend to compile in a background `tmux` session (`CTRL+B d` to detach from the session and `tmux a` to reattach to it when you ssh again into the RaspberryPi).
+Additional steps could be required in some cases (usually on a RaspberryPi 1 or for Raspbian) [check the latest posts on my blog for additional info](https://uraimo.com).
