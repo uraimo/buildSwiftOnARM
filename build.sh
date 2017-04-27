@@ -1,5 +1,5 @@
 #!/bin/sh
-REL=3.1
+REL=3.1.1
 
 INSTALL_DIR=`pwd`/install
 PACKAGE=`pwd`/swift-${REL}.tgz
