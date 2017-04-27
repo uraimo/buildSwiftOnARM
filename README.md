@@ -30,6 +30,8 @@ Configure a swap file of at least 2Gb, on Ubuntu:
     sudo chmod 600 swapfile
     sudo mkswap swapfile
     sudo swapon swapfile
+    
+You'll need to manually enable the swap file with `swapon` each time you reboot the raspberrypi (or the system will just run without swap).
 
 On Raspbian, open `/etc/dphys-swapfile` and edit:
 
