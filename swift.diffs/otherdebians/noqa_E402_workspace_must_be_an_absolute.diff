@@ -70,3 +70,17 @@ index dd68069..8916bdf 100755
  def call_without_sleeping(command, env=None, dry_run=False, echo=False):
      """
      Execute a command during which system sleep is disabled.
+diff --git a/utils/update-checkout b/utils/update-checkout
+index 7ae7210..f920519 100755
+--- a/utils/update-checkout
++++ b/utils/update-checkout
+@@ -18,6 +18,9 @@ import re
+ import sys
+ import traceback
+ 
++sys.path = sys.path[1:]
++sys.path.append(os.path.join(os.path.dirname(__file__), "swift_build_support"))
++
+ from functools import reduce
+ from multiprocessing import freeze_support
+ 
