@@ -7,6 +7,7 @@ Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@
 
 Currently this project builds Swift 3.1.1 (get it [here](https://www.dropbox.com/s/w0fxwqx7t1llixx/swift-3.1.1-RPi23-1604.tgz?dl=0)) but only on Ubuntu Mate 16.04 (see [#4](https://github.com/uraimo/buildSwiftOnARM/issues/4) for the issue related to Raspbian), [check out the 3.0.2 tag](https://github.com/uraimo/buildSwiftOnARM/tree/3.0.2) for the previous version, that worked on both Ubuntu 16.04 and Raspbian. SPM will compile correctly only on Ubuntu.
 
+Check out Helge Heß's project [dockSwiftOnARM](https://github.com/helje5/dockSwiftOnARM) to build Swift in a Docker container or to [build a cross-compiling toolchain](https://github.com/helje5/dockSwiftOnARM/blob/master/toolchain/README.md) that will allow you to build arm binaries directly from your Mac using a precompiled swiftc for ARM.
 
 
 The scripts:
@@ -54,4 +55,4 @@ Now, call the included scripts as follows:
 
 I recommend to perform all these operations in a permanent background `tmux` or `screen` session (`CTRL+B d` to detach from the session and `tmux a` to reattach to it when you ssh again into the RaspberryPi).
 
-Additional steps could be required in some cases (usually on a RaspberryPi 1 or for Raspbian) [check the latest posts on my blog for additional info](https://uraimo.com).
+Additional steps could be required in some cases (usually on a RaspberryPi 1 or for Raspbian) [check the latest ARM posts on my blog for additional info](https://www.uraimo.com/category/raspberry/).
