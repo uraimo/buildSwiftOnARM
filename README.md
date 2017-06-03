@@ -5,7 +5,7 @@ A few, very simple, bash scripts to clone, configure and build Swift on ARM devi
 
 Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@iachievedit](https://twitter.com/iachievedit), some patches from [swift-arm](https://github.com/swift-arm/) by [@hpux735](https://twitter.com/hpux735).
 
-Currently this project builds Swift 3.1.1 (get it [here](https://www.dropbox.com/s/w0fxwqx7t1llixx/swift-3.1.1-RPi23-1604.tgz?dl=0)) but only on Ubuntu Mate 16.04 (see [#4](https://github.com/uraimo/buildSwiftOnARM/issues/4) for the issue related to Raspbian), [check out the 3.0.2 tag](https://github.com/uraimo/buildSwiftOnARM/tree/3.0.2) for the previous version, that worked on both Ubuntu 16.04 and Raspbian. SPM will compile correctly only on Ubuntu.
+Currently this project builds Swift 3.1.1 (get it [here](https://www.dropbox.com/s/w0fxwqx7t1llixx/swift-3.1.1-RPi23-1604.tgz?dl=0) | [post](https://www.uraimo.com/2017/05/01/An-update-on-Swift-3-1-1-for-raspberry-pi-zero-1-2-3/)) but only on Ubuntu Mate 16.04 (see [#4](https://github.com/uraimo/buildSwiftOnARM/issues/4) for the issue related to Raspbian), [check out the 3.0.2 tag](https://github.com/uraimo/buildSwiftOnARM/tree/3.0.2) for the previous version, that worked on both Ubuntu 16.04 and Raspbian. SPM will compile correctly only on Ubuntu.
 
 Check out Helge Heß's project [dockSwiftOnARM](https://github.com/helje5/dockSwiftOnARM) to build Swift in a Docker container or to [build a cross-compiling toolchain](https://github.com/helje5/dockSwiftOnARM/blob/master/toolchain/README.md) that will allow you to build arm binaries directly from your Mac using a precompiled swiftc for ARM.
 
