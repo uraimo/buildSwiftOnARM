@@ -5,7 +5,9 @@ A few, very simple, bash scripts to clone, configure and build Swift on ARM devi
 
 Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@iachievedit](https://twitter.com/iachievedit), some patches from [swift-arm](https://github.com/swift-arm/) by [@hpux735](https://twitter.com/hpux735).
 
-Currently this project builds Swift 3.1.1 (get it [here](https://www.dropbox.com/s/w0fxwqx7t1llixx/swift-3.1.1-RPi23-1604.tgz?dl=0) | [post](https://www.uraimo.com/2017/05/01/An-update-on-Swift-3-1-1-for-raspberry-pi-zero-1-2-3/)) but only on Ubuntu Mate 16.04 (see [#4](https://github.com/uraimo/buildSwiftOnARM/issues/4) for the issue related to Raspbian), [check out the 3.0.2 tag](https://github.com/uraimo/buildSwiftOnARM/tree/3.0.2) for the previous version, that worked on both Ubuntu 16.04 and Raspbian. SPM will compile correctly only on Ubuntu.
+Currently this project builds Swift 3.1.1 on Ubuntu Mate 16.04.x (get it [here](https://www.dropbox.com/s/w0fxwqx7t1llixx/swift-3.1.1-RPi23-1604.tgz?dl=0)), Raspbian(Stretch) and usually on other Debian-based distributions as well. SPM will compiles correctly only on Ubuntu.
+
+Check out the latest updates on Swift for ARM [here](https://www.uraimo.com/category/raspberry/).
 
 Check out Helge Heß's project [dockSwiftOnARM](https://github.com/helje5/dockSwiftOnARM) to build Swift in a Docker container or to [build a cross-compiling toolchain](https://github.com/helje5/dockSwiftOnARM/blob/master/toolchain/README.md) that will allow you to build arm binaries directly from your Mac using a precompiled swiftc for ARM.
 
@@ -56,3 +58,4 @@ Now, call the included scripts as follows:
 I recommend to perform all these operations in a permanent background `tmux` or `screen` session (`CTRL+B d` to detach from the session and `tmux a` to reattach to it when you ssh again into the RaspberryPi).
 
 Additional steps could be required in some cases (usually on a RaspberryPi 1 or for Raspbian) [check the latest ARM posts on my blog for additional info](https://www.uraimo.com/category/raspberry/).
+
