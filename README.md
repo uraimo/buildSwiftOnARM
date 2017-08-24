@@ -6,9 +6,9 @@ Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@
 
 Currently this project builds Swift 3.1.1 on Ubuntu Mate 16.04.x (get it [here](https://www.dropbox.com/s/w0fxwqx7t1llixx/swift-3.1.1-RPi23-1604.tgz?dl=0)), Raspbian(Stretch) and usually on other Debian-based distributions as well. SPM will compiles correctly only on Ubuntu and the REPL is not available.
 
-Compiling 3.1.1 on Raspbian Stretch requires an additional libdispatch path available under `swift-corelibs-libdispatch.diff/raspbian/`, apply it with `patch -p1 < ../swift-corelibs-libdispatch.diffs/raspbian/c01599944879e58556a6e34585ac6539f5e83000_no_membarrier.diff`
+Compiling 3.1.1 on Raspbian Stretch requires an additional libdispatch patch available under `swift-corelibs-libdispatch.diff/raspbian/`, apply it with `patch -p1 < ../swift-corelibs-libdispatch.diffs/raspbian/c01599944879e58556a6e34585ac6539f5e83000_no_membarrier.diff` from the libdispatch directory.
 
-Check out the latest updates on Swift for ARM [here](https://www.uraimo.com/category/raspberry/).
+For the latest updates on Swift on ARM, check out my blog [here](https://www.uraimo.com/category/raspberry/).
 
 Check out Helge Heß's project [dockSwiftOnARM](https://github.com/helje5/dockSwiftOnARM) to build Swift in a Docker container or to [build a cross-compiling toolchain](https://github.com/helje5/dockSwiftOnARM/blob/master/toolchain/README.md) that will allow you to build arm binaries directly from your Mac using a precompiled swiftc for ARM.
 
