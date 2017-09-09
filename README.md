@@ -48,7 +48,7 @@ Save the file and:
     
 Now, call the included scripts as follows:
 
-1. Launch `clone.sh` that will install the required dependencies (_git cmake ninja-build clang-3.7 python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev_), fix clang links and clone apple/swift with all its dependecies.
+1. Launch `clone.sh` that will install the required dependencies (_git cmake ninja-build clang-3.8 python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev_), fix clang links and clone apple/swift with all its dependecies.
 
 2. Run `checkoutRelease.sh` that will select the current release (3.1.1) and apply the needed patches. These patches cover the basic Raspi2/3 with Xenial case, but even I've had many report of successful build onn different setups, additional patches  could still be needed on different boards/OSs. I recommend to just try and if you get an error, verify if one of the patches in the subdirectories of the <failing_component>.diffs can solve your issue. To apply it manually going in the `<failing_component>` directory and run `patch -p1 < ../<failing_component>.diffs/otherdebians/fix.diff`.
 
@@ -60,3 +60,6 @@ I recommend to perform all these operations in a permanent background `tmux` or 
 
 Additional steps could be required in some cases (on a RaspberryPi 1 or for Raspbian) [check the latest ARM posts on my blog for additional info](https://www.uraimo.com/category/raspberry/).
 
+If you plan to build 4.0+ and if your cmake is older than 3.6.x (Ubuntu Mate ships with 3.5.2), you'll also need to [download](https://cmake.org/files/) and compile from sources a newer release of cmake, I recommend 3.7.2.
+
+To build a different release than the one currently configured in the script, open `checkoutRelease.sh` and `build.sh` and modify the variables on top, with the branch name for the release and the release name for the tgz respectively.
