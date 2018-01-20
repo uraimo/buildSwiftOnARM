@@ -1,17 +1,3 @@
-diff --git a/CoreFoundation/Base.subproj/CFSortFunctions.c b/CoreFoundation/Base.subproj/CFSortFunctions.c
-index 05bd43e..381f599 100644
---- a/CoreFoundation/Base.subproj/CFSortFunctions.c
-+++ b/CoreFoundation/Base.subproj/CFSortFunctions.c
-@@ -53,6 +53,9 @@ enum {
- #define __checkint_int64_mul(x, y, err)         (x * y)
- #define __checkint_uint64_add(x, y, err)        (x + y)
- 
-+#define __checkint_int32_mul(x,y,err)           (x * y)
-+#define __checkint_uint32_add(x,y,err)          (x + y)
-+
- #endif
- 
- enum {
 diff --git a/CoreFoundation/RunLoop.subproj/CFRunLoop.c b/CoreFoundation/RunLoop.subproj/CFRunLoop.c
 index da2e573..df5cf50 100644
 --- a/CoreFoundation/RunLoop.subproj/CFRunLoop.c
