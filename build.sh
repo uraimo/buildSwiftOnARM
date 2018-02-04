@@ -3,6 +3,14 @@ REL=3.1.1
 
 INSTALL_DIR=`pwd`/install
 PACKAGE=`pwd`/swift-${REL}.tgz
+#Determine architecture
+case `uname -m` in
+    armv6*)
+        ARCH=armv6;;
+    *)
+        ARCH=armv7;;
+esac	
+
 rm -rf $INSTALL_DIR $PACKAGE
 
 
@@ -11,10 +19,10 @@ rm -rf $INSTALL_DIR $PACKAGE
 echo "+ Fixing up the install package for ARM"
 cp -R swift-corelibs-libdispatch/dispatch/ ${INSTALL_DIR}/usr/lib/swift
 
-cp ./build/buildbot_linux/libdispatch-linux-armv7/src/swift/Dispatch.swiftdoc ${INSTALL_DIR}/usr/lib/swift/linux/armv7/
-cp ./build/buildbot_linux/libdispatch-linux-armv7/src/swift/Dispatch.swiftmodule ${INSTALL_DIR}/usr/lib/swift/linux/armv7/
-cp ./build/buildbot_linux/libdispatch-linux-armv7/src/libdispatch.la ${INSTALL_DIR}/usr/lib/swift/linux/
-cp ./build/buildbot_linux/libdispatch-linux-armv7/src/.libs/libdispatch.so ${INSTALL_DIR}/usr/lib/swift/linux
+cp ./build/buildbot_linux/libdispatch-linux-${ARCH}/src/swift/Dispatch.swiftdoc ${INSTALL_DIR}/usr/lib/swift/linux/${ARCH}/
+cp ./build/buildbot_linux/libdispatch-linux-${ARCH}/src/swift/Dispatch.swiftmodule ${INSTALL_DIR}/usr/lib/swift/linux/${ARCH}/
+cp ./build/buildbot_linux/libdispatch-linux-${ARCH}/src/libdispatch.la ${INSTALL_DIR}/usr/lib/swift/linux/
+cp ./build/buildbot_linux/libdispatch-linux-${ARCH}/src/.libs/libdispatch.so ${INSTALL_DIR}/usr/lib/swift/linux
 
 mkdir -p ${INSTALL_DIR}/usr/lib/swift/os
 cp swift-corelibs-libdispatch/os/linux_base.h ${INSTALL_DIR}/usr/lib/swift/os
