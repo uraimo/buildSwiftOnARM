@@ -60,6 +60,4 @@ I recommend to perform all these operations in a permanent background `tmux` or 
 
 Additional steps could be required in some cases (on a RaspberryPi 1 or for Raspbian) [check the latest ARM posts on my blog for additional info](https://www.uraimo.com/category/raspberry/).
 
-If you plan to build 4.0+ and if your cmake is older than 3.6.x (Ubuntu Mate ships with 3.5.2), you'll also need to [download](https://cmake.org/files/) and compile from sources a newer release of cmake, I recommend 3.7.2.
-
 To build a different release than the one currently configured in the script, open `checkoutRelease.sh` and `build.sh` and modify the variables on top, with the branch name for the release and the release name for the tgz respectively.
