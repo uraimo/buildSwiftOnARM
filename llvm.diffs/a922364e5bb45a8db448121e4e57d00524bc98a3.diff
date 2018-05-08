@@ -17,13 +17,13 @@ index 35fc4de..1b543c9 100644
          Section.advanceStubOffset(getMaxStubSize());
        }
 +    } else if (RelType == ELF::R_ARM_GOT_PREL) {
-+      uint32_t GOTOffset = allocateGOTEntries(SectionID, 1);
++      uint32_t GOTOffset = allocateGOTEntries(1);
 +
 +      RelocationEntry GOTRE(SectionID, Offset, ELF::R_ARM_REL32, GOTOffset);
 +      addRelocationForSection(GOTRE, GOTSectionID);
 +
 +      // Fill in the value of the symbol we're targeting into the GOT
-+      RelocationEntry RE = computeGOTOffsetRE(SectionID, GOTOffset,
++      RelocationEntry RE = computeGOTOffsetRE(GOTOffset,
 +                                              Value.Offset, ELF::R_ARM_ABS32);
 +      if (Value.SymbolName)
 +        addRelocationForSymbol(RE, Value.SymbolName);
