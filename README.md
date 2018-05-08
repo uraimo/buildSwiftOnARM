@@ -6,6 +6,14 @@ A few, very simple, bash scripts to clone, configure and build Swift on ARM devi
 
 Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@iachievedit](https://twitter.com/iachievedit), some patches from [swift-arm](https://github.com/swift-arm/) by [@hpux735](https://twitter.com/hpux735).
 
+## Supported Architectures
+
+* ✅ ARMv7 (RaspberryPi 2/3, ODroid, CHIP, etc...)
+* ✅ ARMv6 (Original RaspberryPi, Pi Zero, etc... )
+* ✅ aarch64 (Pine64, etc...)
+
+## Instructions
+
 Currently this project builds Swift 3.1.1 on Ubuntu Mate 16.04.x (get it [here](https://www.dropbox.com/s/w0fxwqx7t1llixx/swift-3.1.1-RPi23-1604.tgz?dl=0)), Raspbian/Stretch (get it [here](https://www.dropbox.com/s/v6oslfta6u773rj/swift-3.1.1-RPi23-RaspbianStretchAug17.tgz?dl=0) for ARMv7 or [here](https://www.dropbox.com/s/rnpcenhk48piskd/swift-3.1.1-Rpi1armv6-RaspbianStretchAug17.tgz?dl=0) for ARMv6) and usually on other Debian-based distributions as well. SPM compiles correctly for both but the REPL is, as usual, not available.
 
 Compiling 3.1.1 on Raspbian Stretch requires an additional libdispatch patch available under `swift-corelibs-libdispatch.diff/raspbian/`, apply it with `patch -p1 < ../swift-corelibs-libdispatch.diffs/raspbian/c01599944879e58556a6e34585ac6539f5e83000_no_membarrier.diff` from the libdispatch directory.
