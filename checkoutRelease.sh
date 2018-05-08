@@ -9,4 +9,4 @@ find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'/.git ] && ec
 echo "✳️ \033[1m Switching all the repositories to ${BRANCH}...\033[0m"
 find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'/.git ] && echo \\* Switching '{}' to ${BRANCH} && cd '{}' && git checkout ${BRANCH}" \;
 echo "✅ \033[1m Applying the required patches...\033[0m"
-find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs ] && echo \\* Applying patches to '{}' && cd '{}'  && patch -p1 < ../'{}'.diffs/*.diff" \;
+find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs ] && echo \\* Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/*.diff; do patch -p1 < $f; done;" \;
