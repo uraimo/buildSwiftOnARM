@@ -1,3 +1,5 @@
+_This repository is being updated to move to Swift 4.1, check out the 3.1.1 branch for the previous release._
+
 # Building Swift on ARM
 
 A few, very simple, bash scripts to clone, configure and build Swift on ARM devices. 
@@ -61,3 +63,12 @@ I recommend to perform all these operations in a permanent background `tmux` or 
 Additional steps could be required in some cases (on a RaspberryPi 1 or for Raspbian) [check the latest ARM posts on my blog for additional info](https://www.uraimo.com/category/raspberry/).
 
 To build a different release than the one currently configured in the script, open `checkoutRelease.sh` and `build.sh` and modify the variables on top, with the branch name for the release and the release name for the tgz respectively.
+
+## Previous Releases
+
+You can compile old releases checking out the specific tag:
+
+* [Swift 3.1.0](https://github.com/uraimo/buildSwiftOnARM/tree/3.1.1)
+* [Swift 3.1](https://github.com/uraimo/buildSwiftOnARM/tree/3.1)
+* [Swift 3.0.2](https://github.com/uraimo/buildSwiftOnARM/tree/3.0.2)
+
