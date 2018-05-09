@@ -1,0 +1,49 @@
+diff --git a/stdlib/public/SwiftShims/RefCount.h b/stdlib/public/SwiftShims/RefCount.h
+index e1cd7aa..6b467e9 100644
+--- a/stdlib/public/SwiftShims/RefCount.h
++++ b/stdlib/public/SwiftShims/RefCount.h
+@@ -1302,7 +1302,7 @@ class HeapObjectSideTableEntry {
+
+   public:
+   HeapObjectSideTableEntry(HeapObject *newObject)
+-    : object(newObject), refCounts()
++    : object(newObject)//, refCounts()
+   { }
+
+ #pragma clang diagnostic push
+diff --git a/stdlib/public/runtime/Heap.cpp b/stdlib/public/runtime/Heap.cpp
+index 489fd56..f7b830b 100644
+--- a/stdlib/public/runtime/Heap.cpp
++++ b/stdlib/public/runtime/Heap.cpp
+@@ -53,20 +53,21 @@ using namespace swift;
+ void *swift::swift_slowAlloc(size_t size, size_t alignMask)
+     SWIFT_CC(RegisterPreservingCC_IMPL) {
+   void *p;
+-  if (alignMask <= MALLOC_ALIGN_MASK) {
+-    p = malloc(size);
+-  } else {
+-    p = AlignedAlloc(size, alignMask + 1);
+-  }
++//  if (alignMask <= MALLOC_ALIGN_MASK) {
++//    p = malloc(size);
++    p = calloc(1,size); // NEW
++//  } else {
++//    p = AlignedAlloc(size, alignMask + 1 );
++//  }
+   if (!p) swift::crash("Could not allocate memory.");
+   return p;
+ }
+
+ void swift::swift_slowDealloc(void *ptr, size_t bytes, size_t alignMask)
+     SWIFT_CC(RegisterPreservingCC_IMPL) {
+-  if (alignMask <= MALLOC_ALIGN_MASK) {
+-    free(ptr);
+-  } else {
+-    AlignedFree(ptr);
+-  }
++//  if (alignMask <= MALLOC_ALIGN_MASK) {
++    free(ptr);  // MARCO
++//  } else {
++//    AlignedFree(ptr);
++//  }
+ }
