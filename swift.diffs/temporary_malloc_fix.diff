@@ -1,5 +1,21 @@
+diff --git a/include/swift/Basic/Malloc.h b/include/swift/Basic/Malloc.h
+index 4f937da..25c364e 100644
+--- a/include/swift/Basic/Malloc.h
++++ b/include/swift/Basic/Malloc.h
+@@ -35,7 +35,10 @@ inline void *AlignedAlloc(size_t size, size_t align) {
+     align = sizeof(void*);
+   
+   void *r;
+-#if defined(_WIN32)
++#if (defined(__linux__) && defined(__arm__))
++  r = calloc(1,size);
++  assert(r && "malloc failed");
++#elif defined(_WIN32)
+   r = _aligned_malloc(size, align);
+   assert(r && "_aligned_malloc failed");
+ #else
 diff --git a/stdlib/public/SwiftShims/RefCount.h b/stdlib/public/SwiftShims/RefCount.h
-index e1cd7aa..6b467e9 100644
+index e1cd7aa..10c4ff3 100644
 --- a/stdlib/public/SwiftShims/RefCount.h
 +++ b/stdlib/public/SwiftShims/RefCount.h
 @@ -1302,7 +1302,7 @@ class HeapObjectSideTableEntry {
@@ -7,32 +23,7 @@ index e1cd7aa..6b467e9 100644
    public:
    HeapObjectSideTableEntry(HeapObject *newObject)
 -    : object(newObject), refCounts()
-+    : object(newObject)//, refCounts()
++    : object(newObject) //, refCounts()
    { }
  
  #pragma clang diagnostic push
-diff --git a/stdlib/public/runtime/Heap.cpp b/stdlib/public/runtime/Heap.cpp
-index 489fd56..8f4298f 100644
---- a/stdlib/public/runtime/Heap.cpp
-+++ b/stdlib/public/runtime/Heap.cpp
-@@ -53,11 +53,15 @@ using namespace swift;
- void *swift::swift_slowAlloc(size_t size, size_t alignMask)
-     SWIFT_CC(RegisterPreservingCC_IMPL) {
-   void *p;
--  if (alignMask <= MALLOC_ALIGN_MASK) {
--    p = malloc(size);
--  } else {
--    p = AlignedAlloc(size, alignMask + 1);
--  }
-+//#if (defined(__linux__) && (defined(__arm__)||defined(__arm64__)))
-+  p = calloc(1,size);
-+//#else
-+//  if (alignMask <= MALLOC_ALIGN_MASK) {
-+//    p = malloc(size);
-+//  } else {
-+//    p = AlignedAlloc(size, alignMask + 1);
-+//  }
-+//#endif
-   if (!p) swift::crash("Could not allocate memory.");
-   return p;
- }
