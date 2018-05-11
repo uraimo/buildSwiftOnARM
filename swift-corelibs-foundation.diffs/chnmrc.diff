@@ -8,12 +8,12 @@ index da9d2c0..24ad687 100644
      CFRuntimeClass *cls = __CFRuntimeClassTable[typeID];
 -    size_t align = (cls->version & _kCFRuntimeRequiresAlignment) ? cls->requiredAlignment : 16;
 +    size_t align = (cls->version & _kCFRuntimeRequiresAlignment) ? cls->requiredAlignment : 16; // TODO: Is this for 32Bit system also valid?
-
+     
      CFRuntimeBase *memory = (CFRuntimeBase *)swift_allocObject(isa, size, align - 1);
-
+     
      // Zero the rest of the memory, starting at cfinfo
 -    memset(&memory->_cfinfoa, 0, size - (sizeof(memory->_cfisa) + sizeof(memory->_swift_strong_rc) + sizeof(memory->_swift_weak_rc)));
 +    //memset(&memory->_cfinfoa, 0, size - (sizeof(memory->_cfisa) + sizeof(memory->_swift_strong_rc) + sizeof(memory->_swift_weak_rc)));
-
+     
      // Set up the cfinfo struct
      uint32_t *cfinfop = (uint32_t *)&(memory->_cfinfoa);
