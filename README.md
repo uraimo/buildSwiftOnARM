@@ -1,4 +1,8 @@
-_🚨 This repository is being updated to move to Swift 4.1, check out the 3.1.1 branch for the previous release._
+🚨 _This repository is being updated to Swift 4.1_  🚨
+
+_Click [here](https://www.dropbox.com/s/9ngyhqj0erre56k/swift-4.1-RPi23-Ubuntu1604-Preview1.tgz) for the latest Ubuntu Mate 16.04 binaries snapshot._ 
+
+_Check out the `swift-3.1.1` branch for the previous stable release._
 
 # Building Swift on ARM
 
