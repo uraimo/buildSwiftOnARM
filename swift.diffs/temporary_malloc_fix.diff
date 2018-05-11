@@ -15,7 +15,7 @@ index 4f937da..25c364e 100644
    assert(r && "_aligned_malloc failed");
  #else
 diff --git a/stdlib/public/SwiftShims/RefCount.h b/stdlib/public/SwiftShims/RefCount.h
-index e1cd7aa..10c4ff3 100644
+index e1cd7aa..9a55134 100644
 --- a/stdlib/public/SwiftShims/RefCount.h
 +++ b/stdlib/public/SwiftShims/RefCount.h
 @@ -1302,7 +1302,7 @@ class HeapObjectSideTableEntry {
@@ -23,7 +23,7 @@ index e1cd7aa..10c4ff3 100644
    public:
    HeapObjectSideTableEntry(HeapObject *newObject)
 -    : object(newObject), refCounts()
-+    : object(newObject) //, refCounts()
++    : object(newObject), refCounts(RefCounts<SideTableRefCountBits>::Initialized)
    { }
  
  #pragma clang diagnostic push
