@@ -26,7 +26,7 @@ The scripts:
 
 - clone.sh - Install dependencies and clones the main Swift repository and all the related projects
 
-- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (4.1 at the moment) and apply the patches
+- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (4.1.1 at the moment) and apply the patches
 
 - build.sh - Build
 
@@ -59,11 +59,11 @@ Now, call the included scripts as follows:
 
 1. Launch `clone.sh` that will install the required dependencies (_git cmake ninja-build clang-3.8 python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev_), fix clang links and clone apple/swift with all its dependecies.
 
-2. Run `checkoutRelease.sh` that will select the current release (4.1) and apply the needed patches. These patches cover the basic Raspi2/3 with Xenial case, but I've had many reports of successful build on different setups, but beware, additional patches could  be needed on different boards/OSs. I recommend to just try and if you get an error, verify if one of the additional patches (not normally applied by checkoutRelease.sh) in the subdirectories of the <failing_component>.diffs can solve your issue. To apply it manually going in the `<failing_component>` directory and run `patch -p1 < ../<failing_component>.diffs/otherdebians/fix.diff`.
+2. Run `checkoutRelease.sh` that will select the current release (4.1.1) and apply the needed patches. These patches cover the basic Raspi2/3 with Xenial case, but I've had many reports of successful build on different setups, but beware, additional patches could  be needed on different boards/OSs. I recommend to just try and if you get an error, verify if one of the additional patches (not normally applied by checkoutRelease.sh) in the subdirectories of the <failing_component>.diffs can solve your issue. To apply it manually going in the `<failing_component>` directory and run `patch -p1 < ../<failing_component>.diffs/otherdebians/fix.diff`.
 
 3. Once done, start the build with `build.sh`.
 
-4. Once the build completes a few hours later, you'll have a `swift-4.1.tgz` archive containing the whole Swift compiler distribution. Once decompressed you'll find the Swift binaries under `usr/bin`.
+4. Once the build completes a few hours later, you'll have a `swift-4.1.1.tgz` archive containing the whole Swift compiler distribution. Once decompressed you'll find the Swift binaries under `usr/bin`.
 
 I recommend to perform all these operations in a permanent background `tmux` or `screen` session (`CTRL+B d` to detach from the session and `tmux a` to reattach to it when you ssh again into the RaspberryPi).
 
