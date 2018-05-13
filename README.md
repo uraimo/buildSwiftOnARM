@@ -1,12 +1,6 @@
-🚨 _This repository is being updated to Swift 4.1_  🚨
-
-_Click [here](https://www.dropbox.com/s/9ngyhqj0erre56k/swift-4.1-RPi23-Ubuntu1604-Preview1.tgz) for the latest Ubuntu Mate 16.04 binaries snapshot._ 
-
-_Check out the `swift-3.1.1` branch for the previous stable release._
-
 # Building Swift on ARM
 
-A few, very simple, bash scripts to clone, configure and build Swift on ARM devices. 
+A few, very simple, bash scripts to clone, configure and build Swift 4.1.1 on ARM devices. 
 
 Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@iachievedit](https://twitter.com/iachievedit), some patches from [swift-arm](https://github.com/swift-arm/) by [@hpux735](https://twitter.com/hpux735), support for 4.1 derived from the work of [@chnmrc](https://github.com/chnmrc/swift4arm).
 
@@ -16,11 +10,15 @@ Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@
 * ✅ ARMv6 (Original RaspberryPi, Pi Zero, etc... )
 * ✅ aarch64 (Pine64, etc...)
 
+## Prebuilt binaries
+
+Swift 4.1.1 for Ubuntu Mate 16.04.4 is available [here](https://www.dropbox.com/s/wdnze97cndnhanf/swift-4.1.1-RPi23-Ubuntu1604.tgz?dl=0), see the required dependencies below.
+
 ## Instructions
 
 For the latest updates on Swift on ARM, check out my blog [here](https://www.uraimo.com/category/raspberry/).
 
-Check out Helge Heß's project [dockSwiftOnARM](https://github.com/helje5/dockSwiftOnARM) to build Swift in a Docker container or to [build a cross-compiling toolchain](https://github.com/helje5/dockSwiftOnARM/blob/master/toolchain/README.md) that will allow you to build arm binaries directly from your Mac using a precompiled swiftc for ARM.
+Check out Helge Heß's project [dockSwiftOnARM](https://github.com/helje5/dockSwiftOnARM) to build Swift in a Docker container or to [build a cross-compiling toolchain](https://github.com/AlwaysRightInstitute/swift-mac2arm-x-compile-toolchain) that will allow you to build arm binaries directly from your Mac using a precompiled swiftc for ARM.
 
 The scripts:
 
@@ -37,9 +35,9 @@ The scripts:
 
 First of all, use a suitably sized sd-card, at least 16Gb in size.
 
-Configure a swap file of at least 2Gb, on Ubuntu:
+Configure a swap file of at least 3Gb, on Ubuntu:
 
-    sudo fallocate -l 2G swapfile
+    sudo fallocate -l 3G swapfile
     sudo chmod 600 swapfile
     sudo mkswap swapfile
     sudo swapon swapfile
