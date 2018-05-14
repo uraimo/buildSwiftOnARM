@@ -1,19 +1,23 @@
-diff --git a/CoreFoundation/Base.subproj/CFRuntime.c b/CoreFoundation/Base.subproj/CFRuntime.c
-index da9d2c0..24ad687 100644
---- a/CoreFoundation/Base.subproj/CFRuntime.c
-+++ b/CoreFoundation/Base.subproj/CFRuntime.c
-@@ -382,12 +382,12 @@ CFTypeRef _CFRuntimeCreateInstance(CFAllocatorRef allocator, CFTypeID typeID, CF
-     uintptr_t isa = __CFRuntimeObjCClassTable[typeID];
-     CFIndex size = sizeof(CFRuntimeBase) + extraBytes;
-     CFRuntimeClass *cls = __CFRuntimeClassTable[typeID];
--    size_t align = (cls->version & _kCFRuntimeRequiresAlignment) ? cls->requiredAlignment : 16;
-+    size_t align = (cls->version & _kCFRuntimeRequiresAlignment) ? cls->requiredAlignment : 16; // TODO: Is this for 32Bit system also valid?
-     
-     CFRuntimeBase *memory = (CFRuntimeBase *)swift_allocObject(isa, size, align - 1);
-     
-     // Zero the rest of the memory, starting at cfinfo
--    memset(&memory->_cfinfoa, 0, size - (sizeof(memory->_cfisa) + sizeof(memory->_swift_strong_rc) + sizeof(memory->_swift_weak_rc)));
-+    //memset(&memory->_cfinfoa, 0, size - (sizeof(memory->_cfisa) + sizeof(memory->_swift_strong_rc) + sizeof(memory->_swift_weak_rc)));
-     
-     // Set up the cfinfo struct
-     uint32_t *cfinfop = (uint32_t *)&(memory->_cfinfoa);
+diff --git a/CoreFoundation/Base.subproj/CFRuntime.h b/CoreFoundation/Base.subproj/CFRuntime.h
+index d7aa26c..0f02a3c 100644
+--- a/CoreFoundation/Base.subproj/CFRuntime.h
++++ b/CoreFoundation/Base.subproj/CFRuntime.h
+@@ -196,10 +196,18 @@ typedef struct __CFRuntimeBase {
+     uint32_t _swift_strong_rc;
+     uint32_t _swift_weak_rc;
+     // This is for CF's use, and must match _NSCFType layout
++#if __LP64__
+     _Atomic(uint64_t) _cfinfoa;
++#else
++    _Atomic(uint32_t) _cfinfoa;
++#endif
+ } CFRuntimeBase;
+ 
++#if __LP64__
+ #define INIT_CFRUNTIME_BASE(...) {0, _CF_CONSTANT_OBJECT_STRONG_RC, 0, 0x0000000000000080ULL}
++#else
++#define INIT_CFRUNTIME_BASE(...) {0, _CF_CONSTANT_OBJECT_STRONG_RC, 0, 0x00000080UL}
++#endif
+ 
+ #else
+ 
