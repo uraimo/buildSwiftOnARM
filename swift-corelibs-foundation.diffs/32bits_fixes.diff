@@ -21,3 +21,19 @@ index d7aa26c..0f02a3c 100644
  
  #else
  
+diff --git a/CoreFoundation/String.subproj/CFString.h b/CoreFoundation/String.subproj/CFString.h
+index 2793bfb..b918d30 100644
+--- a/CoreFoundation/String.subproj/CFString.h
++++ b/CoreFoundation/String.subproj/CFString.h
+@@ -157,7 +157,11 @@ struct __CFConstStr {
+         uintptr_t _cfisa;
+         uint32_t _swift_strong_rc;
+         uint32_t _swift_weak_rc;
++#if defined(__LP64__)
+         uint64_t _cfinfoa;
++#else
++        uint32_t _cfinfoa;
++#endif
+     } _base;
+     uint8_t *_ptr;
+ #if defined(__LP64__) && defined(__BIG_ENDIAN__)
