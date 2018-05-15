@@ -1,3 +1,5 @@
+🚨**WIP**: Use the [swift-3.1.1](https://github.com/uraimo/buildSwiftOnARM/tree/3.1.1) for a stable release, check out the [issues](https://github.com/uraimo/buildSwiftOnARM/issues) to verify the current status.🚨
+
 # Building Swift on ARM
 
 A few, very simple, bash scripts to clone, configure and build Swift 4.1.1 on ARM devices. 
