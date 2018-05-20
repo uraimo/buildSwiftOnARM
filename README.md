@@ -1,4 +1,4 @@
-🚨**WIP**: Use the [swift-3.1.1](https://github.com/uraimo/buildSwiftOnARM/tree/3.1.1) for a stable release, check out the [issues](https://github.com/uraimo/buildSwiftOnARM/issues) to verify the current status.🚨
+🚨**WIP**: Use the [swift-3.1.1](https://github.com/uraimo/buildSwiftOnARM/tree/3.1.1) branch for a stable release, check out the [issues](https://github.com/uraimo/buildSwiftOnARM/issues) to verify the current status.🚨
 
 # Building Swift on ARM
 
