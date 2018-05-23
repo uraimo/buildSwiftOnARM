@@ -14,7 +14,7 @@ Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@
 
 ## Prebuilt binaries
 
-Swift 4.1.1 for Ubuntu Mate 16.04.4 is available [here](https://www.dropbox.com/s/wdnze97cndnhanf/swift-4.1.1-RPi23-Ubuntu1604.tgz?dl=0), see the required dependencies below.
+Swift 4.1.1 for Ubuntu Mate 16.04.4 is available [here](https://www.dropbox.com/s/qnmyp712o8q5k2j/swift-4.1.1-RPi23-Ubuntu1604_b3.tgz), see the required dependencies below.
 
 ## Instructions
 
