@@ -6,7 +6,7 @@ build-debian:
   script:
     - ./clone.sh
     - ./checkoutRelease.sh
-    - ./build.sh
+    - ./build-ci.sh
   tags:
     - armv7
     - debian9
@@ -19,7 +19,7 @@ build-ubuntu:
   script:
     - ./clone.sh
     - ./checkoutRelease.sh
-    - ./build.sh
+    - ./build-ci.sh
   tags:
     - armv7
     - ubuntu1604
