@@ -1,0 +1,28 @@
+stages:
+  - build
+
+build-debian:
+  stage: build
+  script:
+    - ./clone.sh
+    - ./checkoutRelease.sh
+    - ./build.sh
+  tags:
+    - armv7
+    - debian9
+  artifacts:
+    paths:
+      - swift-4.1.1.tgz
+      
+build-ubuntu:
+  stage: build
+  script:
+    - ./clone.sh
+    - ./checkoutRelease.sh
+    - ./build.sh
+  tags:
+    - armv7
+    - ubuntu1604
+  artifacts:
+    paths:
+      - swift-4.1.1.tgz
