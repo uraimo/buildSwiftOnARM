@@ -14,7 +14,7 @@ Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@
 
 ## Prebuilt binaries
 
-Swift 4.1.1 for Ubuntu Mate 16.04.4 is available [here](https://www.dropbox.com/s/qnmyp712o8q5k2j/swift-4.1.1-RPi23-Ubuntu1604_b3.tgz), see the required dependencies below.
+Swift 4.1.1 armv7(RaspberryPi 2/3)  or Ubuntu Mate 16.04.4 is available [here](https://www.dropbox.com/s/qnmyp712o8q5k2j/swift-4.1.1-RPi23-Ubuntu1604_b3.tgz) or [here](https://www.dropbox.com/s/tlhn479u74vkkfm/swift-4.1.1-RPi23-RaspbianStretch_b3.tgz) for Raspbian Stretch. See the required dependencies below.
 
 ## Instructions
 
@@ -59,7 +59,7 @@ Now, call the included scripts as follows:
 
 1. Launch `clone.sh` that will install the required dependencies (_git cmake ninja-build clang-3.8 python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev libcurl4-openssl-dev libz-dev_), fix clang links and clone apple/swift with all its dependecies.
 
-2. Run `checkoutRelease.sh` that will select the current release (4.1.1) and apply the needed patches. These patches cover the basic Raspi2/3 with Xenial case, but I've had many reports of successful build on different setups, but beware, additional patches could  be needed on different boards/OSs. I recommend to just try and if you get an error, verify if one of the additional patches (not normally applied by checkoutRelease.sh) in the subdirectories of the <failing_component>.diffs can solve your issue. To apply it manually going in the `<failing_component>` directory and run `patch -p1 < ../<failing_component>.diffs/otherdebians/fix.diff`.
+2. Run `checkoutRelease.sh` that will select the current release (4.1.1) and apply the needed patches. These patches cover the basic Raspi2/3 with Xenial case, but I've had many reports of successful build on different setups, but beware, additional patches could  be needed on different boards/OSs.
 
 3. Once done, start the build with `build.sh`.
 
