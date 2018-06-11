@@ -14,7 +14,7 @@ Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@
 
 ## Prebuilt binaries
 
-Swift 4.1.2 armv7(RaspberryPi 2/3)  or Ubuntu Mate 16.04.4 is available [here](https://www.dropbox.com/s/f6g1kw02w0cjq5w/swift-4.1.2-RPi23-Ubuntu1604_b3.tgz?dl=0) or 4.1.1 [here](https://www.dropbox.com/s/tlhn479u74vkkfm/swift-4.1.1-RPi23-RaspbianStretch_b3.tgz) for Raspbian Stretch. See the required dependencies below.
+Swift 4.1.2 armv7(RaspberryPi 2/3)  or Ubuntu Mate 16.04.4 is available [here](https://www.dropbox.com/s/f6g1kw02w0cjq5w/swift-4.1.2-RPi23-Ubuntu1604_b3.tgz?dl=0) or [here](https://www.dropbox.com/s/zs7kf3clc43e93j/swift-4.1.2-RPi23-RaspbianStretch_b3.tgz?dl=0) for Raspbian Stretch. See the required dependencies below.
 
 ## Instructions
 
