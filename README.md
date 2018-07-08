@@ -71,6 +71,18 @@ Additional steps could be required in some cases (on a RaspberryPi 1 or for Rasp
 
 To build a different release than the one currently configured in the script, open `checkoutRelease.sh` and `build.sh` and modify the variables on top, with the branch name for the release and the release name for the tgz respectively.
 
+# Building on Raspbian Stretch
+
+The Swift project now requires a version of Swig greater that 3.0.12, newer than the one shipped with Stretch.
+
+To compile the project you’ll need to update it manually as follows:
+
+```
+wget http://ftp.de.debian.org/debian/pool/main/s/swig/swig_3.0.12-1.1_armhf.deb
+wget http://ftp.de.debian.org/debian/pool/main/s/swig/swig3.0_3.0.12-1.1_armhf.deb
+sudo dpkg -i swig3.0_3.0.12-1.1_armhf.deb swig_3.0.12-1.1_armhf.deb
+```
+
 ## Previous Releases
 
 You can compile old releases checking out the specific tag:
