@@ -78,9 +78,9 @@ The Swift project now requires a version of Swig greater that 3.0.12, newer than
 To compile the project you’ll need to update it manually as follows:
 
 ```
-wget http://ftp.de.debian.org/debian/pool/main/s/swig/swig_3.0.12-1.1_armhf.deb
-wget http://ftp.de.debian.org/debian/pool/main/s/swig/swig3.0_3.0.12-1.1_armhf.deb
-sudo dpkg -i swig3.0_3.0.12-1.1_armhf.deb swig_3.0.12-1.1_armhf.deb
+wget http://ftp.de.debian.org/debian/pool/main/s/swig/swig_3.0.12-1.2_armhf.deb
+wget http://ftp.de.debian.org/debian/pool/main/s/swig/swig3.0_3.0.12-1.2_armhf.deb
+sudo dpkg -i swig3.0_3.0.12-1.2_armhf.deb swig_3.0.12-1.2_armhf.deb
 ```
 
 ## Previous Releases
