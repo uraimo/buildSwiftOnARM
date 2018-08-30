@@ -83,6 +83,10 @@ wget http://ftp.de.debian.org/debian/pool/main/s/swig/swig3.0_3.0.12-1.2_armhf.d
 sudo dpkg -i swig3.0_3.0.12-1.2_armhf.deb swig_3.0.12-1.2_armhf.deb
 ```
 
+## REPL Issues
+
+Since the first releases of Swift on ARM32, the REPL has never been available on this platform, but that doesn't impact the compiler itself. Considering this, as you would expect, launching `swift` without parameters will result in an error instead of the REPL prompt.
+
 ## Previous Releases
 
 You can compile old releases checking out the specific tag:
