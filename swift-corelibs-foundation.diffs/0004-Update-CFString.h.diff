@@ -1,0 +1,25 @@
+From 150266c53406c7d5a94e7b8e81824d065e8aae49 Mon Sep 17 00:00:00 2001
+From: Marco Chini <chnmrc@dnet.it>
+Date: Mon, 21 May 2018 20:05:53 +0200
+Subject: [PATCH 3/4] Update CFString.h
+
+---
+ CoreFoundation/String.subproj/CFString.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CoreFoundation/String.subproj/CFString.h b/CoreFoundation/String.subproj/CFString.h
+index 4e54c40b..3eab99a1 100644
+--- a/CoreFoundation/String.subproj/CFString.h
++++ b/CoreFoundation/String.subproj/CFString.h
+@@ -156,7 +156,7 @@ struct __CFConstStr {
+     struct {
+         uintptr_t _cfisa;
+         uintptr_t _swift_rc;
+-#if defined(__LP64__)
++#if defined(__LP64__) || defined(__LLP64__)
+         uint64_t _cfinfoa;
+ #else
+         uint32_t _cfinfoa;
+-- 
+2.17.1
+

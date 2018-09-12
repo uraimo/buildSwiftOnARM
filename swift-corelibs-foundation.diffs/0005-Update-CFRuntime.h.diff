@@ -1,0 +1,33 @@
+From 1b52386787deda590f2bcc1e515655769fb0ef0b Mon Sep 17 00:00:00 2001
+From: Marco Chini <chnmrc@dnet.it>
+Date: Mon, 21 May 2018 20:54:18 +0200
+Subject: [PATCH 4/4] Update CFRuntime.h
+
+---
+ CoreFoundation/Base.subproj/CFRuntime.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CoreFoundation/Base.subproj/CFRuntime.h b/CoreFoundation/Base.subproj/CFRuntime.h
+index 72bd9d3f..13b044c2 100644
+--- a/CoreFoundation/Base.subproj/CFRuntime.h
++++ b/CoreFoundation/Base.subproj/CFRuntime.h
+@@ -195,14 +195,14 @@ typedef struct __CFRuntimeBase {
+     uintptr_t _cfisa;
+     uintptr_t _swift_rc;
+     // This is for CF's use, and must match _NSCFType layout
+-#if __LP64__
++#if defined(__LP64__) || defined(__LLP64__)
+     _Atomic(uint64_t) _cfinfoa;
+ #else
+     _Atomic(uint32_t) _cfinfoa;
+ #endif
+ } CFRuntimeBase;
+ 
+-#if __LP64__
++#if defined(__LP64__) || defined(__LLP64__)
+ #define INIT_CFRUNTIME_BASE(...) {0, _CF_CONSTANT_OBJECT_STRONG_RC, 0x0000000000000080ULL}
+ #else
+ #define INIT_CFRUNTIME_BASE(...) {0, _CF_CONSTANT_OBJECT_STRONG_RC, 0x00000080UL}
+-- 
+2.17.1
+
