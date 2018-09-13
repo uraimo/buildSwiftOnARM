@@ -1,4 +1,8 @@
 # buildSwiftOnARM Simple Test Suite
 
-**WIP**
+To run the test suite:
+
+```
+  swift test
+```
 
