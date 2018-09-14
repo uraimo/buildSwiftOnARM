@@ -1,10 +1,7 @@
-🚨**WIP**: Use the [swift-3.1.1](https://github.com/uraimo/buildSwiftOnARM/tree/3.1.1) branch for a stable release, check out the [issues](https://github.com/uraimo/buildSwiftOnARM/issues) to verify the current status.🚨
 
 # Building Swift on ARM
 
-A few, very simple, bash scripts to clone, configure and build Swift 4.1.2 on ARM devices. 
-
-Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@iachievedit](https://twitter.com/iachievedit), some patches from [swift-arm](https://github.com/swift-arm/) by [@hpux735](https://twitter.com/hpux735), support for 4.1 derived from the work of [@chnmrc](https://github.com/chnmrc/swift4arm).
+A few, very simple, bash scripts to clone, configure and build Swift 4.1.3 on ARM devices. 
 
 ## Supported Architectures
 
@@ -14,7 +11,7 @@ Derived from [package-swift](https://github.com/iachievedit/package-swift) by [@
 
 ## Prebuilt binaries
 
-Swift 4.1.2 armv7(RaspberryPi 2/3)  or Ubuntu Mate 16.04.4 is available [here](https://www.dropbox.com/s/f6g1kw02w0cjq5w/swift-4.1.2-RPi23-Ubuntu1604_b3.tgz?dl=0) or [here](https://www.dropbox.com/s/zs7kf3clc43e93j/swift-4.1.2-RPi23-RaspbianStretch_b3.tgz?dl=0) for Raspbian Stretch. See the required dependencies below.
+Swift 4.1.3 armv7(RaspberryPi 2/3) for Ubuntu Mate 16.04.x is available [here](https://www.dropbox.com/s/gf22ssjt1a3dhjm/swift-4.1.3-RPi23-Ubuntu1604.tgz?dl=0) or [here](https://www.dropbox.com/s/e257cvg23ghe2dt/swift-4.1.3-RPi23-RaspbianStretch.tgz?dl=0) for Raspbian Stretch. See the required dependencies below.
 
 ## Instructions
 
@@ -26,7 +23,7 @@ The scripts:
 
 - clone.sh - Install dependencies and clones the main Swift repository and all the related projects
 
-- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (4.1.1 at the moment) and apply the patches
+- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (4.1.3 at the moment) and apply the patches
 
 - build.sh - Build
 
@@ -71,21 +68,29 @@ Additional steps could be required in some cases (on a RaspberryPi 1 or for Rasp
 
 To build a different release than the one currently configured in the script, open `checkoutRelease.sh` and `build.sh` and modify the variables on top, with the branch name for the release and the release name for the tgz respectively.
 
-# Building on Raspbian Stretch
 
-The Swift project now requires a version of Swig greater that 3.0.12, newer than the one shipped with Stretch.
+## Dependencies 
 
-To compile the project you’ll need to update it manually as follows:
+If you plan to use one of the provided prebuilt binaries, you'll need the install the following dependencies dependecies:
 
-```
-wget http://ftp.de.debian.org/debian/pool/main/s/swig/swig_3.0.12-1.2_armhf.deb
-wget http://ftp.de.debian.org/debian/pool/main/s/swig/swig3.0_3.0.12-1.2_armhf.deb
-sudo dpkg -i swig3.0_3.0.12-1.2_armhf.deb swig_3.0.12-1.2_armhf.deb
-```
+    sudo apt install clang-3.8 libicu-dev libcurl4-nss-dev
+
 
 ## REPL Issues
 
 Since the first releases of Swift on ARM32, the REPL has never been available on this platform, but that doesn't impact the compiler itself. Considering this, as you would expect, launching `swift` without parameters will result in an error instead of the REPL prompt.
+
+## Acknowledgments 
+
+We wouldn't have Swift on ARM and most of the patches included on buildSwiftOnARM without the work done by these developers:
+
+ * [@Kaiede](https://github.com/Kaiede)
+ * [@chnmrc](https://github.com/chnmrc)
+ * [@jasonm128](https://github.com/jasonm128)
+ * [@hpux735](https://twitter.com/hpux735)
+ * [@iachievedit](https://twitter.com/iachievedit)
+ 
+The community can be reached at the [swift-arm](https://launchpass.com/swift-arm) Slack channel.
 
 ## Previous Releases
 
