@@ -16,7 +16,7 @@ sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-$CL
 sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-$CLANG_VERSION 100
 
 if [[ $PLATFORM = "Raspbian" ]]; then
-   ./distro-scripts/raspbian-stretch.sh
+   ./distro-scripts/raspbianstretch.sh
 fi
 
 git clone https://github.com/apple/swift
