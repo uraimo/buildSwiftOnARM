@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f8c9b0a795..b0906dac2c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -581,6 +581,8 @@ else()
+     set(SWIFT_HOST_VARIANT_ARCH_default "itanium")
+   elseif("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86")
+     set(SWIFT_HOST_VARIANT_ARCH_default "i686")
++  elseif("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "i686")
++    set(SWIFT_HOST_VARIANT_ARCH_default "i686")
+   else()
+     message(FATAL_ERROR "Unrecognized architecture on host system: ${CMAKE_SYSTEM_PROCESSOR}")
+   endif()
+@@ -635,6 +637,8 @@ if("${SWIFT_HOST_VARIANT_SDK}" STREQUAL "LINUX")
+   if("${SWIFT_HOST_TRIPLE}" STREQUAL "")
+     if("${SWIFT_HOST_VARIANT_ARCH}" STREQUAL "x86_64")
+       set(SWIFT_HOST_TRIPLE "x86_64-unknown-linux-gnu")
++    elseif("${SWIFT_HOST_VARIANT_ARCH}" STREQUAL "i686")
++      set(SWIFT_HOST_TRIPLE "i686-unknown-linux-gnu")
+     elseif("${SWIFT_HOST_VARIANT_ARCH}" STREQUAL "aarch64")
+       set(SWIFT_HOST_TRIPLE "aarch64-unknown-linux-gnu")
+     elseif("${SWIFT_HOST_VARIANT_ARCH}" MATCHES "(powerpc64|powerpc64le)")
+diff --git a/utils/swift_build_support/swift_build_support/targets.py b/utils/swift_build_support/swift_build_support/targets.py
+index f4b5bb0d48..2859677fac 100644
+--- a/utils/swift_build_support/swift_build_support/targets.py
++++ b/utils/swift_build_support/swift_build_support/targets.py
+@@ -113,6 +113,7 @@ class StdlibDeploymentTarget(object):
+ 
+     Linux = Platform("linux", archs=[
+         "x86_64",
++        "i686",
+         "armv6",
+         "armv7",
+         "aarch64",
+@@ -160,6 +161,8 @@ class StdlibDeploymentTarget(object):
+         if system == 'Linux':
+             if machine == 'x86_64':
+                 return StdlibDeploymentTarget.Linux.x86_64
++            elif machine == 'i686':
++                return StdlibDeploymentTarget.Linux.i686
+             elif machine.startswith('armv7'):
+                 # linux-armv7* is canonicalized to 'linux-armv7'
+                 return StdlibDeploymentTarget.Linux.armv7
