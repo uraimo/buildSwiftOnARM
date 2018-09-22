@@ -1,0 +1,13 @@
+diff --git a/tools/clang/tools/clang-import-test/clang-import-test.cpp b/tools/clang/tools/clang-import-test/clang-import-test.cpp
+index 4871acdf36..a21ae0ef40 100644
+--- a/tools/clang/tools/clang-import-test/clang-import-test.cpp
++++ b/tools/clang/tools/clang-import-test/clang-import-test.cpp
+@@ -244,7 +244,7 @@ struct CIAndOrigins {
+   ASTContext &getASTContext() { return CI->getASTContext(); }
+   FileManager &getFileManager() { return CI->getFileManager(); }
+   const OriginMap &getOriginMap() {
+-    static const OriginMap EmptyOriginMap;
++    static const OriginMap EmptyOriginMap{};
+     if (ExternalASTSource *Source = CI->getASTContext().getExternalSource())
+       return static_cast<ExternalASTMerger *>(Source)->GetOrigins();
+     return EmptyOriginMap;
