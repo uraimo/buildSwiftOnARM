@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d75fbbeb98..80bf657e62 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -590,6 +590,8 @@ else()
+     set(SWIFT_HOST_VARIANT_ARCH_default "itanium")
+   elseif("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86")
+     set(SWIFT_HOST_VARIANT_ARCH_default "i686")
++  elseif("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "i686")
++    set(SWIFT_HOST_VARIANT_ARCH_default "i686")
+   else()
+     message(FATAL_ERROR "Unrecognized architecture on host system: ${CMAKE_SYSTEM_PROCESSOR}")
+   endif()
+@@ -597,8 +599,9 @@ endif()
+ 
+ set(SWIFT_HOST_VARIANT_SDK "${SWIFT_HOST_VARIANT_SDK_default}" CACHE STRING
+     "Deployment sdk for Swift host tools (the compiler).")
+-set(SWIFT_HOST_VARIANT_ARCH "${SWIFT_HOST_VARIANT_ARCH_default}" CACHE STRING
+-    "Deployment arch for Swift host tools (the compiler).")
++# FIXME: Do not check this in. Not sure why i686 won't cache properly here
++#        and keeps winding up blank instead.
++set(SWIFT_HOST_VARIANT_ARCH "${SWIFT_HOST_VARIANT_ARCH_default}")
+ 
+ #
+ # Enable additional warnings.
+@@ -644,6 +647,8 @@ if("${SWIFT_HOST_VARIANT_SDK}" STREQUAL "LINUX")
+   if("${SWIFT_HOST_TRIPLE}" STREQUAL "")
+     if("${SWIFT_HOST_VARIANT_ARCH}" STREQUAL "x86_64")
+       set(SWIFT_HOST_TRIPLE "x86_64-unknown-linux-gnu")
++    elseif("${SWIFT_HOST_VARIANT_ARCH}" STREQUAL "i686")
++      set(SWIFT_HOST_TRIPLE "i686-unknown-linux-gnu")
+     elseif("${SWIFT_HOST_VARIANT_ARCH}" STREQUAL "aarch64")
+       set(SWIFT_HOST_TRIPLE "aarch64-unknown-linux-gnu")
+     elseif("${SWIFT_HOST_VARIANT_ARCH}" MATCHES "(powerpc64|powerpc64le)")
