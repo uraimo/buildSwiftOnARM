@@ -1,0 +1,69 @@
+From e86c0dc01993c4e4f39fde0e72bf781ffca30125 Mon Sep 17 00:00:00 2001
+From: Adam Thayer <user@biticus.net>
+Date: Sun, 23 Sep 2018 23:14:35 -0700
+Subject: [PATCH] Fix DateFormatter TimeZone Setter
+
+Because of the use of 'timeZone' instead of 'newValue' in the setter, setting the timeZone of a DateFormatter doesn't actually work. Instead, it winds up re-setting the old value, which happens to be whatever was originally set, usually what we get from copying the default down in CoreFoundation.
+
+Also adds a unit test to help prevent breaks like this again.
+---
+ Foundation/DateFormatter.swift         |  6 +++---
+ TestFoundation/TestDateFormatter.swift | 19 +++++++++++++++++++
+ 2 files changed, 22 insertions(+), 3 deletions(-)
+
+diff --git a/Foundation/DateFormatter.swift b/Foundation/DateFormatter.swift
+index 69644c0fb6..80ae4bada7 100644
+--- a/Foundation/DateFormatter.swift
++++ b/Foundation/DateFormatter.swift
+@@ -176,13 +176,13 @@ open class DateFormatter : Formatter {
+     /*@NSCopying*/ internal var _timeZone: TimeZone? { willSet { _reset() } }
+     open var timeZone: TimeZone! {
+         get {
+-            guard let timeZone = _timeZone else {
++            guard let tz = _timeZone else {
+                 return (CFDateFormatterCopyProperty(_cfObject, kCFDateFormatterTimeZone) as! NSTimeZone)._swiftObject
+             }
+-            return timeZone
++            return tz
+         }
+         set {
+-            _timeZone = timeZone
++            _timeZone = newValue
+         }
+     }
+ 
+diff --git a/TestFoundation/TestDateFormatter.swift b/TestFoundation/TestDateFormatter.swift
+index 98c636f620..3050a39d29 100644
+--- a/TestFoundation/TestDateFormatter.swift
++++ b/TestFoundation/TestDateFormatter.swift
+@@ -24,6 +24,7 @@ class TestDateFormatter: XCTestCase {
+             ("test_dateFormatString", test_dateFormatString),
+             ("test_setLocaleToNil", test_setLocaleToNil),
+             ("test_setTimeZoneToNil", test_setTimeZoneToNil),
++            ("test_setTimeZone", test_setTimeZone),
+         ]
+     }
+     
+@@ -356,4 +357,22 @@ class TestDateFormatter: XCTestCase {
+         // Time zone should go back to the system one.
+         XCTAssertEqual(f.timeZone, NSTimeZone.system)
+     }
++
++    func test_setTimeZone() {
++        // Test two different time zones. Should ensure that if one
++        // happens to be TimeZone.current, we still get a valid test.
++        let newYork = TimeZone(identifier: "America/New_York")!
++        let losAngeles = TimeZone(identifier: "America/Los_Angeles")!
++
++        XCTAssertNotEqual(newYork, losAngeles)
++
++        // Case 1: New York
++        let f = DateFormatter()
++        f.timeZone = newYork
++        XCTAssertEqual(f.timeZone, newYork)
++
++        // Case 2: Los Angeles
++        f.timeZone = losAngeles
++        XCTAssertEqual(f.timeZone, losAngeles)
++    }
+ }
