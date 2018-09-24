@@ -1,0 +1,65 @@
+From 4f28c15f65dce78db6e2668316e2498f24ab7bd2 Mon Sep 17 00:00:00 2001
+From: Adam Thayer <user@biticus.net>
+Date: Sun, 23 Sep 2018 10:20:40 -0700
+Subject: [PATCH] Fix Conditional Bridge Behavior for NSNumber to Bool
+
+The original change for this did not check the behavior.
+
+A better implementation here is to use the one from Swift itself, which also matches the initializer that this extension also adds.
+---
+ Foundation/NSNumber.swift                 | 15 +++++++++------
+ TestFoundation/TestNSNumberBridging.swift | 10 ++++++++++
+ 2 files changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/Foundation/NSNumber.swift b/Foundation/NSNumber.swift
+index 704caa36a4..087ae6d8bc 100644
+--- a/Foundation/NSNumber.swift
++++ b/Foundation/NSNumber.swift
+@@ -537,17 +537,20 @@ extension Bool : _ObjectiveCBridgeable {
+     }
+     
+     public static func _forceBridgeFromObjectiveC(_ x: NSNumber, result: inout Bool?) {
+-        result = _unconditionallyBridgeFromObjectiveC(x)
++        let _ = _conditionallyBridgeFromObjectiveC(x, result: &result)
+     }
+     
+     public static func _conditionallyBridgeFromObjectiveC(_ x: NSNumber, result: inout Bool?) -> Bool {
+-        if x.intValue == 0 || x.intValue == 1 {
+-            result = x.boolValue
++        if x === kCFBooleanTrue || NSNumber(value: 1) == x {
++            result = true
++            return true
++        } else if x === kCFBooleanFalse || NSNumber(value: 0) == x {
++            result = false
+             return true
+-        } else {
+-            result = nil
+-            return false
+         }
++
++        result = nil
++        return false
+     }
+     
+     public static func _unconditionallyBridgeFromObjectiveC(_ source: NSNumber?) -> Bool {
+diff --git a/TestFoundation/TestNSNumberBridging.swift b/TestFoundation/TestNSNumberBridging.swift
+index 3a84175227..ade7bca089 100644
+--- a/TestFoundation/TestNSNumberBridging.swift
++++ b/TestFoundation/TestNSNumberBridging.swift
+@@ -642,6 +642,16 @@ class TestNSNumberBridging : XCTestCase {
+         XCTAssertNotNil(b3)
+         XCTAssertEqual(b3, true)
+ 
++        let b4 = NSNumber(value: 0.0) as? Bool
++        XCTAssertNotNil(b4)
++        XCTAssertEqual(b4, false)
++
++        let b5 = NSNumber(value: 1.0) as? Bool
++        XCTAssertNotNil(b5)
++        XCTAssertEqual(b5, true)
++
++        XCTAssertNil(NSNumber(value: 0.25) as? Bool)
++        XCTAssertNil(NSNumber(value: 1.25) as? Bool)
+         XCTAssertNil(NSNumber(value: -1) as? Bool)
+         XCTAssertNil(NSNumber(value: 2) as? Bool)
+         XCTAssertNil(NSNumber(value: Int8.min) as? Bool)
