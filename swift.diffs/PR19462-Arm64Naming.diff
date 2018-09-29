@@ -1,0 +1,126 @@
+From 2d04b8491b31f379738fca6129c42a294d230510 Mon Sep 17 00:00:00 2001
+From: Saleem Abdulrasool <compnerd@compnerd.org>
+Date: Fri, 21 Sep 2018 11:20:09 -0700
+Subject: [PATCH] stdlib: check for ARM/ARM64 more thoroughly (NFC)
+
+Update the instances of checks for architectures to be more broad for different
+spellings of the architecture macro.  Certain targets use `_M_ARM` and others
+use `__arm__`.  Similarly, arm64/aarch64 has `_M_ARM64`, `__arm64__` and
+`__aarch64__` as spellings.  This just mechanically goes through and encodes the
+various spellings.
+
+Take the opportunity to replace some raw checks with `defined` checks which
+avoids a pedantic warning due to the undefined macro when performing the check
+as the preprocessor may warn about an undefined condition evaluating to `0`.
+---
+ include/swift/Runtime/Atomic.h        | 2 +-
+ stdlib/public/SwiftShims/HeapObject.h | 6 +++---
+ stdlib/public/runtime/HeapObject.cpp  | 2 +-
+ stdlib/public/runtime/SwiftObject.mm  | 2 +-
+ stdlib/public/runtime/WeakReference.h | 8 ++++----
+ stdlib/public/stubs/MathStubs.cpp     | 2 +-
+ 6 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/include/swift/Runtime/Atomic.h b/include/swift/Runtime/Atomic.h
+index 3f9c1a3edf5..655078a7d6a 100644
+--- a/include/swift/Runtime/Atomic.h
++++ b/include/swift/Runtime/Atomic.h
+@@ -22,7 +22,7 @@
+ // is formally UB by C++11 language rules, we should be OK because neither
+ // the processor model nor the optimizer can realistically reorder our uses
+ // of 'consume'.
+-#if __arm64__ || __arm__
++#if defined(__arm__) || defined(_M_ARM) || defined(__arm64__) || defined(__aarch64__) || defined(_M_ARM64)
+ #  define SWIFT_MEMORY_ORDER_CONSUME (std::memory_order_relaxed)
+ #else
+ #  define SWIFT_MEMORY_ORDER_CONSUME (std::memory_order_consume)
+diff --git a/stdlib/public/SwiftShims/HeapObject.h b/stdlib/public/SwiftShims/HeapObject.h
+index cbc1309a435..97ccbc433a9 100644
+--- a/stdlib/public/SwiftShims/HeapObject.h
++++ b/stdlib/public/SwiftShims/HeapObject.h
+@@ -122,7 +122,7 @@ static_assert(alignof(HeapObject) == alignof(void*),
+ #define _swift_abi_ObjCReservedLowBits                                         \
+   (unsigned) SWIFT_ABI_X86_64_OBJC_NUM_RESERVED_LOW_BITS
+ 
+-#elif defined(__arm64__)
++#elif defined(__arm64__) || defined(__aarch64__) || defined(_M_ARM64)
+ 
+ #ifdef __APPLE__
+ #define _swift_abi_LeastValidPointerValue                                      \
+@@ -165,10 +165,10 @@ static_assert(alignof(HeapObject) == alignof(void*),
+ #define _swift_abi_LeastValidPointerValue                                      \
+   (__swift_uintptr_t) SWIFT_ABI_DEFAULT_LEAST_VALID_POINTER
+ 
+-#if __i386__
++#if defined(__i386__)
+ #define _swift_abi_SwiftSpareBitsMask                                          \
+   (__swift_uintptr_t) SWIFT_ABI_I386_SWIFT_SPARE_BITS_MASK
+-#elif __arm__
++#elif defined(__arm__) || defined(_M_ARM)
+ #define _swift_abi_SwiftSpareBitsMask                                          \
+   (__swift_uintptr_t) SWIFT_ABI_ARM_SWIFT_SPARE_BITS_MASK
+ #else
+diff --git a/stdlib/public/runtime/HeapObject.cpp b/stdlib/public/runtime/HeapObject.cpp
+index 32a9246d659..557931e511c 100644
+--- a/stdlib/public/runtime/HeapObject.cpp
++++ b/stdlib/public/runtime/HeapObject.cpp
+@@ -61,7 +61,7 @@ using namespace swift;
+ /// Returns true if the pointer passed to a native retain or release is valid.
+ /// If false, the operation should immediately return.
+ static inline bool isValidPointerForNativeRetain(const void *p) {
+-#if defined(__x86_64__) || defined(__arm64__)
++#if defined(__x86_64__) || defined(__arm64__) || defined(__aarch64__) || defined(_M_ARM64)
+   // On these platforms, the upper half of address space is reserved for the
+   // kernel, so we can assume that pointer values in this range are invalid.
+   return (intptr_t)p > 0;
+diff --git a/stdlib/public/runtime/SwiftObject.mm b/stdlib/public/runtime/SwiftObject.mm
+index f7137bd0423..f92812ea3e6 100644
+--- a/stdlib/public/runtime/SwiftObject.mm
++++ b/stdlib/public/runtime/SwiftObject.mm
+@@ -498,7 +498,7 @@ - (BOOL)isNSValue__      { return NO; }
+ 
+ #if defined(__x86_64__)
+ static uintptr_t const objectPointerIsObjCBit = 0x4000000000000000ULL;
+-#elif defined(__arm64__)
++#elif defined(__arm64__) || defined(__arch64__) || defined(_M_ARM64)
+ static uintptr_t const objectPointerIsObjCBit = 0x4000000000000000ULL;
+ #else
+ static uintptr_t const objectPointerIsObjCBit = 0x00000002U;
+diff --git a/stdlib/public/runtime/WeakReference.h b/stdlib/public/runtime/WeakReference.h
+index 34dd52e6a44..a0f86e9d770 100644
+--- a/stdlib/public/runtime/WeakReference.h
++++ b/stdlib/public/runtime/WeakReference.h
+@@ -78,16 +78,16 @@ class WeakReferenceBits {
+ #if !SWIFT_OBJC_INTEROP
+     NativeMarkerMask  = 0,
+     NativeMarkerValue = 0
+-#elif __x86_64__
++#elif defined(__x86_64__)
+     NativeMarkerMask  = SWIFT_ABI_X86_64_OBJC_WEAK_REFERENCE_MARKER_MASK,
+     NativeMarkerValue = SWIFT_ABI_X86_64_OBJC_WEAK_REFERENCE_MARKER_VALUE
+-#elif __i386__
++#elif defined(__i386__)
+     NativeMarkerMask  = SWIFT_ABI_I386_OBJC_WEAK_REFERENCE_MARKER_MASK,
+     NativeMarkerValue = SWIFT_ABI_I386_OBJC_WEAK_REFERENCE_MARKER_VALUE
+-#elif __arm__
++#elif defined(__arm__) || defined(_M_ARM)
+     NativeMarkerMask  = SWIFT_ABI_ARM_OBJC_WEAK_REFERENCE_MARKER_MASK,
+     NativeMarkerValue = SWIFT_ABI_ARM_OBJC_WEAK_REFERENCE_MARKER_VALUE
+-#elif __arm64__
++#elif defined(__arm64__) || defined(__aarch64__) || defined(_M_ARM64)
+     NativeMarkerMask  = SWIFT_ABI_ARM64_OBJC_WEAK_REFERENCE_MARKER_MASK,
+     NativeMarkerValue = SWIFT_ABI_ARM64_OBJC_WEAK_REFERENCE_MARKER_VALUE
+ #else
+diff --git a/stdlib/public/stubs/MathStubs.cpp b/stdlib/public/stubs/MathStubs.cpp
+index 39ac39357ae..dbafab66cbf 100644
+--- a/stdlib/public/stubs/MathStubs.cpp
++++ b/stdlib/public/stubs/MathStubs.cpp
+@@ -64,7 +64,7 @@ extern "C" {
+     (defined(__linux__) && defined(__aarch64__)) || \
+     (defined(__linux__) && defined(__powerpc64__)) || \
+     (defined(__linux__) && defined(__s390x__)) || \
+-    (defined(__ANDROID__) && defined(__arm64__))
++    (defined(__ANDROID__) && defined(__aarch64__))
+ 
+ SWIFT_RUNTIME_STDLIB_API
+ ti_int
