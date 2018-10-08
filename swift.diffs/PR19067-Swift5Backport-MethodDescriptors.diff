@@ -1,0 +1,750 @@
+diff --git a/docs/ABI/Mangling.rst b/docs/ABI/Mangling.rst
+index e7e81b8ccf..bb6e46496c 100644
+--- a/docs/ABI/Mangling.rst
++++ b/docs/ABI/Mangling.rst
+@@ -115,6 +115,8 @@ field offsets are therefore required when accessing fields in generic
+ types where the metadata itself has unknown layout.)
+ 
+ ::
++  global ::= global 'Tj'                 // resilient method dispatch thunk
++  global ::= global 'Tq'                 // method descriptor
+ 
+   global ::= global 'TO'                 // ObjC-as-swift thunk
+   global ::= global 'To'                 // swift-as-ObjC thunk
+diff --git a/include/swift/AST/ASTMangler.h b/include/swift/AST/ASTMangler.h
+index 09d48980c0..f454207dce 100644
+--- a/include/swift/AST/ASTMangler.h
++++ b/include/swift/AST/ASTMangler.h
+@@ -57,7 +57,6 @@ public:
+   enum class SymbolKind {
+     Default,
+     DynamicThunk,
+-    SwiftDispatchThunk,
+     SwiftAsObjCThunk,
+     ObjCAsSwiftThunk,
+     DirectMethodReferenceThunk,
+diff --git a/include/swift/Demangling/DemangleNodes.def b/include/swift/Demangling/DemangleNodes.def
+index 27cb3be631..cbe894fa7c 100644
+--- a/include/swift/Demangling/DemangleNodes.def
++++ b/include/swift/Demangling/DemangleNodes.def
+@@ -200,8 +200,9 @@ NODE(ReflectionMetadataFieldDescriptor)
+ NODE(ReflectionMetadataAssocTypeDescriptor)
+ NODE(ReflectionMetadataSuperclassDescriptor)
+ NODE(GenericTypeParamDecl)
+-CONTEXT_NODE(CurryThunk)
+-CONTEXT_NODE(DispatchThunk)
++NODE(CurryThunk)
++NODE(DispatchThunk)
++NODE(MethodDescriptor)
+ NODE(ThrowsAnnotation)
+ NODE(EmptyList)
+ NODE(FirstElementMarker)
+diff --git a/include/swift/IRGen/Linking.h b/include/swift/IRGen/Linking.h
+index 5c809a4c06..8cc8987c23 100644
+--- a/include/swift/IRGen/Linking.h
++++ b/include/swift/IRGen/Linking.h
+@@ -116,6 +116,18 @@ class LinkEntity {
+     /// ConstructorDecl* inside a protocol or a class.
+     DispatchThunkAllocator,
+ 
++    /// A method descriptor.  The pointer is a FuncDecl* inside a protocol
++    /// or a class.
++    MethodDescriptor,
++
++    /// A method descriptor for an initializing constructor.  The pointer
++    /// is a ConstructorDecl* inside a class.
++    MethodDescriptorInitializer,
++
++    /// A method descriptor for an allocating constructor.  The pointer is a
++    /// ConstructorDecl* inside a protocol or a class.
++    MethodDescriptorAllocator,
++
+     /// A resilient enum tag index. The pointer is a EnumElementDecl*.
+     EnumCase,
+ 
+@@ -411,18 +423,22 @@ class LinkEntity {
+ 
+   LinkEntity() = default;
+ 
++  static bool isValidResilientMethodRef(SILDeclRef declRef) {
++    if (declRef.isForeign ||
++        declRef.isDirectReference ||
++        declRef.isCurried)
++      return false;
++
++    auto *decl = declRef.getDecl();
++    return (isa<ClassDecl>(decl->getDeclContext()) ||
++            isa<ProtocolDecl>(decl->getDeclContext()));
++  }
++
+ public:
+   static LinkEntity forDispatchThunk(SILDeclRef declRef) {
+-    assert(!declRef.isForeign &&
+-           !declRef.isDirectReference &&
+-           !declRef.isCurried);
++    assert(isValidResilientMethodRef(declRef));
+ 
+     LinkEntity::Kind kind;
+-
+-    auto *decl = declRef.getDecl();
+-    assert(isa<ClassDecl>(decl->getDeclContext()) ||
+-           isa<ProtocolDecl>(decl->getDeclContext()));
+-
+     switch (declRef.kind) {
+     case SILDeclRef::Kind::Func:
+       kind = Kind::DispatchThunk;
+@@ -438,7 +454,30 @@ public:
+     }
+ 
+     LinkEntity entity;
+-    entity.setForDecl(kind, decl);
++    entity.setForDecl(kind, declRef.getDecl());
++    return entity;
++  }
++
++  static LinkEntity forMethodDescriptor(SILDeclRef declRef) {
++    assert(isValidResilientMethodRef(declRef));
++
++    LinkEntity::Kind kind;
++    switch (declRef.kind) {
++    case SILDeclRef::Kind::Func:
++      kind = Kind::MethodDescriptor;
++      break;
++    case SILDeclRef::Kind::Initializer:
++      kind = Kind::MethodDescriptorInitializer;
++      break;
++    case SILDeclRef::Kind::Allocator:
++      kind = Kind::MethodDescriptorAllocator;
++      break;
++    default:
++      llvm_unreachable("Bad SILDeclRef for method descriptor");
++    }
++
++    LinkEntity entity;
++    entity.setForDecl(kind, declRef.getDecl());
+     return entity;
+   }
+ 
+diff --git a/lib/AST/ASTMangler.cpp b/lib/AST/ASTMangler.cpp
+index 0e6cc67dae..e5b3aede68 100644
+--- a/lib/AST/ASTMangler.cpp
++++ b/lib/AST/ASTMangler.cpp
+@@ -532,7 +532,6 @@ void ASTMangler::appendSymbolKind(SymbolKind SKind) {
+   switch (SKind) {
+     case SymbolKind::Default: return;
+     case SymbolKind::DynamicThunk: return appendOperator("TD");
+-    case SymbolKind::SwiftDispatchThunk: return appendOperator("Tj");
+     case SymbolKind::SwiftAsObjCThunk: return appendOperator("To");
+     case SymbolKind::ObjCAsSwiftThunk: return appendOperator("TO");
+     case SymbolKind::DirectMethodReferenceThunk: return appendOperator("Td");
+diff --git a/lib/Demangling/Demangler.cpp b/lib/Demangling/Demangler.cpp
+index 9d2fa8d1f8..dddc6f100f 100644
+--- a/lib/Demangling/Demangler.cpp
++++ b/lib/Demangling/Demangler.cpp
+@@ -1700,6 +1700,7 @@ NodePointer Demangler::demangleThunkOrSpecialization() {
+   switch (char c = nextChar()) {
+     case 'c': return createWithChild(Node::Kind::CurryThunk, popNode(isEntity));
+     case 'j': return createWithChild(Node::Kind::DispatchThunk, popNode(isEntity));
++    case 'q': return createWithChild(Node::Kind::MethodDescriptor, popNode(isEntity));
+     case 'o': return createNode(Node::Kind::ObjCAttribute);
+     case 'O': return createNode(Node::Kind::NonObjCAttribute);
+     case 'D': return createNode(Node::Kind::DynamicAttribute);
+diff --git a/lib/Demangling/NodePrinter.cpp b/lib/Demangling/NodePrinter.cpp
+index 7703600722..c1e6b2ed88 100644
+--- a/lib/Demangling/NodePrinter.cpp
++++ b/lib/Demangling/NodePrinter.cpp
+@@ -378,6 +378,7 @@ private:
+     case Node::Kind::MaterializeForSet:
+     case Node::Kind::MergedFunction:
+     case Node::Kind::Metaclass:
++    case Node::Kind::MethodDescriptor:
+     case Node::Kind::NativeOwningAddressor:
+     case Node::Kind::NativeOwningMutableAddressor:
+     case Node::Kind::NativePinningAddressor:
+@@ -890,6 +891,10 @@ NodePointer NodePrinter::print(NodePointer Node, bool asPrefixContext) {
+     Printer << "dispatch thunk of ";
+     print(Node->getChild(0));
+     return nullptr;
++  case Node::Kind::MethodDescriptor:
++    Printer << "method descriptor for ";
++    print(Node->getChild(0));
++    return nullptr;
+   case Node::Kind::OutlinedBridgedMethod:
+     Printer << "outlined bridged method (" << Node->getText() << ") of ";
+     return nullptr;
+diff --git a/lib/Demangling/OldRemangler.cpp b/lib/Demangling/OldRemangler.cpp
+index 4c8562a24a..5c7b62215b 100644
+--- a/lib/Demangling/OldRemangler.cpp
++++ b/lib/Demangling/OldRemangler.cpp
+@@ -1907,14 +1907,18 @@ void Remangler::mangleGenericTypeParamDecl(Node *node) {
+   unreachable("todo");
+ }
+ 
+-void Remangler::mangleCurryThunk(Node *node, EntityContext &ctx) {
++void Remangler::mangleCurryThunk(Node *node) {
+   Out << "<curry-thunk>";
+ }
+ 
+-void Remangler::mangleDispatchThunk(Node *node, EntityContext &ctx) {
++void Remangler::mangleDispatchThunk(Node *node) {
+   Out << "<dispatch-thunk>";
+ }
+ 
++void Remangler::mangleMethodDescriptor(Node *node) {
++  Out << "<method-descriptor>";
++}
++
+ void Remangler::mangleEmptyList(Node *node) {
+   Out << "<empty>";
+ }
+diff --git a/lib/Demangling/Remangler.cpp b/lib/Demangling/Remangler.cpp
+index 8219f8821e..89d447de5d 100644
+--- a/lib/Demangling/Remangler.cpp
++++ b/lib/Demangling/Remangler.cpp
+@@ -1839,6 +1839,11 @@ void Remangler::mangleDispatchThunk(Node *node) {
+   Buffer << "Tj";
+ }
+ 
++void Remangler::mangleMethodDescriptor(Node *node) {
++  mangleSingleChildNode(node);
++  Buffer << "Tq";
++}
++
+ void Remangler::mangleThrowsAnnotation(Node *node) {
+   Buffer << 'K';
+ }
+diff --git a/lib/IRGen/GenClass.cpp b/lib/IRGen/GenClass.cpp
+index 86dc1b47ac..506cbd44b7 100644
+--- a/lib/IRGen/GenClass.cpp
++++ b/lib/IRGen/GenClass.cpp
+@@ -1028,36 +1028,6 @@ void IRGenModule::emitClassDecl(ClassDecl *D) {
+ 
+   emitNestedTypeDecls(D->getMembers());
+   emitFieldMetadataRecord(D);
+-
+-  // If the class is resilient, emit dispatch thunks.
+-  if (isResilient(D, ResilienceExpansion::Minimal)) {
+-    struct ThunkEmitter : public SILVTableVisitor<ThunkEmitter> {
+-      IRGenModule &IGM;
+-      ClassDecl *D;
+-
+-      ThunkEmitter(IRGenModule &IGM, ClassDecl *D)
+-        : IGM(IGM), D(D) {
+-        addVTableEntries(D);
+-      }
+-
+-      void addMethodOverride(SILDeclRef baseRef, SILDeclRef declRef) {}
+-
+-      void addMethod(SILDeclRef member) {
+-        auto *func = cast<AbstractFunctionDecl>(member.getDecl());
+-        if (func->getDeclContext() == D &&
+-            func->getEffectiveAccess() >= AccessLevel::Public) {
+-          IGM.emitDispatchThunk(member);
+-        }
+-      }
+-
+-      void addPlaceholder(MissingMemberDecl *m) {
+-        assert(m->getNumberOfVTableEntries() == 0
+-               && "Should not be emitting class with missing members");
+-      }
+-    };
+-
+-    ThunkEmitter emitter(*this, D);
+-  }
+ }
+ 
+ namespace {
+diff --git a/lib/IRGen/GenDecl.cpp b/lib/IRGen/GenDecl.cpp
+index c6b45857ce..5e1d025878 100644
+--- a/lib/IRGen/GenDecl.cpp
++++ b/lib/IRGen/GenDecl.cpp
+@@ -1461,7 +1461,10 @@ SILLinkage LinkEntity::getLinkage(ForDefinition_t forDefinition) const {
+   switch (getKind()) {
+   case Kind::DispatchThunk:
+   case Kind::DispatchThunkInitializer:
+-  case Kind::DispatchThunkAllocator: {
++  case Kind::DispatchThunkAllocator:
++  case Kind::MethodDescriptor:
++  case Kind::MethodDescriptorInitializer:
++  case Kind::MethodDescriptorAllocator: {
+     auto *decl = getDecl();
+ 
+     // Protocol requirements don't have their own access control
+@@ -1665,7 +1668,10 @@ bool LinkEntity::isAvailableExternally(IRGenModule &IGM) const {
+   switch (getKind()) {
+   case Kind::DispatchThunk:
+   case Kind::DispatchThunkInitializer:
+-  case Kind::DispatchThunkAllocator: {
++  case Kind::DispatchThunkAllocator:
++  case Kind::MethodDescriptor:
++  case Kind::MethodDescriptorInitializer:
++  case Kind::MethodDescriptorAllocator: {
+     auto *decl = getDecl();
+ 
+     // Protocol requirements don't have their own access control
+@@ -3257,6 +3263,47 @@ IRGenModule::getAddrOfTypeMetadataLazyCacheVariable(CanType type,
+                                TypeMetadataPtrTy, DebugTypeInfo());
+ }
+ 
++llvm::GlobalValue *IRGenModule::defineAlias(LinkEntity entity,
++                                            llvm::Constant *definition) {
++  // Check for an existing forward declaration of the alias.
++  auto &entry = GlobalVars[entity];
++  llvm::GlobalValue *existingVal = nullptr;
++  if (entry) {
++    existingVal = cast<llvm::GlobalValue>(entry);
++    // Clear the existing value's name so we can steal it.
++    existingVal->setName("");
++  }
++
++  LinkInfo link = LinkInfo::get(*this, entity, ForDefinition);
++  auto *ptrTy = cast<llvm::PointerType>(definition->getType());
++  auto *alias = llvm::GlobalAlias::create(
++      ptrTy->getElementType(), ptrTy->getAddressSpace(), link.getLinkage(),
++      link.getName(), definition, &Module);
++  alias->setVisibility(link.getVisibility());
++  alias->setDLLStorageClass(link.getDLLStorage());
++
++  if (link.isUsed()) {
++    addUsedGlobal(alias);
++  }
++
++  // Replace an existing external declaration for the address point.
++  if (entry) {
++    auto existingVal = cast<llvm::GlobalValue>(entry);
++
++    // FIXME: MC breaks when emitting alias references on some platforms
++    // (rdar://problem/22450593 ). Work around this by referring to the aliasee
++    // instead.
++    llvm::Constant *aliasCast = alias->getAliasee();
++    aliasCast = llvm::ConstantExpr::getBitCast(aliasCast,
++                                               entry->getType());
++    existingVal->replaceAllUsesWith(aliasCast);
++    existingVal->eraseFromParent();
++  }
++  entry = alias;
++
++  return alias;
++}
++
+ /// Define the metadata for a type.
+ ///
+ /// Some type metadata has information before the address point that the
+@@ -3310,6 +3357,10 @@ llvm::GlobalValue *IRGenModule::defineTypeMetadata(CanType concreteType,
+   if (!section.empty())
+     var->setSection(section);
+ 
++  LinkInfo link = LinkInfo::get(*this, entity, ForDefinition);
++  if (link.isUsed())
++    addUsedGlobal(var);
++
+   // Keep type metadata around for all types.
+   if (auto nominal = concreteType->getAnyNominal())
+     addRuntimeResolvableType(nominal);
+@@ -3329,47 +3380,7 @@ llvm::GlobalValue *IRGenModule::defineTypeMetadata(CanType concreteType,
+                                                         addr, indices);
+   }
+   addr = llvm::ConstantExpr::getBitCast(addr, TypeMetadataPtrTy);
+-
+-  // Check for an existing forward declaration of the address point.
+-  auto &directEntry = GlobalVars[directEntity];
+-  llvm::GlobalValue *existingVal = nullptr;
+-  if (directEntry) {
+-    existingVal = cast<llvm::GlobalValue>(directEntry);
+-    // Clear the existing value's name so we can steal it.
+-    existingVal->setName("");
+-  }
+-
+-  LinkInfo link = LinkInfo::get(*this, directEntity, ForDefinition);
+-  auto *ptrTy = cast<llvm::PointerType>(addr->getType());
+-  auto *alias = llvm::GlobalAlias::create(
+-      ptrTy->getElementType(), ptrTy->getAddressSpace(), link.getLinkage(),
+-      link.getName(), addr, &Module);
+-  alias->setVisibility(link.getVisibility());
+-  alias->setDLLStorageClass(link.getDLLStorage());
+-
+-  // The full metadata is used based on the visibility of the address point,
+-  // not the metadata itself.
+-  if (link.isUsed()) {
+-    addUsedGlobal(var);
+-    addUsedGlobal(alias);
+-  }
+-
+-  // Replace an existing external declaration for the address point.
+-  if (directEntry) {
+-    auto existingVal = cast<llvm::GlobalValue>(directEntry);
+-
+-    // FIXME: MC breaks when emitting alias references on some platforms
+-    // (rdar://problem/22450593 ). Work around this by referring to the aliasee
+-    // instead.
+-    llvm::Constant *aliasCast = alias->getAliasee();
+-    aliasCast = llvm::ConstantExpr::getBitCast(aliasCast,
+-                                               directEntry->getType());
+-    existingVal->replaceAllUsesWith(aliasCast);
+-    existingVal->eraseFromParent();
+-  }
+-  directEntry = alias;
+-
+-  return alias;
++  return defineAlias(directEntity, addr);
+ }
+ 
+ /// Fetch the declaration of the metadata (or metadata template) for a
+diff --git a/lib/IRGen/GenMeta.cpp b/lib/IRGen/GenMeta.cpp
+index 67e9512acd..1060e37407 100644
+--- a/lib/IRGen/GenMeta.cpp
++++ b/lib/IRGen/GenMeta.cpp
+@@ -785,12 +785,14 @@ namespace {
+ 
+     SILVTable *VTable = nullptr;
+     unsigned VTableSize = 0;
++    bool Resilient;
+ 
+   public:
+     ClassContextDescriptorBuilder(IRGenModule &IGM, ClassDecl *Type,
+                                   RequireMetadata_t requireMetadata)
+-      : super(IGM, Type, requireMetadata)
+-    {
++      : super(IGM, Type, requireMetadata),
++        Resilient(IGM.isResilient(Type, ResilienceExpansion::Minimal)) {
++
+       if (getType()->isForeign()) return;
+ 
+       MetadataLayout = &IGM.getClassMetadataLayout(Type);
+@@ -863,19 +865,26 @@ namespace {
+     void addMethod(SILDeclRef fn) {
+       assert(VTable && "no vtable?!");
+ 
++      // Define the method descriptor to point to the current position in the
++      // nominal type descriptor.
++      IGM.defineMethodDescriptor(fn, Type,
++                      B.getAddrOfCurrentPosition(IGM.MethodDescriptorStructTy));
++
++      // Actually build the descriptor.
++      auto *func = cast<AbstractFunctionDecl>(fn.getDecl());
+       auto descriptor = B.beginStruct(IGM.MethodDescriptorStructTy);
+ 
+       // Classify the method.
+       using Flags = MethodDescriptorFlags;
+-      auto flags = getMethodDescriptorFlags<Flags>(fn.getDecl());
++      auto flags = getMethodDescriptorFlags<Flags>(func);
+ 
+       // Remember if the declaration was dynamic.
+-      if (fn.getDecl()->isDynamic())
++      if (func->isDynamic())
+         flags = flags.withIsDynamic(true);
+ 
+       // TODO: final? open?
+ 
+-      auto *dc = fn.getDecl()->getDeclContext();
++      auto *dc = func->getDeclContext();
+       assert(!isa<ExtensionDecl>(dc));
+ 
+       if (fn.getDecl()->getDeclContext() == getType()) {
+@@ -894,6 +903,12 @@ namespace {
+       descriptor.addInt(IGM.Int32Ty, flags.getIntValue());
+ 
+       descriptor.finishAndAddTo(B);
++
++      // Emit method dispatch thunk if the class is resilient.
++      if (Resilient &&
++          func->getEffectiveAccess() >= AccessLevel::Public) {
++        IGM.emitDispatchThunk(fn);
++      }
+     }
+ 
+     void addMethodOverride(SILDeclRef baseRef, SILDeclRef declRef) {}
+@@ -3492,12 +3507,14 @@ namespace {
+     std::string AssociatedTypeNames;
+     SILDefaultWitnessTable *DefaultWitnesses;
+ 
++    bool Resilient;
++
+   public:
+     ProtocolDescriptorBuilder(IRGenModule &IGM, ProtocolDecl *protocol,
+                               ConstantStructBuilder &B,
+                               SILDefaultWitnessTable *defaultWitnesses)
+-      : IGM(IGM), B(B), Protocol(protocol),
+-        DefaultWitnesses(defaultWitnesses) {}
++      : IGM(IGM), B(B), Protocol(protocol), DefaultWitnesses(defaultWitnesses),
++        Resilient(IGM.isResilient(Proto, ResilienceExpansion::Minimal)) {}
+ 
+     void layout() {
+       addObjCCompatibilityIsa();
+@@ -3609,6 +3626,15 @@ namespace {
+       ConstantInitBuilder reqtBuilder(IGM);
+       auto reqtsArray = reqtBuilder.beginArray(IGM.ProtocolRequirementStructTy);
+       for (auto &entry : pi.getWitnessEntries()) {
++        if (Resilient && entry.isFunction()) {
++          // Define the method descriptor.
++          SILDeclRef func(entry.getFunction());
++          auto *descriptor =
++            reqtsArray.getAddrOfCurrentPosition(
++              IGM.ProtocolRequirementStructTy);
++          IGM.defineMethodDescriptor(func, Proto, descriptor);
++        }
++
+         auto reqt = reqtsArray.beginStruct(IGM.ProtocolRequirementStructTy);
+ 
+         auto info = getRequirementInfo(entry);
+@@ -3671,8 +3697,8 @@ namespace {
+ 
+       // Look up the dispatch thunk if the protocol is resilient.
+       llvm::Constant *thunk = nullptr;
+-      if (IGM.isResilient(Protocol, ResilienceExpansion::Minimal))
+-        thunk = IGM.getAddrOfDispatchThunk(func, NotForDefinition);
++      if (Resilient)
++        thunk = IGM.emitDispatchThunk(func);
+ 
+       // Classify the function.
+       auto flags = getMethodDescriptorFlags<Flags>(func.getDecl());
+@@ -3751,18 +3777,6 @@ void IRGenModule::emitProtocolDecl(ProtocolDecl *protocol) {
+ 
+   // Note that we emitted this protocol.
+   SwiftProtocols.push_back(protocol);
+-
+-  // If the protocol is resilient, emit dispatch thunks.
+-  if (isResilient(protocol, ResilienceExpansion::Minimal)) {
+-    for (auto *member : protocol->getMembers()) {
+-      if (auto *funcDecl = dyn_cast<FuncDecl>(member)) {
+-        emitDispatchThunk(SILDeclRef(funcDecl));
+-      }
+-      if (auto *ctorDecl = dyn_cast<ConstructorDecl>(member)) {
+-        emitDispatchThunk(SILDeclRef(ctorDecl, SILDeclRef::Kind::Allocator));
+-      }
+-    }
+-  }
+ }
+ 
+ //===----------------------------------------------------------------------===//
+diff --git a/lib/IRGen/GenThunk.cpp b/lib/IRGen/GenThunk.cpp
+index 38633c7221..0adf0d71b6 100644
+--- a/lib/IRGen/GenThunk.cpp
++++ b/lib/IRGen/GenThunk.cpp
+@@ -115,3 +115,10 @@ llvm::Function *IRGenModule::emitDispatchThunk(SILDeclRef declRef) {
+ 
+   return f;
+ }
++
++llvm::GlobalValue *IRGenModule::defineMethodDescriptor(SILDeclRef declRef,
++                                                       NominalTypeDecl *nominalDecl,
++                                                       llvm::Constant *definition) {
++  auto entity = LinkEntity::forMethodDescriptor(declRef);
++  return defineAlias(entity, definition);
++}
+diff --git a/lib/IRGen/IRGenMangler.h b/lib/IRGen/IRGenMangler.h
+index 7f307ea977..20eda6de0e 100644
+--- a/lib/IRGen/IRGenMangler.h
++++ b/lib/IRGen/IRGenMangler.h
+@@ -35,6 +35,36 @@ class IRGenMangler : public Mangle::ASTMangler {
+ public:
+   IRGenMangler() { }
+ 
++  std::string mangleDispatchThunk(const FuncDecl *func) {
++    beginMangling();
++    appendEntity(func);
++    appendOperator("Tj");
++    return finalize();
++  }
++
++  std::string mangleConstructorDispatchThunk(const ConstructorDecl *ctor,
++                                             bool isAllocating) {
++    beginMangling();
++    appendConstructorEntity(ctor, isAllocating);
++    appendOperator("Tj");
++    return finalize();
++  }
++
++  std::string mangleMethodDescriptor(const FuncDecl *func) {
++    beginMangling();
++    appendEntity(func);
++    appendOperator("Tq");
++    return finalize();
++  }
++
++  std::string mangleConstructorMethodDescriptor(const ConstructorDecl *ctor,
++                                                bool isAllocating) {
++    beginMangling();
++    appendConstructorEntity(ctor, isAllocating);
++    appendOperator("Tq");
++    return finalize();
++  }
++
+   std::string mangleValueWitness(Type type, ValueWitness witness);
+ 
+   std::string mangleValueWitnessTable(Type type) {
+diff --git a/lib/IRGen/IRGenModule.h b/lib/IRGen/IRGenModule.h
+index ec105775c2..60c2e4ed3e 100644
+--- a/lib/IRGen/IRGenModule.h
++++ b/lib/IRGen/IRGenModule.h
+@@ -1114,6 +1114,15 @@ public:
+                                          ForDefinition_t forDefinition);
+ 
+   llvm::Function *emitDispatchThunk(SILDeclRef declRef);
++
++  llvm::GlobalValue *defineAlias(LinkEntity entity,
++                                 llvm::Constant *definition);
++
++  llvm::GlobalValue *defineMethodDescriptor(SILDeclRef declRef,
++                                            NominalTypeDecl *nominalDecl,
++                                            llvm::Constant *definition);
++
++
+   Address getAddrOfEnumCase(EnumElementDecl *Case,
+                             ForDefinition_t forDefinition);
+   Address getAddrOfFieldOffset(VarDecl *D, ForDefinition_t forDefinition);
+diff --git a/lib/IRGen/Linking.cpp b/lib/IRGen/Linking.cpp
+index 3c6981fe7d..9ecaa299fc 100644
+--- a/lib/IRGen/Linking.cpp
++++ b/lib/IRGen/Linking.cpp
+@@ -58,23 +58,39 @@ void LinkEntity::mangle(raw_ostream &buffer) const {
+ std::string LinkEntity::mangleAsString() const {
+   IRGenMangler mangler;
+   switch (getKind()) {
+-    case Kind::DispatchThunk:
+-      return mangler.mangleEntity(getDecl(), /*isCurried=*/false,
+-                                  ASTMangler::SymbolKind::SwiftDispatchThunk);
+-
+-    case Kind::DispatchThunkInitializer:
+-      return mangler.mangleConstructorEntity(
+-          cast<ConstructorDecl>(getDecl()),
+-          /*isAllocating=*/false,
+-          /*isCurried=*/false,
+-          ASTMangler::SymbolKind::SwiftDispatchThunk);
+-
+-    case Kind::DispatchThunkAllocator:
+-      return mangler.mangleConstructorEntity(
+-          cast<ConstructorDecl>(getDecl()),
+-          /*isAllocating=*/true,
+-          /*isCurried=*/false,
+-          ASTMangler::SymbolKind::SwiftDispatchThunk);
++    case Kind::DispatchThunk: {
++      auto *func = cast<FuncDecl>(getDecl());
++      return mangler.mangleDispatchThunk(func);
++    }
++
++    case Kind::DispatchThunkInitializer: {
++      auto *ctor = cast<ConstructorDecl>(getDecl());
++      return mangler.mangleConstructorDispatchThunk(ctor,
++                                                    /*isAllocating=*/false);
++    }
++
++    case Kind::DispatchThunkAllocator: {
++      auto *ctor = cast<ConstructorDecl>(getDecl());
++      return mangler.mangleConstructorDispatchThunk(ctor,
++                                                    /*isAllocating=*/true);
++    }
++
++    case Kind::MethodDescriptor: {
++      auto *func = cast<FuncDecl>(getDecl());
++      return mangler.mangleMethodDescriptor(func);
++    }
++
++    case Kind::MethodDescriptorInitializer: {
++      auto *ctor = cast<ConstructorDecl>(getDecl());
++      return mangler.mangleConstructorMethodDescriptor(ctor,
++                                                       /*isAllocating=*/false);
++    }
++
++    case Kind::MethodDescriptorAllocator: {
++      auto *ctor = cast<ConstructorDecl>(getDecl());
++      return mangler.mangleConstructorMethodDescriptor(ctor,
++                                                       /*isAllocating=*/true);
++    }
+ 
+     case Kind::ValueWitness:
+       return mangler.mangleValueWitness(getType(), getValueWitness());
+diff --git a/lib/IRGen/ProtocolInfo.h b/lib/IRGen/ProtocolInfo.h
+index f69374b68d..3379b66bb8 100644
+--- a/lib/IRGen/ProtocolInfo.h
++++ b/lib/IRGen/ProtocolInfo.h
+@@ -82,8 +82,8 @@ public:
+   }
+   
+   bool isFunction() const {
+-    auto decl = MemberOrAssociatedType.get<Decl*>();
+-    return Protocol == nullptr && isa<AbstractFunctionDecl>(decl);
++    auto decl = MemberOrAssociatedType.dyn_cast<Decl*>();
++    return Protocol == nullptr && decl && isa<AbstractFunctionDecl>(decl);
+   }
+ 
+   bool matchesFunction(AbstractFunctionDecl *func) const {
+diff --git a/lib/TBDGen/TBDGen.cpp b/lib/TBDGen/TBDGen.cpp
+index 57f150eaf3..cd42cceefa 100644
+--- a/lib/TBDGen/TBDGen.cpp
++++ b/lib/TBDGen/TBDGen.cpp
+@@ -68,6 +68,11 @@ void TBDGenVisitor::addDispatchThunk(SILDeclRef declRef) {
+   addSymbol(entity);
+ }
+ 
++void TBDGenVisitor::addMethodDescriptor(SILDeclRef declRef) {
++  auto entity = LinkEntity::forMethodDescriptor(declRef);
++  addSymbol(entity);
++}
++
+ void TBDGenVisitor::addConformances(DeclContext *DC) {
+   for (auto conformance : DC->getLocalConformances()) {
+     auto protocol = conformance->getProtocol();
+@@ -232,8 +237,11 @@ void TBDGenVisitor::visitClassDecl(ClassDecl *CD) {
+         : TBD(TBD), CD(CD) {}
+ 
+     void addMethod(SILDeclRef method) {
+-      if (method.getDecl()->getDeclContext() == CD)
+-        TBD.addDispatchThunk(method);
++      if (method.getDecl()->getDeclContext() == CD) {
++        if (CD->isResilient())
++          TBD.addDispatchThunk(method);
++        TBD.addMethodDescriptor(method);
++      }
+     }
+ 
+     void addMethodOverride(SILDeclRef baseRef, SILDeclRef derivedRef) {}
+@@ -273,11 +281,9 @@ void TBDGenVisitor::visitProtocolDecl(ProtocolDecl *PD) {
+ 
+     if (PD->isResilient()) {
+       for (auto *member : PD->getMembers()) {
+-        if (auto *funcDecl = dyn_cast<FuncDecl>(member)) {
++        if (auto *funcDecl = dyn_cast<AbstractFunctionDecl>(member)) {
+           addDispatchThunk(SILDeclRef(funcDecl));
+-        }
+-        if (auto *ctorDecl = dyn_cast<ConstructorDecl>(member)) {
+-          addDispatchThunk(SILDeclRef(ctorDecl, SILDeclRef::Kind::Allocator));
++          addMethodDescriptor(SILDeclRef(funcDecl));
+         }
+       }
+     }
+diff --git a/lib/TBDGen/TBDGenVisitor.h b/lib/TBDGen/TBDGenVisitor.h
+index 5cbc0d789d..aea7f25f56 100644
+--- a/lib/TBDGen/TBDGenVisitor.h
++++ b/lib/TBDGen/TBDGenVisitor.h
+@@ -70,6 +70,8 @@ private:
+ 
+   void addDispatchThunk(SILDeclRef declRef);
+ 
++  void addMethodDescriptor(SILDeclRef declRef);
++
+ public:
+   TBDGenVisitor(StringSet &symbols, const llvm::Triple &triple,
+                 const UniversalLinkageInfo &universalLinkInfo,
+diff --git a/test/IRGen/generic_vtable.swift b/test/IRGen/generic_vtable.swift
+index f3530a3744..ef39551621 100644
+--- a/test/IRGen/generic_vtable.swift
++++ b/test/IRGen/generic_vtable.swift
+@@ -95,6 +95,17 @@ public class Concrete : Derived<Int> {
+ // CHECK-SAME: }>, align 8
+ 
+ 
++//// Method descriptors
++
++// CHECK-LABEL: @"$S14generic_vtable4BaseC2m1yyFTq" ={{( dllexport)?}}{{( protected)?}} alias %swift.method_descriptor, getelementptr inbounds (<{{.*}}>* @"$S14generic_vtable4BaseCMn", i32 0, i32 13)
++// CHECK-LABEL: @"$S14generic_vtable4BaseC2m2yyFTq" ={{( dllexport)?}}{{( protected)?}} alias %swift.method_descriptor, getelementptr inbounds (<{{.*}}* @"$S14generic_vtable4BaseCMn", i32 0, i32 14)
++// CHECK-LABEL: @"$S14generic_vtable4BaseCACycfcTq" = hidden alias %swift.method_descriptor, getelementptr inbounds (<{{.*}}* @"$S14generic_vtable4BaseCMn", i32 0, i32 15)
++
++// CHECK-LABEL: @"$S14generic_vtable7DerivedC2m3yyFTq" ={{( dllexport)?}}{{( protected)?}} alias %swift.method_descriptor, getelementptr inbounds (<{{.*}}>* @"$S14generic_vtable7DerivedCMn", i32 0, i32 23)
++
++// CHECK-LABEL: @"$S14generic_vtable8ConcreteC2m4yyFTq" ={{( dllexport)?}}{{( protected)?}} alias %swift.method_descriptor, getelementptr inbounds (<{{.*}}>* @"$S14generic_vtable8ConcreteCMn", i32 0, i32 16)
++
++
+ //// Metadata initialization function for 'Derived' copies superclass vtable
+ //// and installs overrides for 'm2()' and 'init()'.
+ 
