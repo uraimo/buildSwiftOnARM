@@ -1,0 +1,37 @@
+diff --git a/Sources/Build/Triple.swift b/Sources/Build/Triple.swift
+index 1ce15566..533f2920 100644
+--- a/Sources/Build/Triple.swift
++++ b/Sources/Build/Triple.swift
+@@ -33,7 +33,10 @@ public struct Triple {
+     public enum Arch: String {
+         case x86_64
+         case armv7
++        case armv6
+         case s390x
+     }
+ 
+     public enum Vendor: String {
+@@ -106,11 +109,16 @@ public struct Triple {
+     public static let macOS = try! Triple("x86_64-apple-macosx10.10")
+     public static let linux = try! Triple("x86_64-unknown-linux")
+     public static let android = try! Triple("armv7-unknown-linux-androideabi")
+-    public static let armLinux = try! Triple("armv7-unknown-linux-gnueabihf")
++    public static let armLinux = try! Triple("armv6-unknown-linux-gnueabihf")
+ 
+diff --git a/Utilities/bootstrap b/Utilities/bootstrap
+index 784a2320..4060b325 100755
+--- a/Utilities/bootstrap
++++ b/Utilities/bootstrap
+@@ -891,8 +891,12 @@ def main():
+     # Compute the build paths.
+     if platform.system() == 'Darwin':
+         build_target = "x86_64-apple-macosx10.10"
+     elif platform.processor() == 's390x':
+         build_target = "s390x-unknown-linux"
+-    elif platform.system() == 'Linux' and platform.machine().startswith("arm"):
+-        build_target = 'armv7-unknown-linux-gnueabihf'
++    elif platform.system() == 'Linux' and platform.machine().startswith("arm"):
++        build_target = 'armv6-unknown-linux-gnueabihf'
+     else:
+         build_target = 'x86_64-unknown-linux'
+ 
