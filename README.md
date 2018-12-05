@@ -11,7 +11,10 @@ A few, very simple, bash scripts to clone, configure and build Swift 4.1.3 on AR
 
 ## Prebuilt binaries
 
-Swift 4.1.3 armv7(RaspberryPi 2/3) for Ubuntu Mate 16.04.x is available [here](https://www.dropbox.com/s/gf22ssjt1a3dhjm/swift-4.1.3-RPi23-Ubuntu1604.tgz?dl=0) or [here](https://www.dropbox.com/s/e257cvg23ghe2dt/swift-4.1.3-RPi23-RaspbianStretch.tgz?dl=0) for Raspbian Stretch. See the required dependencies below.
+Swift 4.1.3 armv7(RaspberryPi 2/3) for Ubuntu Mate 16.04.x is available [here](https://www.dropbox.com/s/gf22ssjt1a3dhjm/swift-4.1.3-RPi23-Ubuntu1604.tgz?dl=0) or [here](https://www.dropbox.com/s/e257cvg23ghe2dt/swift-4.1.3-RPi23-RaspbianStretch.tgz?dl=0) for Raspbian Stretch.
+Binaries for the original RaspberryPi and the various versions of the RaspberryPi Zero running Raspbian are [here](https://www.dropbox.com/s/h6d2bwqs0gf997f/swift-4.1.3-RPi01-RaspbianStretch.tgz?dl=0).
+
+See the **required** dependencies below (clang and a few other packages).
 
 ## Instructions
 
@@ -96,6 +99,7 @@ The community can be reached at the [swift-arm](https://launchpass.com/swift-arm
 
 You can compile old releases checking out the specific tag:
 
+* [Swift 4.1.3](https://github.com/uraimo/buildSwiftOnARM/tree/4.1.3)
 * [Swift 3.1.1](https://github.com/uraimo/buildSwiftOnARM/tree/3.1.1)
 * [Swift 3.1](https://github.com/uraimo/buildSwiftOnARM/tree/3.1)
 * [Swift 3.0.2](https://github.com/uraimo/buildSwiftOnARM/tree/3.0.2)
