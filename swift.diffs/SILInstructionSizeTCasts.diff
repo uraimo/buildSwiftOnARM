@@ -2,21 +2,6 @@ diff --git a/include/swift/SIL/SILInstruction.h b/include/swift/SIL/SILInstructi
 index 34eef2dc58..454e37246e 100644
 --- a/include/swift/SIL/SILInstruction.h
 +++ b/include/swift/SIL/SILInstruction.h
-@@ -1337,12 +1337,12 @@ public:
- 
-   ArrayRef<Operand> getAllOperands() const {
-     return { getTrailingObjects<Operand>(),
--             SILInstruction::Bits.AllocStackInst.NumOperands };
-+             static_cast<size_t>(SILInstruction::Bits.AllocStackInst.NumOperands) };
-   }
- 
-   MutableArrayRef<Operand> getAllOperands() {
-     return { getTrailingObjects<Operand>(),
--             SILInstruction::Bits.AllocStackInst.NumOperands };
-+             static_cast<size_t>(SILInstruction::Bits.AllocStackInst.NumOperands) };
-   }
- 
-   ArrayRef<Operand> getTypeDependentOperands() const {
 @@ -2797,12 +2797,12 @@ public:
    /// Return the type parameters to the builtin.
    SubstitutionList getSubstitutions() const {
