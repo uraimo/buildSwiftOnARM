@@ -310,39 +310,3 @@ index dbafab66cbf..8d0617089ca 100644
  // Similar to above, but with mulodi4.  Perhaps this is
  // something that shouldn't be done, and is a bandaid over
 
-From 92e9970cbe1e7a714b5df88bb06e50880d9c1259 Mon Sep 17 00:00:00 2001
-From: Adam Thayer <user@biticus.net>
-Date: Fri, 28 Sep 2018 21:41:55 -0700
-Subject: [PATCH 7/7] [32-bit Linux] Adjust SILLocation Size Assert
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-The assert currently assumes that the size of SILLocation is 3 pointers big, or 24-bytes as it is on 64-bit platforms. The catch is that this math works because it’s having to make a rough assumption of the size of unsigned and pointer in relation to each other. 4 unsigned + 1 pointer = 3 pointer in this example.
-
-This breaks down on 32-bit where 4 unsigned + 1 pointer = 5 unsigned = 20 bytes. It technically doesn’t violate the spirit of the assert, but the way the assert is written simply doesn’t work for 32-bit.
-
-It can be written as `sizeof(SILLocation) <= 6*sizeof(unsigned)` without an ifdef, but it means that if someone was to make it even smaller at some point, the assert wouldn’t fail, signaling to the developer that they should update the assert with the new, smaller, value. But it would be cleaner. The way this change is written, if the size changes in either direction, the developer is signaled that they should either update the assert, or fix their regression.
----
- lib/SIL/SILLocation.cpp | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/lib/SIL/SILLocation.cpp b/lib/SIL/SILLocation.cpp
-index 12820ef2272..2b0cef7451a 100644
---- a/lib/SIL/SILLocation.cpp
-+++ b/lib/SIL/SILLocation.cpp
-@@ -20,8 +20,14 @@
- 
- using namespace swift;
- 
-+// 64-bit is 24 bytes, 32-bit is 20 bytes.
-+#ifdef __LP64__
- static_assert(sizeof(SILLocation) == 3*sizeof(void *),
-               "SILLocation must stay small");
-+#else
-+static_assert(sizeof(SILLocation) == 5*sizeof(void *),
-+              "SILLocation must stay small");
-+#endif
- 
- SourceLoc SILLocation::getSourceLoc() const {
-   if (isSILFile())
