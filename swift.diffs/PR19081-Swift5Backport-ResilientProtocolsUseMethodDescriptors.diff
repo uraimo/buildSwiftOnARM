@@ -5,7 +5,7 @@ Subject: [PATCH 1/2] IRGen/Runtime: Use method descriptors instead of dispatch
  thunks as keys in resilient witness tables
 
 ---
- include/swift/ABI/Metadata.h       | 11 +++++------
+ include/swift/Runtime/Metadata.h   | 11 +++++------
  lib/IRGen/GenDecl.cpp              | 22 ----------------------
  lib/IRGen/GenProto.cpp             | 12 ++++++------
  lib/IRGen/IRGenModule.h            |  4 ----
@@ -13,7 +13,7 @@ Subject: [PATCH 1/2] IRGen/Runtime: Use method descriptors instead of dispatch
  test/IRGen/protocol_resilience.sil |  4 ++--
  6 files changed, 14 insertions(+), 42 deletions(-)
 
-diff --git a/include/swift/Runtime/Metadata.h b/include/swift/ABI/Metadata.h
+diff --git a/include/swift/Runtime/Metadata.h b/include/swift/Runtime/Metadata.h
 index 06d6639e6bb..c8e1a3209f5 100644
 --- a/include/swift/Runtime/Metadata.h
 +++ b/include/swift/Runtime/Metadata.h
@@ -45,10 +45,10 @@ index 06d6639e6bb..c8e1a3209f5 100644
  };
  using ResilientWitness = TargetResilientWitness<InProcess>;
 diff --git a/lib/IRGen/GenDecl.cpp b/lib/IRGen/GenDecl.cpp
-index 52aa0d09774..fd48952f1a8 100644
+index c6b45857ce..ebf978ccab 100644
 --- a/lib/IRGen/GenDecl.cpp
 +++ b/lib/IRGen/GenDecl.cpp
-@@ -2583,28 +2583,6 @@ IRGenModule::getAddrOfLLVMVariableOrGOTEquivalent(LinkEntity entity,
+@@ -2641,28 +2641,6 @@ IRGenModule::getAddrOfLLVMVariableOrGOTEquivalent(LinkEntity entity,
    return {gotEquivalent, ConstantReference::Indirect};
  }
  
@@ -134,10 +134,10 @@ index a87abb060db..d7e53e7b95f 100644
          break;
        }
 diff --git a/test/IRGen/protocol_resilience.sil b/test/IRGen/protocol_resilience.sil
-index 4cf31bd071f..03bf70d911b 100644
+index 7dc3b7a83c..31dbfa631e 100644
 --- a/test/IRGen/protocol_resilience.sil
 +++ b/test/IRGen/protocol_resilience.sil
-@@ -158,10 +158,10 @@ protocol InternalProtocol {
+@@ -151,10 +151,10 @@ protocol InternalProtocol {
  
  // CHECK-SAME: internal constant {
  
@@ -150,6 +150,7 @@ index 4cf31bd071f..03bf70d911b 100644
  // CHECK-SAME: @secondWitness
  
  // CHECK-SAME: }
+
 
 From 44c4497ac52f72ba79095e3476cf4b6c172af767 Mon Sep 17 00:00:00 2001
 From: Slava Pestov <spestov@apple.com>
@@ -190,20 +191,21 @@ index c8e1a3209f5..503f8c729aa 100644
    RelativeDirectPointer<void, /*nullable*/ true> DefaultImplementation;
  };
 diff --git a/lib/IRGen/GenMeta.cpp b/lib/IRGen/GenMeta.cpp
-index 36ab8b2007e..5cf2cce84ed 100644
+index 1060e37407..bbd20ac6da 100644
 --- a/lib/IRGen/GenMeta.cpp
 +++ b/lib/IRGen/GenMeta.cpp
 @@ -3642,9 +3642,6 @@ namespace {
          // Flags.
          reqt.addInt32(info.Flags.getIntValue());
-
+ 
 -        // Dispatch thunk.
 -        reqt.addRelativeAddressOrNull(info.Thunk);
 -
          // Default implementation.
          reqt.addRelativeAddressOrNull(info.DefaultImpl);
-
-@@ -3669,7 +3666,6 @@ namespace { 
+ 
+@@ -3669,7 +3666,6 @@ namespace {
+ 
      struct RequirementInfo {
        ProtocolRequirementFlags Flags;
 -      llvm::Constant *Thunk;
@@ -242,16 +244,16 @@ index 36ab8b2007e..5cf2cce84ed 100644
  
        // Classify the function.
        auto flags = getMethodDescriptorFlags<Flags>(func.getDecl());
-@@ -660,7 +658,7 @@ namespace {
+@@ -3706,7 +3701,7 @@ namespace {
        // Look for a default witness.
        llvm::Constant *defaultImpl = findDefaultWitness(func);
  
 -      return { flags, thunk, defaultImpl };
 +      return { flags, defaultImpl };
      }
-
-     llvm::Constant *findDefaultWitness(SILDeclRef func) {
  
+     llvm::Constant *findDefaultWitness(SILDeclRef func) {
+
 diff --git a/lib/IRGen/GenThunk.cpp b/lib/IRGen/GenThunk.cpp
 index 0adf0d71b64..abc681797b4 100644
 --- a/lib/IRGen/GenThunk.cpp
@@ -300,12 +302,12 @@ index e2d5fd5ea8a..a051950db49 100644
    llvm::GlobalValue *defineAlias(LinkEntity entity,
                                   llvm::Constant *definition);
 diff --git a/test/IRGen/protocol_metadata.swift b/test/IRGen/protocol_metadata.swift
-index 36e7d03dc08..73cba35a52e 100644
+index 78aafb470a..026f2af0ae 100644
 --- a/test/IRGen/protocol_metadata.swift
 +++ b/test/IRGen/protocol_metadata.swift
 @@ -92,17 +92,17 @@ protocol Comprehensive {
  }
-
+ 
  // CHECK: [[COMPREHENSIVE_REQTS:@".*"]] = internal constant [11 x %swift.protocol_requirement]
 -// CHECK-SAME:  [%swift.protocol_requirement { i32 6, i32 0, i32 0 },
 -// CHECK-SAME:   %swift.protocol_requirement { i32 7, i32 0, i32 0 },
@@ -330,10 +332,11 @@ index 36e7d03dc08..73cba35a52e 100644
 +// CHECK-SAME:   %swift.protocol_requirement { i32 4, i32 0 },
 +// CHECK-SAME:   %swift.protocol_requirement { i32 5, i32 0 }]
  
+ // CHECK: [[COMPREHENSIVE_ASSOC_NAME:@.*]] = private constant [6 x i8] c"Assoc\00"
  
 
 diff --git a/test/IRGen/protocol_resilience.sil b/test/IRGen/protocol_resilience.sil
-index 03bf70d911b..8ae643ef719 100644
+index 31dbfa631e..7686c3ccd2 100644
 --- a/test/IRGen/protocol_resilience.sil
 +++ b/test/IRGen/protocol_resilience.sil
 @@ -42,36 +42,26 @@ import resilient_protocol
@@ -358,22 +361,22 @@ index 03bf70d911b..8ae643ef719 100644
 +// CHECK-SAME:   %swift.protocol_requirement { i32 17, i32 0 },
  
  // CHECK-SAME:   %swift.protocol_requirement { i32 17,
- -// CHECK-SAME:     i32{{ | trunc \(i64 }}sub ([[INT]] ptrtoint (void (%swift.opaque*, %swift.type*, i8**)* @"$S19protocol_resilience17ResilientProtocolP8defaultCyyFTj" to [[INT]]), [[INT]] ptrtoint (i32* getelementptr inbounds ([8 x %swift.protocol_requirement], [8 x %swift.protocol_requirement]* [[RP_REQTS]], i32 0, i32 4, i32 1) to [[INT]])){{,| to i32\),}}
+-// CHECK-SAME:     i32{{ | trunc \(i64 }}sub ([[INT]] ptrtoint (void (%swift.opaque*, %swift.type*, i8**)* @"$S19protocol_resilience17ResilientProtocolP8defaultCyyFTj" to [[INT]]), [[INT]] ptrtoint (i32* getelementptr inbounds ([8 x %swift.protocol_requirement], [8 x %swift.protocol_requirement]* [[RP_REQTS]], i32 0, i32 4, i32 1) to [[INT]])){{,| to i32\),}}
  // CHECK-SAME:     i32{{ | trunc \(i64 }}sub ([[INT]] ptrtoint (void (%swift.opaque*, %swift.type*, i8**)* @defaultC to [[INT]]), [[INT]] ptrtoint (i32* getelementptr inbounds ([8 x %swift.protocol_requirement], [8 x %swift.protocol_requirement]* [[RP_REQTS]], i32 0, i32 4, i32 2) to [[INT]])){{ | to i32\) }}
  // CHECK-SAME:   },
  
  // CHECK-SAME:   %swift.protocol_requirement { i32 17,
- -// CHECK-SAME:     i32{{ | trunc \(i64 }}sub ([[INT]] ptrtoint (void (%swift.opaque*, %swift.type*, i8**)* @"$S19protocol_resilience17ResilientProtocolP8defaultDyyFTj" to [[INT]]), [[INT]] ptrtoint (i32* getelementptr inbounds ([8 x %swift.protocol_requirement], [8 x %swift.protocol_requirement]* [[RP_REQTS]], i32 0, i32 5, i32 1) to [[INT]])){{,| to i32\),}}
+-// CHECK-SAME:     i32{{ | trunc \(i64 }}sub ([[INT]] ptrtoint (void (%swift.opaque*, %swift.type*, i8**)* @"$S19protocol_resilience17ResilientProtocolP8defaultDyyFTj" to [[INT]]), [[INT]] ptrtoint (i32* getelementptr inbounds ([8 x %swift.protocol_requirement], [8 x %swift.protocol_requirement]* [[RP_REQTS]], i32 0, i32 5, i32 1) to [[INT]])){{,| to i32\),}}
  // CHECK-SAME:     i32{{ | trunc \(i64 }}sub ([[INT]] ptrtoint (void (%swift.opaque*, %swift.type*, i8**)* @defaultD to [[INT]]), [[INT]] ptrtoint (i32* getelementptr inbounds ([8 x %swift.protocol_requirement], [8 x %swift.protocol_requirement]* [[RP_REQTS]], i32 0, i32 5, i32 2) to [[INT]])){{ | to i32\) }}
  // CHECK-SAME:   },
  
  // CHECK-SAME:   %swift.protocol_requirement { i32 1,
- -// CHECK-SAME:     i32{{ | trunc \(i64 }}sub ([[INT]] ptrtoint (void (%swift.type*, %swift.type*, i8**)* @"$S19protocol_resilience17ResilientProtocolP8defaultEyyFZTj" to [[INT]]), [[INT]] ptrtoint (i32* getelementptr inbounds ([8 x %swift.protocol_requirement], [8 x %swift.protocol_requirement]* [[RP_REQTS]], i32 0, i32 6, i32 1) to [[INT]])){{,| to i32\),}}
+-// CHECK-SAME:     i32{{ | trunc \(i64 }}sub ([[INT]] ptrtoint (void (%swift.type*, %swift.type*, i8**)* @"$S19protocol_resilience17ResilientProtocolP8defaultEyyFZTj" to [[INT]]), [[INT]] ptrtoint (i32* getelementptr inbounds ([8 x %swift.protocol_requirement], [8 x %swift.protocol_requirement]* [[RP_REQTS]], i32 0, i32 6, i32 1) to [[INT]])){{,| to i32\),}}
  // CHECK-SAME:     i32{{ | trunc \(i64 }}sub ([[INT]] ptrtoint (void (%swift.type*, %swift.type*, i8**)* @defaultE to [[INT]]), [[INT]] ptrtoint (i32* getelementptr inbounds ([8 x %swift.protocol_requirement], [8 x %swift.protocol_requirement]* [[RP_REQTS]], i32 0, i32 6, i32 2) to [[INT]])){{ | to i32\) }}
  // CHECK-SAME:   },
  
  // CHECK-SAME:   %swift.protocol_requirement { i32 1,
 -// CHECK-SAME:     i32{{ | trunc \(i64 }}sub ([[INT]] ptrtoint (void (%swift.type*, %swift.type*, i8**)* @"$S19protocol_resilience17ResilientProtocolP8defaultFyyFZTj" to [[INT]]), [[INT]] ptrtoint (i32* getelementptr inbounds ([8 x %swift.protocol_requirement], [8 x %swift.protocol_requirement]* [[RP_REQTS]], i32 0, i32 7, i32 1) to [[INT]])){{,| to i32\),}}
- // CHECK-SAME:     i32{{ | trunc \(i64 }}sub ([[INT]] ptrtoint (void (%swift.type*, %swift.type*, i8**)* @defaultF to [[INT]]), [[INT]] ptrtoint (i32* getelementptr inbounds ([8 x %swift.protocol_requirement], [8 x %swift.protocol_requirement]* [[RP_REQTS]], i32 0, i32 7, i32 2) to [[INT]])){{ | to i32\) }} 
+ // CHECK-SAME:     i32{{ | trunc \(i64 }}sub ([[INT]] ptrtoint (void (%swift.type*, %swift.type*, i8**)* @defaultF to [[INT]]), [[INT]] ptrtoint (i32* getelementptr inbounds ([8 x %swift.protocol_requirement], [8 x %swift.protocol_requirement]* [[RP_REQTS]], i32 0, i32 7, i32 2) to [[INT]])){{ | to i32\) }}
  // CHECK-SAME:   }
  // CHECK-SAME: ]

@@ -1,5 +1,5 @@
 diff --git a/docs/ABI/Mangling.rst b/docs/ABI/Mangling.rst
-index e7e81b8ccf..bb6e46496c 100644
+index e7e81b8..bb6e464 100644
 --- a/docs/ABI/Mangling.rst
 +++ b/docs/ABI/Mangling.rst
 @@ -115,6 +115,8 @@ field offsets are therefore required when accessing fields in generic
@@ -12,7 +12,7 @@ index e7e81b8ccf..bb6e46496c 100644
    global ::= global 'TO'                 // ObjC-as-swift thunk
    global ::= global 'To'                 // swift-as-ObjC thunk
 diff --git a/include/swift/AST/ASTMangler.h b/include/swift/AST/ASTMangler.h
-index 09d48980c0..f454207dce 100644
+index 09d4898..f454207 100644
 --- a/include/swift/AST/ASTMangler.h
 +++ b/include/swift/AST/ASTMangler.h
 @@ -57,7 +57,6 @@ public:
@@ -24,7 +24,7 @@ index 09d48980c0..f454207dce 100644
      ObjCAsSwiftThunk,
      DirectMethodReferenceThunk,
 diff --git a/include/swift/Demangling/DemangleNodes.def b/include/swift/Demangling/DemangleNodes.def
-index 27cb3be631..cbe894fa7c 100644
+index 27cb3be..cbe894f 100644
 --- a/include/swift/Demangling/DemangleNodes.def
 +++ b/include/swift/Demangling/DemangleNodes.def
 @@ -200,8 +200,9 @@ NODE(ReflectionMetadataFieldDescriptor)
@@ -40,7 +40,7 @@ index 27cb3be631..cbe894fa7c 100644
  NODE(EmptyList)
  NODE(FirstElementMarker)
 diff --git a/include/swift/IRGen/Linking.h b/include/swift/IRGen/Linking.h
-index 5c809a4c06..8cc8987c23 100644
+index 5c809a4..8cc8987 100644
 --- a/include/swift/IRGen/Linking.h
 +++ b/include/swift/IRGen/Linking.h
 @@ -116,6 +116,18 @@ class LinkEntity {
@@ -126,7 +126,7 @@ index 5c809a4c06..8cc8987c23 100644
    }
  
 diff --git a/lib/AST/ASTMangler.cpp b/lib/AST/ASTMangler.cpp
-index 0e6cc67dae..e5b3aede68 100644
+index 0e6cc67..e5b3aed 100644
 --- a/lib/AST/ASTMangler.cpp
 +++ b/lib/AST/ASTMangler.cpp
 @@ -532,7 +532,6 @@ void ASTMangler::appendSymbolKind(SymbolKind SKind) {
@@ -138,7 +138,7 @@ index 0e6cc67dae..e5b3aede68 100644
      case SymbolKind::ObjCAsSwiftThunk: return appendOperator("TO");
      case SymbolKind::DirectMethodReferenceThunk: return appendOperator("Td");
 diff --git a/lib/Demangling/Demangler.cpp b/lib/Demangling/Demangler.cpp
-index 9d2fa8d1f8..dddc6f100f 100644
+index 9d2fa8d..dddc6f1 100644
 --- a/lib/Demangling/Demangler.cpp
 +++ b/lib/Demangling/Demangler.cpp
 @@ -1700,6 +1700,7 @@ NodePointer Demangler::demangleThunkOrSpecialization() {
@@ -150,7 +150,7 @@ index 9d2fa8d1f8..dddc6f100f 100644
      case 'O': return createNode(Node::Kind::NonObjCAttribute);
      case 'D': return createNode(Node::Kind::DynamicAttribute);
 diff --git a/lib/Demangling/NodePrinter.cpp b/lib/Demangling/NodePrinter.cpp
-index 7703600722..c1e6b2ed88 100644
+index 7703600..c1e6b2e 100644
 --- a/lib/Demangling/NodePrinter.cpp
 +++ b/lib/Demangling/NodePrinter.cpp
 @@ -378,6 +378,7 @@ private:
@@ -173,7 +173,7 @@ index 7703600722..c1e6b2ed88 100644
      Printer << "outlined bridged method (" << Node->getText() << ") of ";
      return nullptr;
 diff --git a/lib/Demangling/OldRemangler.cpp b/lib/Demangling/OldRemangler.cpp
-index 4c8562a24a..5c7b62215b 100644
+index 4c8562a..5c7b622 100644
 --- a/lib/Demangling/OldRemangler.cpp
 +++ b/lib/Demangling/OldRemangler.cpp
 @@ -1907,14 +1907,18 @@ void Remangler::mangleGenericTypeParamDecl(Node *node) {
@@ -198,7 +198,7 @@ index 4c8562a24a..5c7b62215b 100644
    Out << "<empty>";
  }
 diff --git a/lib/Demangling/Remangler.cpp b/lib/Demangling/Remangler.cpp
-index 8219f8821e..89d447de5d 100644
+index 8219f88..89d447d 100644
 --- a/lib/Demangling/Remangler.cpp
 +++ b/lib/Demangling/Remangler.cpp
 @@ -1839,6 +1839,11 @@ void Remangler::mangleDispatchThunk(Node *node) {
@@ -214,7 +214,7 @@ index 8219f8821e..89d447de5d 100644
    Buffer << 'K';
  }
 diff --git a/lib/IRGen/GenClass.cpp b/lib/IRGen/GenClass.cpp
-index 86dc1b47ac..506cbd44b7 100644
+index 86dc1b4..506cbd4 100644
 --- a/lib/IRGen/GenClass.cpp
 +++ b/lib/IRGen/GenClass.cpp
 @@ -1028,36 +1028,6 @@ void IRGenModule::emitClassDecl(ClassDecl *D) {
@@ -255,7 +255,7 @@ index 86dc1b47ac..506cbd44b7 100644
  
  namespace {
 diff --git a/lib/IRGen/GenDecl.cpp b/lib/IRGen/GenDecl.cpp
-index c6b45857ce..5e1d025878 100644
+index c6b4585..5e1d025 100644
 --- a/lib/IRGen/GenDecl.cpp
 +++ b/lib/IRGen/GenDecl.cpp
 @@ -1461,7 +1461,10 @@ SILLinkage LinkEntity::getLinkage(ForDefinition_t forDefinition) const {
@@ -391,7 +391,7 @@ index c6b45857ce..5e1d025878 100644
  
  /// Fetch the declaration of the metadata (or metadata template) for a
 diff --git a/lib/IRGen/GenMeta.cpp b/lib/IRGen/GenMeta.cpp
-index 67e9512acd..1060e37407 100644
+index 67e9512..0f1e1ff 100644
 --- a/lib/IRGen/GenMeta.cpp
 +++ b/lib/IRGen/GenMeta.cpp
 @@ -785,12 +785,14 @@ namespace {
@@ -518,7 +518,7 @@ index 67e9512acd..1060e37407 100644
  
  //===----------------------------------------------------------------------===//
 diff --git a/lib/IRGen/GenThunk.cpp b/lib/IRGen/GenThunk.cpp
-index 38633c7221..0adf0d71b6 100644
+index 38633c7..0adf0d7 100644
 --- a/lib/IRGen/GenThunk.cpp
 +++ b/lib/IRGen/GenThunk.cpp
 @@ -115,3 +115,10 @@ llvm::Function *IRGenModule::emitDispatchThunk(SILDeclRef declRef) {
@@ -533,7 +533,7 @@ index 38633c7221..0adf0d71b6 100644
 +  return defineAlias(entity, definition);
 +}
 diff --git a/lib/IRGen/IRGenMangler.h b/lib/IRGen/IRGenMangler.h
-index 7f307ea977..20eda6de0e 100644
+index 7f307ea..20eda6d 100644
 --- a/lib/IRGen/IRGenMangler.h
 +++ b/lib/IRGen/IRGenMangler.h
 @@ -35,6 +35,36 @@ class IRGenMangler : public Mangle::ASTMangler {
@@ -574,7 +574,7 @@ index 7f307ea977..20eda6de0e 100644
  
    std::string mangleValueWitnessTable(Type type) {
 diff --git a/lib/IRGen/IRGenModule.h b/lib/IRGen/IRGenModule.h
-index ec105775c2..60c2e4ed3e 100644
+index ec10577..60c2e4e 100644
 --- a/lib/IRGen/IRGenModule.h
 +++ b/lib/IRGen/IRGenModule.h
 @@ -1114,6 +1114,15 @@ public:
@@ -594,7 +594,7 @@ index ec105775c2..60c2e4ed3e 100644
                              ForDefinition_t forDefinition);
    Address getAddrOfFieldOffset(VarDecl *D, ForDefinition_t forDefinition);
 diff --git a/lib/IRGen/Linking.cpp b/lib/IRGen/Linking.cpp
-index 3c6981fe7d..9ecaa299fc 100644
+index 3c6981f..9ecaa29 100644
 --- a/lib/IRGen/Linking.cpp
 +++ b/lib/IRGen/Linking.cpp
 @@ -58,23 +58,39 @@ void LinkEntity::mangle(raw_ostream &buffer) const {
@@ -655,7 +655,7 @@ index 3c6981fe7d..9ecaa299fc 100644
      case Kind::ValueWitness:
        return mangler.mangleValueWitness(getType(), getValueWitness());
 diff --git a/lib/IRGen/ProtocolInfo.h b/lib/IRGen/ProtocolInfo.h
-index f69374b68d..3379b66bb8 100644
+index f69374b..3379b66 100644
 --- a/lib/IRGen/ProtocolInfo.h
 +++ b/lib/IRGen/ProtocolInfo.h
 @@ -82,8 +82,8 @@ public:
@@ -670,7 +670,7 @@ index f69374b68d..3379b66bb8 100644
  
    bool matchesFunction(AbstractFunctionDecl *func) const {
 diff --git a/lib/TBDGen/TBDGen.cpp b/lib/TBDGen/TBDGen.cpp
-index 57f150eaf3..cd42cceefa 100644
+index 57f150e..cd42cce 100644
 --- a/lib/TBDGen/TBDGen.cpp
 +++ b/lib/TBDGen/TBDGen.cpp
 @@ -68,6 +68,11 @@ void TBDGenVisitor::addDispatchThunk(SILDeclRef declRef) {
@@ -714,7 +714,7 @@ index 57f150eaf3..cd42cceefa 100644
        }
      }
 diff --git a/lib/TBDGen/TBDGenVisitor.h b/lib/TBDGen/TBDGenVisitor.h
-index 5cbc0d789d..aea7f25f56 100644
+index 5cbc0d7..aea7f25 100644
 --- a/lib/TBDGen/TBDGenVisitor.h
 +++ b/lib/TBDGen/TBDGenVisitor.h
 @@ -70,6 +70,8 @@ private:
@@ -727,7 +727,7 @@ index 5cbc0d789d..aea7f25f56 100644
    TBDGenVisitor(StringSet &symbols, const llvm::Triple &triple,
                  const UniversalLinkageInfo &universalLinkInfo,
 diff --git a/test/IRGen/generic_vtable.swift b/test/IRGen/generic_vtable.swift
-index f3530a3744..ef39551621 100644
+index f3530a3..ef39551 100644
 --- a/test/IRGen/generic_vtable.swift
 +++ b/test/IRGen/generic_vtable.swift
 @@ -95,6 +95,17 @@ public class Concrete : Derived<Int> {

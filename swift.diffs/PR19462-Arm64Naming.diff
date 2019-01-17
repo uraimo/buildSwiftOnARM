@@ -22,7 +22,7 @@ as the preprocessor may warn about an undefined condition evaluating to `0`.
  6 files changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/include/swift/Runtime/Atomic.h b/include/swift/Runtime/Atomic.h
-index 3f9c1a3edf5..655078a7d6a 100644
+index 3f9c1a3..655078a 100644
 --- a/include/swift/Runtime/Atomic.h
 +++ b/include/swift/Runtime/Atomic.h
 @@ -22,7 +22,7 @@
@@ -35,7 +35,7 @@ index 3f9c1a3edf5..655078a7d6a 100644
  #else
  #  define SWIFT_MEMORY_ORDER_CONSUME (std::memory_order_consume)
 diff --git a/stdlib/public/SwiftShims/HeapObject.h b/stdlib/public/SwiftShims/HeapObject.h
-index cbc1309a435..97ccbc433a9 100644
+index b4ccbf0..78c66c5 100644
 --- a/stdlib/public/SwiftShims/HeapObject.h
 +++ b/stdlib/public/SwiftShims/HeapObject.h
 @@ -122,7 +122,7 @@ static_assert(alignof(HeapObject) == alignof(void*),
@@ -61,7 +61,7 @@ index cbc1309a435..97ccbc433a9 100644
    (__swift_uintptr_t) SWIFT_ABI_ARM_SWIFT_SPARE_BITS_MASK
  #else
 diff --git a/stdlib/public/runtime/HeapObject.cpp b/stdlib/public/runtime/HeapObject.cpp
-index 32a9246d659..557931e511c 100644
+index 6f70e4c..961ab83 100644
 --- a/stdlib/public/runtime/HeapObject.cpp
 +++ b/stdlib/public/runtime/HeapObject.cpp
 @@ -61,7 +61,7 @@ using namespace swift;
@@ -74,10 +74,10 @@ index 32a9246d659..557931e511c 100644
    // kernel, so we can assume that pointer values in this range are invalid.
    return (intptr_t)p > 0;
 diff --git a/stdlib/public/runtime/SwiftObject.mm b/stdlib/public/runtime/SwiftObject.mm
-index f7137bd0423..f92812ea3e6 100644
+index 70ab327..5428f43 100644
 --- a/stdlib/public/runtime/SwiftObject.mm
 +++ b/stdlib/public/runtime/SwiftObject.mm
-@@ -498,7 +498,7 @@ - (BOOL)isNSValue__      { return NO; }
+@@ -498,7 +498,7 @@ static auto const unTaggedNonNativeBridgeObjectBits
  
  #if defined(__x86_64__)
  static uintptr_t const objectPointerIsObjCBit = 0x4000000000000000ULL;
@@ -87,7 +87,7 @@ index f7137bd0423..f92812ea3e6 100644
  #else
  static uintptr_t const objectPointerIsObjCBit = 0x00000002U;
 diff --git a/stdlib/public/runtime/WeakReference.h b/stdlib/public/runtime/WeakReference.h
-index 34dd52e6a44..a0f86e9d770 100644
+index 34dd52e..a0f86e9 100644
 --- a/stdlib/public/runtime/WeakReference.h
 +++ b/stdlib/public/runtime/WeakReference.h
 @@ -78,16 +78,16 @@ class WeakReferenceBits {
@@ -112,7 +112,7 @@ index 34dd52e6a44..a0f86e9d770 100644
      NativeMarkerValue = SWIFT_ABI_ARM64_OBJC_WEAK_REFERENCE_MARKER_VALUE
  #else
 diff --git a/stdlib/public/stubs/MathStubs.cpp b/stdlib/public/stubs/MathStubs.cpp
-index 39ac39357ae..dbafab66cbf 100644
+index 9f8de55..43deb17 100644
 --- a/stdlib/public/stubs/MathStubs.cpp
 +++ b/stdlib/public/stubs/MathStubs.cpp
 @@ -64,7 +64,7 @@ extern "C" {
@@ -122,5 +122,5 @@ index 39ac39357ae..dbafab66cbf 100644
 -    (defined(__ANDROID__) && defined(__arm64__))
 +    (defined(__ANDROID__) && defined(__aarch64__))
  
- SWIFT_RUNTIME_STDLIB_API
+ SWIFT_RUNTIME_STDLIB_INTERFACE
  ti_int

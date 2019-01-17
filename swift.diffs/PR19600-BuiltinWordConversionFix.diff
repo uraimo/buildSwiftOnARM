@@ -25,10 +25,10 @@ This fix uses sign extension when converting “upward” and the Integer type i
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/stdlib/public/core/Integers.swift.gyb b/stdlib/public/core/Integers.swift.gyb
-index 30b284adfa4..6e07d71d578 100644
+index 5c3f85d..0c7e778 100644
 --- a/stdlib/public/core/Integers.swift.gyb
 +++ b/stdlib/public/core/Integers.swift.gyb
-@@ -1617,7 +1617,7 @@ ${assignmentOperatorComment(x.operator, True)}
+@@ -3773,7 +3773,7 @@ ${assignmentOperatorComment(x.operator, True)}
  % if BuiltinName == 'Int32':
      self._value = Builtin.truncOrBitCast_Word_Int32(_v)
  % elif BuiltinName == 'Int64':
@@ -37,7 +37,7 @@ index 30b284adfa4..6e07d71d578 100644
  % end
    }
  
-@@ -1625,7 +1625,7 @@ ${assignmentOperatorComment(x.operator, True)}
+@@ -3782,7 +3782,7 @@ ${assignmentOperatorComment(x.operator, True)}
    public // @testable
    var _builtinWordValue: Builtin.Word {
  % if BuiltinName == 'Int32':

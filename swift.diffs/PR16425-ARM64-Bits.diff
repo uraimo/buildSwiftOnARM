@@ -13,7 +13,7 @@ across 64-bit platforms.
  1 file changed, 11 insertions(+), 4 deletions(-)
 
 diff --git a/stdlib/public/SwiftShims/System.h b/stdlib/public/SwiftShims/System.h
-index abe42c119d2e..3ef5cebed560 100644
+index abe42c1..3ef5ceb 100644
 --- a/stdlib/public/SwiftShims/System.h
 +++ b/stdlib/public/SwiftShims/System.h
 @@ -62,6 +62,9 @@
