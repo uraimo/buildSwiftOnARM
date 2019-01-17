@@ -467,7 +467,7 @@ index 67e9512acd..1060e37407 100644
 -      : IGM(IGM), B(B), Protocol(protocol),
 -        DefaultWitnesses(defaultWitnesses) {}
 +      : IGM(IGM), B(B), Protocol(protocol), DefaultWitnesses(defaultWitnesses),
-+        Resilient(IGM.isResilient(Proto, ResilienceExpansion::Minimal)) {}
++        Resilient(IGM.isResilient(Protocol, ResilienceExpansion::Minimal)) {}
  
      void layout() {
        addObjCCompatibilityIsa();
@@ -481,7 +481,7 @@ index 67e9512acd..1060e37407 100644
 +          auto *descriptor =
 +            reqtsArray.getAddrOfCurrentPosition(
 +              IGM.ProtocolRequirementStructTy);
-+          IGM.defineMethodDescriptor(func, Proto, descriptor);
++          IGM.defineMethodDescriptor(func, Protocol, descriptor);
 +        }
 +
          auto reqt = reqtsArray.beginStruct(IGM.ProtocolRequirementStructTy);
