@@ -1,7 +1,7 @@
 #!/bin/sh
 
-BRANCH=swift-4.1.3-RELEASE
-TAG=swift-4.1.3-RELEASE
+BRANCH=swift-4.2-branch
+TAG=swift-4.2-RELEASE
 
 echo "♻️ \033[1m Resetting the repositories...\033[0m"
 find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'/.git ] && echo \\* Cleaning '{}' && cd '{}' && git reset --hard HEAD && git clean -fd" \;
