@@ -1,5 +1,5 @@
 #!/bin/sh
-REL=4.2
+REL=4.2.1
 
 INSTALL_DIR=`pwd`/install
 
