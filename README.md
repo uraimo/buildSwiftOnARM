@@ -1,12 +1,27 @@
+<p align="center" style="padding-bottom:50px;">
+<img src="https://github.com/uraimo/buildSwiftOnARM/raw/swift-4.2/logo.png"/>
+</p>
 
-# Building Swift on ARM
+<p align="center">
+<i>Scripts to clone, configure, patch and build Swift 4.2.1 on Linux ARM devices.</i> 
+</p>
 
-A few, very simple, bash scripts to clone, configure and build Swift 4.2.1 on ARM devices. 
+### Summary
+
+- [Supported Architectures](#supported-architectures)
+- [Prebuilt binaries](#prebuilt-binaries)
+- [Building on ARM](#building-on-arm)
+    - [Step by step instructions](#step-by-step-instructions)
+- [Dependencies](#dependencies) 
+- [REPL Issues](#repl-issues)
+- [Acknowledgments](#acknowledgments) 
+- [Previous Releases](#previous-releases)
+
 
 ## Supported Architectures
 
-* ✅ ARMv7 (RaspberryPi 2/3, ODroid, CHIP, etc...)
 * ✅ ARMv6 (Original RaspberryPi, Pi Zero, etc... )
+* ✅ ARMv7 (RaspberryPi 2/3, ODroid, CHIP, etc...)
 * ✅ aarch64 (Pine64, etc...)
 
 ## Prebuilt binaries
@@ -16,26 +31,26 @@ Binaries for the original RaspberryPi and the various versions of the RaspberryP
 
 See the **required** dependencies below (clang and a few other packages).
 
-## Instructions
+## Building on ARM
 
 For the latest updates on Swift on ARM, check out my blog [here](https://www.uraimo.com/category/raspberry/).
 
 Check out Helge Heß's project [dockSwiftOnARM](https://github.com/helje5/dockSwiftOnARM) to build Swift in a Docker container or to [build a cross-compiling toolchain](https://github.com/AlwaysRightInstitute/swift-mac2arm-x-compile-toolchain) that will allow you to build arm binaries directly from your Mac using a precompiled swiftc for ARM.
 
-The scripts:
+The scripts that buildSwiftOnARM provides:
 
 - clone.sh - Install dependencies and clones the main Swift repository and all the related projects
 
-- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (4.2.1 at the moment) and apply the patches
+- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (4.2.1 at the moment) and apply the patches.
 
-- build.sh - Build
+- build.sh - Builds Swift producing a tgz archive with the Swift distributions. 
 
-- clean.sh - Clean all build artifacts 
+- clean.sh - Cleans all build artifacts, only needed when you want to start again from scratch. 
 
 
-## Building instructions
+### Step by step instructions
 
-First of all, use a suitably sized sd-card, at least 16Gb in size.
+First of all, use a suitably sized sd-card, at least 16Gb in size, but I recommend to use an external USB drive toclone the project and build Swift.
 
 Configure a swap file of at least 3Gb, on Ubuntu:
 
@@ -100,7 +115,6 @@ The community can be reached at the [swift-arm](https://launchpass.com/swift-arm
 
 You can compile old releases checking out the specific tag:
 
-* [Swift 4.2.0](https://github.com/uraimo/buildSwiftOnARM/tree/4.2.0)
 * [Swift 4.1.3](https://github.com/uraimo/buildSwiftOnARM/tree/4.1.3)
 * [Swift 3.1.1](https://github.com/uraimo/buildSwiftOnARM/tree/3.1.1)
 * [Swift 3.1](https://github.com/uraimo/buildSwiftOnARM/tree/3.1)
