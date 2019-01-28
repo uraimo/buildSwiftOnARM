@@ -21,8 +21,20 @@ class DispatchTests: XCTestCase {
         XCTAssertTrue(true)
     }
 
+    func testDispatchTimeInterval(){
+	let now = DispatchTime.now()
+	let nowplustwo = now + .nanoseconds(2)
+	let nowut = now.uptimeNanoseconds 
+
+	XCTAssertEqual(nowplustwo.uptimeNanoseconds, nowut+2)
+        XCTAssertNotEqual("DispatchTime(unknown: ())","\(nowplustwo)")
+
+        XCTAssertEqual("nanoseconds(1)","\(DispatchTimeInterval.nanoseconds(1))")
+    }
+
     static var allTests = [
         ("testDataTaskSemaphore", testDataTaskSemaphore),
+        ("testDispatchTimeInterval", testDispatchTimeInterval),
     ]
 
 }
