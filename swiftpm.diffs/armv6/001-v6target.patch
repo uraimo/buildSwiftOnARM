@@ -1,37 +1,34 @@
 diff --git a/Sources/Build/Triple.swift b/Sources/Build/Triple.swift
-index 1ce15566..533f2920 100644
+index 4a9d2e5f..57bc7658 100644
 --- a/Sources/Build/Triple.swift
 +++ b/Sources/Build/Triple.swift
-@@ -33,7 +33,10 @@ public struct Triple {
-     public enum Arch: String {
-         case x86_64
-         case armv7
-+        case armv6
+@@ -35,6 +35,7 @@ public struct Triple {
+         case ppc64le
          case s390x
+         case aarch64
++        case armv6
+         case armv7
+         case arm
      }
- 
-     public enum Vendor: String {
-@@ -106,11 +109,16 @@ public struct Triple {
-     public static let macOS = try! Triple("x86_64-apple-macosx10.10")
-     public static let linux = try! Triple("x86_64-unknown-linux")
-     public static let android = try! Triple("armv7-unknown-linux-androideabi")
+@@ -111,7 +112,7 @@ public struct Triple {
+     public static let ppc64leLinux = try! Triple("powerpc64le-unknown-linux")
+     public static let s390xLinux = try! Triple("s390x-unknown-linux")
+     public static let arm64Linux = try! Triple("aarch64-unknown-linux")
 -    public static let armLinux = try! Triple("armv7-unknown-linux-gnueabihf")
 +    public static let armLinux = try! Triple("armv6-unknown-linux-gnueabihf")
+     public static let android = try! Triple("armv7-unknown-linux-androideabi")
  
+   #if os(macOS)
 diff --git a/Utilities/bootstrap b/Utilities/bootstrap
-index 784a2320..4060b325 100755
+index b04ad7fa..1b767864 100755
 --- a/Utilities/bootstrap
 +++ b/Utilities/bootstrap
-@@ -891,8 +891,12 @@ def main():
-     # Compute the build paths.
-     if platform.system() == 'Darwin':
-         build_target = "x86_64-apple-macosx10.10"
-     elif platform.processor() == 's390x':
-         build_target = "s390x-unknown-linux"
--    elif platform.system() == 'Linux' and platform.machine().startswith("arm"):
--        build_target = 'armv7-unknown-linux-gnueabihf'
-+    elif platform.system() == 'Linux' and platform.machine().startswith("arm"):
-+        build_target = 'armv6-unknown-linux-gnueabihf'
-     else:
-         build_target = 'x86_64-unknown-linux'
- 
+@@ -907,6 +907,8 @@ def main():
+             build_target = 'powerpc64le-unknown-linux'
+         elif platform.machine().startswith("armv7"):
+             build_target = 'armv7-unknown-linux-gnueabihf'
++        elif platform.machine().startswith("armv6"):
++            build_target = 'armv6-unknown-linux-gnueabihf'
+         elif platform.machine() == 'aarch64':
+             build_target = 'aarch64-unknown-linux'
+         else:
