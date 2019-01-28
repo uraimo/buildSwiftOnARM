@@ -12,7 +12,7 @@ A few, very simple, bash scripts to clone, configure and build Swift 4.2.1 on AR
 ## Prebuilt binaries
 
 Swift 4.2.1 armv7(RaspberryPi 2/3) for Ubuntu Mate 16.04.x is available [here](https://www.dropbox.com/s/hm5q4bkev69n2ea/swift-4.2.1-RPi23-Ubuntu1604.tgz?dl=0) or [here](https://www.dropbox.com/s/7k453ner8p4unac/swift-4.2.1-RPi23-RaspbianStretch.tgz?dl=0) for Raspbian Stretch.
-Swift 4.1.3 binaries for the original RaspberryPi and the various versions of the RaspberryPi Zero running Raspbian are [here](https://www.dropbox.com/s/h6d2bwqs0gf997f/swift-4.1.3-RPi01-RaspbianStretch.tgz?dl=0).
+Binaries for the original RaspberryPi and the various versions of the RaspberryPi Zero running Raspbian are [here](https://www.dropbox.com/s/lku0pw66p67gv2j/swift-4.2.1-RPi01-RaspbianStretch.tgz?dl=0).
 
 See the **required** dependencies below (clang and a few other packages).
 
