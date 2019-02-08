@@ -3,16 +3,16 @@
 </p>
 
 <p align="center">
-<i>Scripts to clone, configure, patch and build Swift 4.2.1 on Linux ARM devices.</i> 
+<i>Scripts to clone, configure, patch and build Swift 4.2.2 on Linux ARM devices.</i> 
 </p>
 
 ### Summary
 
 - [Supported Architectures](#supported-architectures)
 - [Prebuilt binaries](#prebuilt-binaries)
+- [Dependencies](#dependencies) 
 - [Building on ARM](#building-on-arm)
     - [Step by step instructions](#step-by-step-instructions)
-- [Dependencies](#dependencies) 
 - [REPL Issues](#repl-issues)
 - [Acknowledgments](#acknowledgments) 
 - [Previous Releases](#previous-releases)
@@ -26,10 +26,20 @@
 
 ## Prebuilt binaries
 
-Swift 4.2.1 armv7(RaspberryPi 2/3) for Ubuntu Mate 16.04.x is available [here](https://www.dropbox.com/s/hm5q4bkev69n2ea/swift-4.2.1-RPi23-Ubuntu1604.tgz?dl=0) or [here](https://www.dropbox.com/s/7k453ner8p4unac/swift-4.2.1-RPi23-RaspbianStretch.tgz?dl=0) for Raspbian Stretch.
-Binaries for the original RaspberryPi and the various versions of the RaspberryPi Zero running Raspbian are [here](https://www.dropbox.com/s/lku0pw66p67gv2j/swift-4.2.1-RPi01-RaspbianStretch.tgz?dl=0).
+Swift 4.2.2 armv7(RaspberryPi 2/3) for Ubuntu Mate 16.04.x is available [here](https://www.dropbox.com/s/qnf7p988lp46mlq/swift-4.2.2-RPi23-Ubuntu1604.tgz) or [here](https://www.dropbox.com/s/qnf7p988lp46mlq/swift-4.2.2-RPi23-Ubuntu1604.tgz) for Raspbian Stretch.
+Binaries for the original RaspberryPi and the various versions of the RaspberryPi Zero running Raspbian are [here](https://www.dropbox.com/s/08aem3xndyfafdi/swift-4.2.2-RPi01-RaspbianStretch.tgz).
 
 See the **required** dependencies below (clang and a few other packages).
+
+
+## Dependencies 
+
+If you plan to use one of the provided prebuilt binaries, you'll need the install the following dependencies dependecies:
+
+    sudo apt install clang-3.8 libicu-dev libcurl4-nss-dev
+
+ 
+ 
 
 ## Building on ARM
 
@@ -41,27 +51,28 @@ The scripts that buildSwiftOnARM provides:
 
 - clone.sh - Install dependencies and clones the main Swift repository and all the related projects
 
-- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (4.2.1 at the moment) and apply the patches.
+- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (4.2.2 at the moment) and apply the patches.
 
 - build.sh - Builds Swift producing a tgz archive with the Swift distributions. 
 
 - clean.sh - Cleans all build artifacts, only needed when you want to start again from scratch. 
 
 
+
 ### Step by step instructions
 
-First of all, use a suitably sized sd-card, at least 16Gb in size, but I recommend to use an external USB drive toclone the project and build Swift.
+First of all, use a suitably sized sd-card, at least 32Gb in size, but I recommend to use an external USB drive to clone the project and build Swift.
 
-Configure a swap file of at least 3Gb, on Ubuntu:
+Configure a swap file of at least 2Gb, on Ubuntu:
 
-    sudo fallocate -l 3G swapfile
+    sudo fallocate -l 2G swapfile
     sudo chmod 600 swapfile
     sudo mkswap swapfile
     sudo swapon swapfile
     
 You'll need to manually enable the swap file with `swapon` *each time you reboot* the RaspberryPi (or the system will just run without swap).
 
-On Raspbian, open `/etc/dphys-swapfile` and edit:
+On Raspbian, since the swapfile is already configured, open `/etc/dphys-swapfile` and edit `CONF_SWAPSIZE` to increase the size:
 
     CONF_SWAPSIZE=2048
     
@@ -74,11 +85,11 @@ Now, call the included scripts as follows:
 
 1. Launch `clone.sh` that will install the required dependencies (_git cmake ninja-build clang-3.8 python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev libcurl4-openssl-dev libz-dev_), fix clang links and clone apple/swift with all its dependecies.
 
-2. Run `checkoutRelease.sh` that will select the current release (4.2.1) and apply the needed patches. These patches cover the basic Raspi2/3 with Xenial case, but I've had many reports of successful build on different setups, but beware, additional patches could  be needed on different boards/OSs.
+2. Run `checkoutRelease.sh` that will select the current release (4.2.2) and apply the needed patches. These patches cover the basic Raspi2/3 with Xenial case, but I've had many reports of successful build on different setups, but beware, additional patches could  be needed on different boards/OSs.
 
 3. Once done, start the build with `build.sh`.
 
-4. Once the build completes a few hours later, you'll have a `swift-4.2.1.tgz` archive containing the whole Swift compiler distribution. Once decompressed you'll find the Swift binaries under `usr/bin`.
+4. Once the build completes a few hours later, you'll have a `swift-4.2.2.tgz` archive containing the whole Swift compiler distribution. Once decompressed you'll find the Swift binaries under `usr/bin`.
 
 I recommend to perform all these operations in a permanent background `tmux` or `screen` session (`CTRL+B d` to detach from the session and `tmux a` to reattach to it when you ssh again into the RaspberryPi).
 
@@ -86,12 +97,6 @@ Additional steps could be required in some cases (on a RaspberryPi 1 or for Rasp
 
 To build a different release than the one currently configured in the script, open `checkoutRelease.sh` and `build.sh` and modify the variables on top, with the branch name for the release and the release name for the tgz respectively.
 
-
-## Dependencies 
-
-If you plan to use one of the provided prebuilt binaries, you'll need the install the following dependencies dependecies:
-
-    sudo apt install clang-3.8 libicu-dev libcurl4-nss-dev
 
 
 ## REPL Issues
