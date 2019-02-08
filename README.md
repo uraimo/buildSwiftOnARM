@@ -34,7 +34,7 @@ See the **required** dependencies below (clang and a few other packages).
 
 ## Dependencies 
 
-If you plan to use one of the provided prebuilt binaries, you'll need the install the following dependencies dependecies:
+If you plan to use one of the provided prebuilt binaries, you'll need the install the following dependencies:
 
     sudo apt install clang-3.8 libicu-dev libcurl4-nss-dev
 
