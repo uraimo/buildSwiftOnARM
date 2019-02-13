@@ -4,9 +4,13 @@ import PackageDescription
 
 let package = Package(
     name: "BuildSwiftOnARM",
+    dependencies: [
+        .package(url: "https://github.com/IBM-Swift/SwiftyJSON.git", from: "17.0.2")
+    ],
     targets: [
         .testTarget(
-            name: "buildSwiftOnARMTests"
+            name: "buildSwiftOnARMTests",
+            dependencies: ["SwiftyJSON"]
 	)
     ]
 )

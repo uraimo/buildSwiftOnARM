@@ -10,13 +10,21 @@ class FoundationTests: XCTestCase {
     func testContentsOfFile() {
         if let str = try? String(contentsOfFile: "Tests/inputs/testfile") {
             XCTAssertEqual(str.trimmingCharacters(in: .whitespacesAndNewlines), "content")
+        } else {
+            XCTFail("Unable to read string from input file")
         }
     }
 
     func testWriteToFile() {
-        try! "Some content".write(toFile: "Tests/outputs/testfile", atomically: false, encoding: .utf8)
+        do {
+            try "Some content".write(toFile:"Tests/outputs/testfile", atomically: false, encoding: .utf8)
+        } catch {
+            XCTFail("Unable to write string to file")
+        }
         if let str = try? String(contentsOfFile: "Tests/outputs/testfile") {
             XCTAssertEqual(str.trimmingCharacters(in: .whitespacesAndNewlines), "Some content")
+        } else {
+            XCTFail("Unable to read string from output file")
         }
     }
 

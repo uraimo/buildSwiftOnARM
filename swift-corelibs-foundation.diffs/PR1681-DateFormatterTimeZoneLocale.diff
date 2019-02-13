@@ -1,0 +1,109 @@
+From fb15e69cd5131c00193467c95632f05e75e81ccd Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Daniel=20Rodr=C3=ADguez=20Troiti=C3=B1o?=
+ <danielrodriguez@fb.com>
+Date: Fri, 31 Aug 2018 15:37:49 -0700
+Subject: [PATCH] Fix DateFormatter behaviour for nil locale and timeZone.
+
+The locale and timeZone properties of DateFormatter seems to be "null
+resetteable" in macOS, but the Swift Foundation behaviour differs.
+
+Before this patch, setting locale to nil would segfault the program the
+next time the formatter is used, while timeZone will incorrectly return
+nil. After this patch a nil locale will simply reset to the current
+locale and a nil timeZone will reset to the system one.
+
+The tests check that the initial defaults are also correctly set.
+---
+ Foundation/DateFormatter.swift         | 26 +++++++++++++++++++++++---
+ TestFoundation/TestDateFormatter.swift | 26 ++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+), 3 deletions(-)
+
+diff --git a/Foundation/DateFormatter.swift b/Foundation/DateFormatter.swift
+index 1c604ac8f5..69644c0fb6 100644
+--- a/Foundation/DateFormatter.swift
++++ b/Foundation/DateFormatter.swift
+@@ -91,7 +91,7 @@ open class DateFormatter : Formatter {
+ 
+     internal func _setFormatterAttributes(_ formatter: CFDateFormatter) {
+         _setFormatterAttribute(formatter, attributeName: kCFDateFormatterIsLenient, value: isLenient._cfObject)
+-        _setFormatterAttribute(formatter, attributeName: kCFDateFormatterTimeZone, value: timeZone?._cfObject)
++        _setFormatterAttribute(formatter, attributeName: kCFDateFormatterTimeZone, value: _timeZone?._cfObject)
+         if let ident = _calendar?.identifier {
+             _setFormatterAttribute(formatter, attributeName: kCFDateFormatterCalendarName, value: Calendar._toNSCalendarIdentifier(ident).rawValue._cfObject)
+         } else {
+@@ -160,11 +160,31 @@ open class DateFormatter : Formatter {
+         }
+     }
+ 
+-    /*@NSCopying*/ open var locale: Locale! = .current { willSet { _reset() } }
++    /*@NSCopying*/ internal var _locale: Locale? { willSet { _reset() } }
++    open var locale: Locale! {
++        get {
++            guard let locale = _locale else { return .current }
++            return locale
++        }
++        set {
++            _locale = newValue
++        }
++    }
+ 
+     open var generatesCalendarDates = false { willSet { _reset() } }
+ 
+-    /*@NSCopying*/ open var timeZone: TimeZone! = NSTimeZone.system { willSet { _reset() } }
++    /*@NSCopying*/ internal var _timeZone: TimeZone? { willSet { _reset() } }
++    open var timeZone: TimeZone! {
++        get {
++            guard let timeZone = _timeZone else {
++                return (CFDateFormatterCopyProperty(_cfObject, kCFDateFormatterTimeZone) as! NSTimeZone)._swiftObject
++            }
++            return timeZone
++        }
++        set {
++            _timeZone = timeZone
++        }
++    }
+ 
+     /*@NSCopying*/ internal var _calendar: Calendar! { willSet { _reset() } }
+     open var calendar: Calendar! {
+diff --git a/TestFoundation/TestDateFormatter.swift b/TestFoundation/TestDateFormatter.swift
+index 2ba14339ae..98c636f620 100644
+--- a/TestFoundation/TestDateFormatter.swift
++++ b/TestFoundation/TestDateFormatter.swift
+@@ -22,6 +22,8 @@ class TestDateFormatter: XCTestCase {
+             ("test_customDateFormat", test_customDateFormat),
+             ("test_setLocalizedDateFormatFromTemplate", test_setLocalizedDateFormatFromTemplate),
+             ("test_dateFormatString", test_dateFormatString),
++            ("test_setLocaleToNil", test_setLocaleToNil),
++            ("test_setTimeZoneToNil", test_setTimeZoneToNil),
+         ]
+     }
+     
+@@ -330,4 +332,28 @@ class TestDateFormatter: XCTestCase {
+             XCTAssertEqual(f.dateFormat, dateFormat)
+         }
+     }
++
++    func test_setLocaleToNil() {
++        let f = DateFormatter()
++        // Locale should be the current one by default
++        XCTAssertEqual(f.locale, .current)
++
++        f.locale = nil
++
++        // Locale should go back to current.
++        XCTAssertEqual(f.locale, .current)
++
++        // A nil locale should not crash a subsequent operation
++        let result: String? = f.string(from: Date())
++        XCTAssertNotNil(result)
++    }
++
++    func test_setTimeZoneToNil() {
++        let f = DateFormatter()
++        // Time zone should be the system one by default.
++        XCTAssertEqual(f.timeZone, NSTimeZone.system)
++        f.timeZone = nil
++        // Time zone should go back to the system one.
++        XCTAssertEqual(f.timeZone, NSTimeZone.system)
++    }
+ }

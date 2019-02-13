@@ -1,8 +1,8 @@
 diff --git a/lib/ClangImporter/ImportDecl.cpp b/lib/ClangImporter/ImportDecl.cpp
-index 46e499b..a086aea 100644
+index 5da0d1b..683e243 100644
 --- a/lib/ClangImporter/ImportDecl.cpp
 +++ b/lib/ClangImporter/ImportDecl.cpp
-@@ -273,8 +273,13 @@ getSwiftStdlibType(const clang::TypedefNameDecl *D,
+@@ -311,8 +311,13 @@ getSwiftStdlibType(const clang::TypedefNameDecl *D,
      break;
  
    case MappedCTypeKind::VaList:
@@ -19,10 +19,10 @@ index 46e499b..a086aea 100644
  
    case MappedCTypeKind::ObjCBool:
 diff --git a/stdlib/public/core/CTypes.swift b/stdlib/public/core/CTypes.swift
-index b38de34..2614c44 100644
+index 6171591..91cce69 100644
 --- a/stdlib/public/core/CTypes.swift
 +++ b/stdlib/public/core/CTypes.swift
-@@ -204,6 +204,28 @@ extension UInt {
+@@ -221,6 +221,28 @@ extension UInt {
    }
  }
  
@@ -51,21 +51,21 @@ index b38de34..2614c44 100644
  /// A wrapper around a C `va_list` pointer.
  @_fixed_layout
  public struct CVaListPointer {
-@@ -224,6 +246,7 @@ extension CVaListPointer : CustomDebugStringConvertible {
+@@ -241,6 +263,7 @@ extension CVaListPointer : CustomDebugStringConvertible {
      return value.debugDescription
    }
  }
 +#endif
  
- @_versioned
- @_inlineable
+ @inlinable
+ internal func _memcpy(
 diff --git a/stdlib/public/core/VarArgs.swift b/stdlib/public/core/VarArgs.swift
-index 52e9f21..2758b15 100644
+index 07a6662..2b8d4dd 100644
 --- a/stdlib/public/core/VarArgs.swift
 +++ b/stdlib/public/core/VarArgs.swift
-@@ -85,6 +85,30 @@ internal let _registerSaveWords = _countGPRegisters + _countSSERegisters * _sseR
+@@ -90,6 +90,30 @@ internal let _registerSaveWords = _countGPRegisters + _countSSERegisters * _sseR
  internal let _countGPRegisters = 16
- @_versioned
+ @usableFromInline
  internal let _registerSaveWords = _countGPRegisters
 +
 +#elseif arch(arm64) && !(os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(Windows))
@@ -94,7 +94,7 @@ index 52e9f21..2758b15 100644
  #endif
  
  #if arch(s390x)
-@@ -467,6 +491,138 @@ final internal class _VaListBuilder {
+@@ -476,6 +500,138 @@ final internal class _VaListBuilder {
    internal var storage: ContiguousArray<Int>
  }
  

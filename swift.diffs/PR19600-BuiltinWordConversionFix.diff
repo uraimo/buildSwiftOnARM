@@ -1,0 +1,48 @@
+From 7288f2650f4ae20b8ed0ab03eb3440dea86e77b8 Mon Sep 17 00:00:00 2001
+From: Adam Thayer <user@biticus.net>
+Date: Thu, 27 Sep 2018 16:04:41 -0700
+Subject: [PATCH] Add sextOrBitCast to conversions of Builtin.Word
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+An error was hit when attempting to build Swift on a 32-bit Linux host. It was asserting when attempting to run ‘RedunantLoadElim” during the optimizer. The reason why is a bit messy.
+
+First, Builtin.Word is always considered to be 64-bit when it is a SILType. This means the optimizer, when working with a Builtin.Word, will create 64-bit APInts when converting from other types.
+
+Second, the SIL being output for a particular literal looked like this:
+Int2048 (integer_literal) : Int32 (Signed Truncation) : Word (zextOrBitCast)
+
+The constant fold behavior would convert this into an integer_literal of the Builtin.Word type. But because of the zext cast, if the original literal was -1, it would become +4 billion during folding.
+
+This normally isn’t a problem **except** when SIL is still attempting to optimize. (See First)
+
+Third, The Redundant Load Elimination pass was attempting to make sense of an index_addr instruction which was indexing at -1. This happens when you perform “-= 1” on an UnsafePointer. Because SIL was interpreting Word’s size incorrectly, it caused the RLE pass to ask “what is the ProjectionKind at ptr[4billion]?” Since there’s no feasible answer for such a question, the answer was “nothing” when the Projection’s kind() was checked, which tripped the assert.
+
+This fix uses sign extension when converting “upward” and the Integer type is signed, otherwise it will still use zero extension.
+---
+ stdlib/public/core/IntegerTypes.swift.gyb | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/stdlib/public/core/Integers.swift.gyb b/stdlib/public/core/Integers.swift.gyb
+index 5c3f85d..0c7e778 100644
+--- a/stdlib/public/core/Integers.swift.gyb
++++ b/stdlib/public/core/Integers.swift.gyb
+@@ -3773,7 +3773,7 @@ ${assignmentOperatorComment(x.operator, True)}
+ % if BuiltinName == 'Int32':
+     self._value = Builtin.truncOrBitCast_Word_Int32(_v)
+ % elif BuiltinName == 'Int64':
+-    self._value = Builtin.zextOrBitCast_Word_Int64(_v)
++    self._value = Builtin.${z}extOrBitCast_Word_Int64(_v)
+ % end
+   }
+ 
+@@ -3782,7 +3782,7 @@ ${assignmentOperatorComment(x.operator, True)}
+   public // @testable
+   var _builtinWordValue: Builtin.Word {
+ % if BuiltinName == 'Int32':
+-    return Builtin.zextOrBitCast_Int32_Word(_value)
++    return Builtin.${z}extOrBitCast_Int32_Word(_value)
+ % elif BuiltinName == 'Int64':
+     return Builtin.truncOrBitCast_Int64_Word(_value)
+ % end
