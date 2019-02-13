@@ -26,7 +26,7 @@
 
 ## Prebuilt binaries
 
-Swift 4.2.2 armv7(RaspberryPi 2/3) for Ubuntu Mate 16.04.x is available [here](https://www.dropbox.com/s/qnf7p988lp46mlq/swift-4.2.2-RPi23-Ubuntu1604.tgz) or [here](https://www.dropbox.com/s/qnf7p988lp46mlq/swift-4.2.2-RPi23-Ubuntu1604.tgz) for Raspbian Stretch.
+Swift 4.2.2 armv7(RaspberryPi 2/3) for Ubuntu Mate 16.04.x is available [here](https://www.dropbox.com/s/qnf7p988lp46mlq/swift-4.2.2-RPi23-Ubuntu1604.tgz) or [here](https://www.dropbox.com/s/b9gizkdqifhqcdh/swift-4.2.2-RPi23-RaspbianStretch.tgz?dl=0) for Raspbian Stretch.
 Binaries for the original RaspberryPi and the various versions of the RaspberryPi Zero running Raspbian are [here](https://www.dropbox.com/s/08aem3xndyfafdi/swift-4.2.2-RPi01-RaspbianStretch.tgz).
 
 See the **required** dependencies below (clang and a few other packages).
