@@ -9,6 +9,7 @@
 ### Summary
 
 - [Supported Architectures](#supported-architectures)
+- [4.2.x Status](#status)
 - [Prebuilt binaries](#prebuilt-binaries)
 - [Dependencies](#dependencies) 
 - [Building on ARM](#building-on-arm)
@@ -23,6 +24,10 @@
 * ✅ ARMv6 (Original RaspberryPi, Pi Zero, etc... )
 * ✅ ARMv7 (RaspberryPi 2/3, ODroid, CHIP, etc...)
 * ✅ aarch64 (Pine64, etc...)
+
+## Status
+
+Currently 4.2.x still has an unfixed [issue](https://github.com/uraimo/buildSwiftOnARM/issues), if your use case is impacted by that bug, check out [4.1.3](https://github.com/uraimo/buildSwiftOnARM/tree/4.1.3).
 
 ## Prebuilt binaries
 
