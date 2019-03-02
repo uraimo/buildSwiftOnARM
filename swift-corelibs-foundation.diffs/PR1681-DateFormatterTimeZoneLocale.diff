@@ -73,6 +73,7 @@ index 2ba14339ae..98c636f620 100644
              ("test_customDateFormat", test_customDateFormat),
              ("test_setLocalizedDateFormatFromTemplate", test_setLocalizedDateFormatFromTemplate),
              ("test_dateFormatString", test_dateFormatString),
+             ("test_dateFrom", test_dateFrom),
 +            ("test_setLocaleToNil", test_setLocaleToNil),
 +            ("test_setTimeZoneToNil", test_setTimeZoneToNil),
          ]

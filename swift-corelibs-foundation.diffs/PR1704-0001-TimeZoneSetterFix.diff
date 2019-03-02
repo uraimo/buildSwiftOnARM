@@ -38,6 +38,7 @@ index 98c636f620..3050a39d29 100644
 +++ b/TestFoundation/TestDateFormatter.swift
 @@ -24,6 +24,7 @@ class TestDateFormatter: XCTestCase {
              ("test_dateFormatString", test_dateFormatString),
+             ("test_dateFrom", test_dateFrom),
              ("test_setLocaleToNil", test_setLocaleToNil),
              ("test_setTimeZoneToNil", test_setTimeZoneToNil),
 +            ("test_setTimeZone", test_setTimeZone),
