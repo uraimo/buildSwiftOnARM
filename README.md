@@ -1,5 +1,5 @@
 <p align="center" style="padding-bottom:50px;">
-<img src="https://github.com/uraimo/buildSwiftOnARM/raw/master/logo.svg"/>
+<img src="https://raw.githubusercontent.com/uraimo/buildSwiftOnARM/master/logo.svg?sanitize=true"/>
 </p>
 
 <p align="center">
