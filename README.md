@@ -1,8 +1,5 @@
-<p align="center" style="padding-bottom:50px;">
+<p align="center" style="margin-bottom:30px;">
 <img src="https://raw.githubusercontent.com/uraimo/buildSwiftOnARM/master/logo.svg?sanitize=true"/>
-</p>
-
-<p align="center">
 <i>Scripts to clone, configure, patch and build Swift 4.2.3 on Linux ARM devices.</i> 
 </p>
 
@@ -34,14 +31,17 @@ Currently 4.2.x still has an unfixed [issue](https://github.com/uraimo/buildSwif
 | Architecture | OS | Boards | Download |                                                                          
 | ------------ | -- | ------ | -------- |
 | ARMv6 | Raspbian Stretch | RaspberryPi Classic, All versions of Pi Zero |  [4.2.2](https://www.dropbox.com/s/08aem3xndyfafdi/swift-4.2.2-RPi01-RaspbianStretch.tgz) |
-| Armv7 | Raspbian Stretch | All versions of RaspberryPi 2/3 | [4.2.2](https://www.dropbox.com/s/b9gizkdqifhqcdh/swift-4.2.2-RPi23-RaspbianStretch.tgz?dl=0) |  
-| Armv7 | Ubuntu 16.04 | All versions of RaspberryPi 2/3 | [4.2.2](https://www.dropbox.com/s/qnf7p988lp46mlq/swift-4.2.2-RPi23-Ubuntu1604.tgz) |
+| Armv7 | Raspbian Stretch | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/cpyzse32ap7v7gw/swift-4.2.3-RPi23-RaspbianStretch.tgz) |  
+| Armv7 | Ubuntu 16.04 | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/dyfx3okrp406xja/swift-4.2.3-RPi23-Ubuntu1604.tgz) |
+| aarch64 | Ubuntu 18.04/64 | All versions of RaspberryPi 2/3 | ... |
  
 ### Dependencies 
 
 To use the provided prebuilt binaries you'll need the install the following dependencies:
 
     sudo apt install clang-3.8 libicu-dev libcurl4-nss-dev
+
+On aarch64, install simply `clang` instead of `clang-3.8`.
 
 Once you are done, just decompress the archive with `tar xzf <archivename.tgz>` as you would do with the official releases.
 
