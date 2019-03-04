@@ -33,7 +33,7 @@ Currently 4.2.x still has an unfixed [issue](https://github.com/uraimo/buildSwif
 | ARMv6 | Raspbian Stretch | RaspberryPi Classic, All versions of Pi Zero |  [4.2.3](https://www.dropbox.com/s/zqp2kaathvb9fbn/swift-4.2.3-RPi01-RaspbianStretch.tgz?dl=0) |
 | Armv7 | Raspbian Stretch | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/cpyzse32ap7v7gw/swift-4.2.3-RPi23-RaspbianStretch.tgz?dl=0) |  
 | Armv7 | Ubuntu 16.04 | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/dyfx3okrp406xja/swift-4.2.3-RPi23-Ubuntu1604.tgz?dl=0) |
-| aarch64 | Ubuntu 18.04/64 | All versions of RaspberryPi 2/3 | ... |
+| aarch64 | Ubuntu 18.04/aarch64 | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/a68df0ymmvenezl/swift-4.2.3-RPi23-Ubuntu1804_aarch64.tgz?dl=0) |
  
 ### Dependencies 
 
