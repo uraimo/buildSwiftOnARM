@@ -19,8 +19,8 @@
 ## Supported Architectures
 
 * ✅  ARMv6 32bit: _Original RaspberryPi, Pi Zero, etc..._
-* ✅  ARMv7 32bit: _All versions of RaspberryPi 2/3, OrangePi, ODroid, CHIP, etc..._
-* ✅  aarch64: _RaspberryPis or other ARMv7 boards with a 64 bit OS, Pine64, etc..._
+* ✅  ARMv7/8 32bit: _All versions of RaspberryPi 2/3, OrangePi, ODroid, CHIP, etc..._
+* ✅  aarch64: _RaspberryPis or other ARMv8 boards with a 64 bit OS, Pine64, etc..._
 
 ## Status
 
@@ -28,12 +28,14 @@ Currently 4.2.x still has an unfixed [issue](https://github.com/uraimo/buildSwif
 
 ## Prebuilt binaries
 
-| Architecture | OS | Boards | Download |                                                                          
-| ------------ | -- | ------ | -------- |
-| ARMv6 | Raspbian Stretch | RaspberryPi Classic, All versions of Pi Zero |  [4.2.3](https://www.dropbox.com/s/zqp2kaathvb9fbn/swift-4.2.3-RPi01-RaspbianStretch.tgz?dl=0) |
-| Armv7 | Raspbian Stretch | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/cpyzse32ap7v7gw/swift-4.2.3-RPi23-RaspbianStretch.tgz?dl=0) |  
-| Armv7 | Ubuntu 16.04 | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/dyfx3okrp406xja/swift-4.2.3-RPi23-Ubuntu1604.tgz?dl=0) |
-| aarch64 | Ubuntu 18.04/aarch64 | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/a68df0ymmvenezl/swift-4.2.3-RPi23-Ubuntu1804_aarch64.tgz?dl=0) |
+| OS | Architecture | Boards | Download |                                                                          
+| -- | ------------ | ------ | -------- |
+| Raspbian Stretch | ARMv6 | RaspberryPi Classic, All versions of Pi Zero |  [4.2.3](https://www.dropbox.com/s/zqp2kaathvb9fbn/swift-4.2.3-RPi01-RaspbianStretch.tgz?dl=0) |
+| Raspbian Stretch | ARMv7 | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/cpyzse32ap7v7gw/swift-4.2.3-RPi23-RaspbianStretch.tgz?dl=0) |  
+| Ubuntu 16.04 | ARMv7 | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/dyfx3okrp406xja/swift-4.2.3-RPi23-Ubuntu1604.tgz?dl=0) |
+| Ubuntu 18.04 | ARMv7 | All versions of RaspberryPi 2/3 | ... |
+| Ubuntu 18.10 | ARMv7 | All versions of RaspberryPi 2/3 | ... |
+| Ubuntu 18.04/aarch64 | aarch64 | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/a68df0ymmvenezl/swift-4.2.3-RPi23-Ubuntu1804_aarch64.tgz?dl=0) |
  
 ### Dependencies 
 
@@ -41,9 +43,9 @@ To use the provided prebuilt binaries you'll need the install the following depe
 
     sudo apt install clang-3.8 libicu-dev libcurl4-nss-dev
 
-On aarch64, install simply `clang` instead of `clang-3.8`.
+On Ubuntus newer than 16.04, simply install the unversioned `clang` instead of `clang-3.8`.
 
-Once you are done, just decompress the archive with `tar xzf <archivename.tgz>` as you would do with the official releases.
+Once you are done, just decompress the archive with `tar xzf <archivename.tgz>` as you would do with the official releases, you'll find the Swift binaries in `bin/`.
 
 ## Building on ARM
 
@@ -124,6 +126,8 @@ The community can be reached at the [swift-arm](https://launchpass.com/swift-arm
 
 You can compile old releases checking out the specific tag:
 
+* [Swift 4.2.2](https://github.com/uraimo/buildSwiftOnARM/tree/4.2.2)
+* [Swift 4.2.1](https://github.com/uraimo/buildSwiftOnARM/tree/4.2.1)
 * [Swift 4.1.3](https://github.com/uraimo/buildSwiftOnARM/tree/4.1.3)
 * [Swift 3.1.1](https://github.com/uraimo/buildSwiftOnARM/tree/3.1.1)
 * [Swift 3.1](https://github.com/uraimo/buildSwiftOnARM/tree/3.1)
