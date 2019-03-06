@@ -1,5 +1,3 @@
-#@uraimo: Manually apply when compiling on Ubuntu 18.10, required due to glibc version.
-#         This fix is already present in swift-5.0-branch.
 From 521935db9de17ad08748fd050137ac83b7734835 Mon Sep 17 00:00:00 2001
 From: Craig Topper <craig.topper@intel.com>
 Date: Thu, 24 May 2018 17:59:47 +0000
