@@ -30,12 +30,12 @@ Currently 4.2.x still has an unfixed [issue](https://github.com/uraimo/buildSwif
 
 | OS | Architecture | Boards | Download |                                                                          
 | -- | ------------ | ------ | -------- |
-| Raspbian Stretch | ARMv6 | RaspberryPi Classic, All versions of Pi Zero |  [4.2.3](https://www.dropbox.com/s/zqp2kaathvb9fbn/swift-4.2.3-RPi01-RaspbianStretch.tgz?dl=0) |
-| Raspbian Stretch | ARMv7 | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/cpyzse32ap7v7gw/swift-4.2.3-RPi23-RaspbianStretch.tgz?dl=0) |  
-| Ubuntu 16.04 | ARMv7 | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/dyfx3okrp406xja/swift-4.2.3-RPi23-Ubuntu1604.tgz?dl=0) |
+| Raspbian Stretch | ARMv6 | RaspberryPi Classic, All versions of Pi Zero |  [4.2.3](https://github.com/uraimo/buildSwiftOnARM/releases/download/4.2.3/swift-4.2.3-RPi01-RaspbianStretch.tgz) |
+| Raspbian Stretch | ARMv7 | All versions of RaspberryPi 2/3 | [4.2.3](https://github.com/uraimo/buildSwiftOnARM/releases/download/4.2.3/swift-4.2.3-RPi23-RaspbianStretch.tgz) |  
+| Ubuntu 16.04 | ARMv7 | All versions of RaspberryPi 2/3 | [4.2.3](https://github.com/uraimo/buildSwiftOnARM/releases/download/4.2.3/swift-4.2.3-RPi23-Ubuntu1604.tgz) |
 | Ubuntu 18.04 | ARMv7 | All versions of RaspberryPi 2/3 | ... |
 | Ubuntu 18.10 | ARMv7 | All versions of RaspberryPi 2/3 | ... |
-| Ubuntu 18.04/aarch64 | aarch64 | All versions of RaspberryPi 2/3 | [4.2.3](https://www.dropbox.com/s/a68df0ymmvenezl/swift-4.2.3-RPi23-Ubuntu1804_aarch64.tgz?dl=0) |
+| Ubuntu 18.04/aarch64 | aarch64 | All versions of RaspberryPi 2/3 | [4.2.3](https://github.com/uraimo/buildSwiftOnARM/releases/download/4.2.3/swift-4.2.3-RPi23-Ubuntu1804_aarch64.tgz) |
  
 ### Dependencies 
 
