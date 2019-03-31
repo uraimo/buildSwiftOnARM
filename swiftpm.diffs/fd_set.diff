@@ -1,5 +1,5 @@
 diff --git a/Sources/SPMUtility/FSWatch.swift b/Sources/SPMUtility/FSWatch.swift
-index a4752f4..c078546 100644
+index a4752f4..7da4517 100644
 --- a/Sources/SPMUtility/FSWatch.swift
 +++ b/Sources/SPMUtility/FSWatch.swift
 @@ -441,12 +441,23 @@ public final class Inotify {
@@ -19,7 +19,7 @@ index a4752f4..c078546 100644
 -    let intOffset = Int(fd / 16)
 -    let bitOffset = Int(fd % 16)
 +    #if os(Linux) && arch(arm) 
-+    let sz = 32
++    let sz: Int32 = 32 //Could this be only 32?
 +    #else
 +    let sz = 16
 +    #endif
@@ -29,12 +29,11 @@ index a4752f4..c078546 100644
      let mask = 1 << bitOffset
      switch intOffset {
          case 0: set.__fds_bits.0 = set.__fds_bits.0 | mask
-@@ -465,6 +476,25 @@ private func FD_SET(_ fd: Int32, _ set: inout fd_set) {
+@@ -465,6 +476,24 @@ private func FD_SET(_ fd: Int32, _ set: inout fd_set) {
          case 13: set.__fds_bits.13 = set.__fds_bits.13 | mask
          case 14: set.__fds_bits.14 = set.__fds_bits.14 | mask
          case 15: set.__fds_bits.15 = set.__fds_bits.15 | mask
 +      	#if os(Linux) && arch(arm)
-+        case 15: set.__fds_bits.15 = set.__fds_bits.15 | mask
 +        case 16: set.__fds_bits.16 = set.__fds_bits.16 | mask
 +        case 17: set.__fds_bits.17 = set.__fds_bits.17 | mask
 +        case 18: set.__fds_bits.18 = set.__fds_bits.18 | mask
@@ -55,7 +54,7 @@ index a4752f4..c078546 100644
          default: break
      }
  }
-@@ -490,6 +520,24 @@ private func FD_ISSET(_ fd: Int32, _ set: inout fd_set) -> Bool {
+@@ -490,6 +519,24 @@ private func FD_ISSET(_ fd: Int32, _ set: inout fd_set) -> Bool {
          case 13: return set.__fds_bits.13 & mask != 0
          case 14: return set.__fds_bits.14 & mask != 0
          case 15: return set.__fds_bits.15 & mask != 0
