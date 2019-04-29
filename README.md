@@ -35,13 +35,30 @@
  
 ### Dependencies 
 
-To use the provided prebuilt binaries you'll need the install the following dependencies:
+In order to use the provided prebuilt binaries you'll need to install the following dependencies:
+
+**Ubuntu 16.04 and Raspbian**
 
     sudo apt install clang-3.8 libicu-dev libcurl4-nss-dev
 
-On Ubuntus newer than 16.04, simply install the unversioned `clang` instead of `clang-3.8`.
+**Ubuntu 18.04 and newer**
 
-Once you are done, just decompress the archive with `tar xzf <archivename.tgz>` as you would do with the official releases, you'll find the Swift binaries in `bin/`.
+    sudo apt install clang libicu-dev libcurl4-nss-dev curl
+
+Decompress the archive on the RaspberryPi, you'll find the Swift binaries in `usr/bin/` relative to where you decompressed the archive.
+
+    tar -xzf <archivename.tgz>
+
+Ensure that the path you decompressed to is in your `PATH` environment variable: `echo $PATH`. If it's not then add it to your path for your shell.
+
+    PATH='$HOME/usr/bin:$PATH'
+
+Verify the swift version is setup: 
+
+    $ swift --version
+    
+    Swift version 5.0 (swift-5.0-RELEASE)
+    Target: armv7-unknown-linux-gnueabihf
 
 ## Building on ARM
 
