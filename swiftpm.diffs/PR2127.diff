@@ -1,3 +1,62 @@
+diff --git a/Sources/Build/BuildPlan.swift b/Sources/Build/BuildPlan.swift
+index e0ef02a..2b521c9 100644
+--- a/Sources/Build/BuildPlan.swift
++++ b/Sources/Build/BuildPlan.swift
+@@ -141,6 +141,9 @@ public struct BuildParameters {
+     /// `.swiftmodule`s.
+     public let enableParseableModuleInterfaces: Bool
+ 
++    /// Maximum number of threads to use for compilation (0 means use number of CPUs)
++    public let numThreads: UInt32
++
+     /// Checks if stdout stream is tty.
+     fileprivate let isTTY: Bool = {
+         guard let stream = stdoutStream.stream as? LocalFileOutputByteStream else {
+@@ -169,7 +172,8 @@ public struct BuildParameters {
+         sanitizers: EnabledSanitizers = EnabledSanitizers(),
+         enableCodeCoverage: Bool = false,
+         indexStoreMode: IndexStoreMode = .auto,
+-        enableParseableModuleInterfaces: Bool = false
++        enableParseableModuleInterfaces: Bool = false,
++        numThreads: UInt32 = 0
+     ) {
+         self.dataPath = dataPath
+         self.configuration = configuration
+@@ -182,7 +187,8 @@ public struct BuildParameters {
+         self.sanitizers = sanitizers
+         self.enableCodeCoverage = enableCodeCoverage
+         self.indexStoreMode = indexStoreMode
+-        self.enableParseableModuleInterfaces = enableParseableModuleInterfaces
++        self.enableParseableModuleInterfaces = enableParseableModuleInterfaces
++	 self.numThreads = numThreads
+     }
+ 
+     /// Returns the compiler arguments for the index store, if enabled.
+diff --git a/Sources/Build/ToolProtocol.swift b/Sources/Build/ToolProtocol.swift
+index 07ad19b..43775e2 100644
+--- a/Sources/Build/ToolProtocol.swift
++++ b/Sources/Build/ToolProtocol.swift
+@@ -142,6 +142,6 @@ struct SwiftCompilerTool: ToolProtocol {
+         stream <<< "    enable-whole-module-optimization: "
+             <<< Format.asJSON(target.buildParameters.configuration == .release) <<< "\n"
+         stream <<< "    num-threads: "
+-            <<< Format.asJSON("\(SwiftCompilerTool.numThreads)") <<< "\n"
++            <<< Format.asJSON("\(target.buildParameters.numThreads)") <<< "\n"
+     }
+ }
+diff --git a/Sources/Commands/Options.swift b/Sources/Commands/Options.swift
+index ad69c22..80db177 100644
+--- a/Sources/Commands/Options.swift
++++ b/Sources/Commands/Options.swift
+@@ -74,5 +74,8 @@ public class ToolOptions {
+     /// Whether to enable generation of `.swiftinterface`s alongside `.swiftmodule`s.
+     public var shouldEnableParseableModuleInterfaces = false
+ 
++    /// Limit the number of parallel instances of the swift compiler
++    public var numThreads = UInt32(0)
++
+     public required init() {}
+ }
 diff --git a/Sources/Commands/SwiftTool.swift b/Sources/Commands/SwiftTool.swift
 index 1386444..b1fa591 100644
 --- a/Sources/Commands/SwiftTool.swift
