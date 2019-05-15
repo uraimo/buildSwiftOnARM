@@ -1,0 +1,21 @@
+From fae45be102fc1681103f665b2ed48e10d86bbae8 Mon Sep 17 00:00:00 2001
+From: Tabor Kelly <tabor.kelly@racepointenergy.com>
+Date: Fri, 26 Apr 2019 11:56:57 -0700
+Subject: [PATCH] Respect schedulerLanes when using the C API.
+
+---
+ products/libllbuild/BuildSystem-C-API.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/products/libllbuild/BuildSystem-C-API.cpp b/products/libllbuild/BuildSystem-C-API.cpp
+index e0463aaa..ac2bdde9 100644
+--- a/products/libllbuild/BuildSystem-C-API.cpp
++++ b/products/libllbuild/BuildSystem-C-API.cpp
+@@ -574,6 +574,7 @@ class CAPIBuildSystem {
+     invocation.environment = cAPIInvocation.environment;
+     invocation.useSerialBuild = cAPIInvocation.useSerialBuild;
+     invocation.showVerboseStatus = cAPIInvocation.showVerboseStatus;
++    invocation.schedulerLanes = cAPIInvocation.schedulerLanes;
+ 
+     // Register a custom diagnostic handler with the source manager.
+     sourceMgr.setDiagHandler([](const llvm::SMDiagnostic& diagnostic,
