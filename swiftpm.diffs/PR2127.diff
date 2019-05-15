@@ -1,80 +1,10 @@
-From 49e3dc2f7443abe608fc1dbc47e99e8994a3bcd5 Mon Sep 17 00:00:00 2001
-From: Tabor Kelly <taborkelly@gmail.com>
-Date: Tue, 14 May 2019 08:37:53 -0700
-Subject: [PATCH] Add a --numThreads/-j to limit parallel compilation which can
- cause OOM killer problems on some Linux systems.
-
----
- Sources/Build/BuildPlan.swift    |  7 ++++++-
- Sources/Build/ToolProtocol.swift |  2 +-
- Sources/Commands/Options.swift   |  3 +++
- Sources/Commands/SwiftTool.swift | 30 ++++++++++++++++++++++--------
- 4 files changed, 32 insertions(+), 10 deletions(-)
-
-diff --git a/Sources/Build/BuildPlan.swift b/Sources/Build/BuildPlan.swift
-index 5faeb6a56..dd025e483 100644
---- a/Sources/Build/BuildPlan.swift
-+++ b/Sources/Build/BuildPlan.swift
-@@ -140,6 +140,9 @@ public struct BuildParameters {
-     /// `.swiftmodule`s.
-     public let enableParseableModuleInterfaces: Bool
- 
-+    /// Maximum number of threads to use for compilation (0 means use number of CPUs)
-+    public let numThreads: UInt32
-+
-     /// Checks if stdout stream is tty.
-     fileprivate let isTTY: Bool = {
-         guard let stream = stdoutStream.stream as? LocalFileOutputByteStream else {
-@@ -164,7 +167,8 @@ public struct BuildParameters {
-         sanitizers: EnabledSanitizers = EnabledSanitizers(),
-         enableCodeCoverage: Bool = false,
-         indexStoreMode: IndexStoreMode = .auto,
--        enableParseableModuleInterfaces: Bool = false
-+        enableParseableModuleInterfaces: Bool = false,
-+        numThreads: UInt32 = 0
-     ) {
-         self.dataPath = dataPath
-         self.configuration = configuration
-@@ -178,6 +182,7 @@ public struct BuildParameters {
-         self.enableCodeCoverage = enableCodeCoverage
-         self.indexStoreMode = indexStoreMode
-         self.enableParseableModuleInterfaces = enableParseableModuleInterfaces
-+        self.numThreads = numThreads
-     }
- 
-     /// Returns the compiler arguments for the index store, if enabled.
-diff --git a/Sources/Build/ToolProtocol.swift b/Sources/Build/ToolProtocol.swift
-index 07ad19b78..43775e273 100644
---- a/Sources/Build/ToolProtocol.swift
-+++ b/Sources/Build/ToolProtocol.swift
-@@ -142,6 +142,6 @@ struct SwiftCompilerTool: ToolProtocol {
-         stream <<< "    enable-whole-module-optimization: "
-             <<< Format.asJSON(target.buildParameters.configuration == .release) <<< "\n"
-         stream <<< "    num-threads: "
--            <<< Format.asJSON("\(SwiftCompilerTool.numThreads)") <<< "\n"
-+            <<< Format.asJSON("\(target.buildParameters.numThreads)") <<< "\n"
-     }
- }
-diff --git a/Sources/Commands/Options.swift b/Sources/Commands/Options.swift
-index 417eccc72..bb764b440 100644
---- a/Sources/Commands/Options.swift
-+++ b/Sources/Commands/Options.swift
-@@ -77,5 +77,8 @@ public class ToolOptions {
-     /// Write dependency resolver trace to a file.
-     public var enableResolverTrace = false
- 
-+    /// Limit the number of parallel instances of the swift compiler
-+    public var numThreads = UInt32(0)
-+
-     public required init() {}
- }
 diff --git a/Sources/Commands/SwiftTool.swift b/Sources/Commands/SwiftTool.swift
-index 42d033333..396b65efb 100644
+index 1386444..b1fa591 100644
 --- a/Sources/Commands/SwiftTool.swift
 +++ b/Sources/Commands/SwiftTool.swift
-@@ -366,6 +366,11 @@ public class SwiftTool<Options: ToolOptions> {
-             option: parser.add(option: "--trace-resolver", kind: Bool.self),
-             to: { $0.enableResolverTrace = $1 })
+@@ -376,6 +376,11 @@ public class SwiftTool<Options: ToolOptions> {
+             option: parser.add(option: "--enable-parseable-module-interfaces", kind: Bool.self),
+             to: { $0.shouldEnableParseableModuleInterfaces = $1 })
  
 +        binder.bind(
 +            option: parser.add(option: "--numThreads", shortName: "-j", kind: Int.self,
@@ -84,58 +14,49 @@ index 42d033333..396b65efb 100644
          // Let subclasses bind arguments.
          type(of: self).defineArguments(parser: parser, binder: binder)
  
-@@ -593,7 +598,8 @@ public class SwiftTool<Options: ToolOptions> {
+@@ -603,7 +608,7 @@ public class SwiftTool<Options: ToolOptions> {
          guard let llbuildTargetName = try computeLLBuildTargetName(for: subset, buildParameters: parameters) else {
              return
          }
--        try runLLBuild(plan: plan, manifest: parameters.llbuildManifest, llbuildTarget: llbuildTargetName)
-+        try runLLBuild(plan: plan, manifest: parameters.llbuildManifest, llbuildTarget: llbuildTargetName,
-+            numThreads: parameters.numThreads)
+-        try runLLBuild(manifest: parameters.llbuildManifest, llbuildTarget: llbuildTargetName)
++        try runLLBuild(manifest: parameters.llbuildManifest, llbuildTarget: llbuildTargetName, numThreads: parameters.numThreads)
      }
  
      /// Build a subset of products and targets using swift-build-tool.
-@@ -609,7 +615,8 @@ public class SwiftTool<Options: ToolOptions> {
+@@ -619,7 +624,8 @@ public class SwiftTool<Options: ToolOptions> {
          try llbuild.generateManifest(at: yaml)
  
          // Run llbuild.
--        try runLLBuild(plan: plan, manifest: yaml, llbuildTarget: llbuildTargetName)
-+        try runLLBuild(plan: plan, manifest: yaml, llbuildTarget: llbuildTargetName,
-+            numThreads: plan.buildParameters.numThreads)
+-        try runLLBuild(manifest: yaml, llbuildTarget: llbuildTargetName)
++        try runLLBuild(manifest: yaml, llbuildTarget: llbuildTargetName,
++		numThreads: plan.buildParameters.numThreads)
  
          // Create backwards-compatibilty symlink to old build path.
          let oldBuildPath = buildPath.appending(component: options.configuration.dirname)
-@@ -619,16 +626,18 @@ public class SwiftTool<Options: ToolOptions> {
+@@ -629,17 +635,18 @@ public class SwiftTool<Options: ToolOptions> {
          try createSymlink(oldBuildPath, pointingAt: plan.buildParameters.buildPath, relative: true)
      }
  
--    func runLLBuild(plan: BuildPlan, manifest: AbsolutePath, llbuildTarget: String) throws {
-+    func runLLBuild(plan: BuildPlan, manifest: AbsolutePath, llbuildTarget: String, numThreads: UInt32) throws {
+-    func runLLBuild(manifest: AbsolutePath, llbuildTarget: String) throws {
++    func runLLBuild(manifest: AbsolutePath, llbuildTarget: String, numThreads: UInt32) throws {
          assert(localFileSystem.isFile(manifest), "llbuild manifest not present: \(manifest)")
          if options.shouldEnableLLBuildLibrary {
--            try runLLBuildAsLibrary(plan: plan, manifest: manifest, llbuildTarget: llbuildTarget)
-+            try runLLBuildAsLibrary(plan: plan, manifest: manifest, llbuildTarget: llbuildTarget,
-+                numThreads: numThreads)
+-            try runLLBuildAsLibrary(manifest: manifest, llbuildTarget: llbuildTarget)
++            try runLLBuildAsLibrary(manifest: manifest, llbuildTarget: llbuildTarget, numThreads: numThreads)
          } else {
 -            try runLLBuildAsExecutable(manifest: manifest, llbuildTarget: llbuildTarget)
 +            try runLLBuildAsExecutable(manifest: manifest, llbuildTarget: llbuildTarget, numThreads: numThreads)
          }
      }
  
--    func runLLBuildAsLibrary(plan: BuildPlan, manifest: AbsolutePath, llbuildTarget: String) throws {
-+    func runLLBuildAsLibrary(plan: BuildPlan, manifest: AbsolutePath, llbuildTarget: String,
-+        numThreads: UInt32) throws {
-         // Setup the build delegate.
-         let isVerbose = verbosity != .concise
-         let progressAnimation: ProgressAnimationProtocol = isVerbose ?
-@@ -642,6 +651,7 @@ public class SwiftTool<Options: ToolOptions> {
-         buildDelegate.isVerbose = isVerbose
- 
+-    func runLLBuildAsLibrary(manifest: AbsolutePath, llbuildTarget: String) throws {
++    func runLLBuildAsLibrary(manifest: AbsolutePath, llbuildTarget: String, numThreads: UInt32) throws {
          let databasePath = buildPath.appending(component: "build.db").pathString
 +        BuildSystem.setSchedulerLaneWidth(width: numThreads)
          let buildSystem = BuildSystem(buildFile: manifest.pathString, databaseFile: databasePath, delegate: buildDelegate)
-         buildDelegate.onCommmandFailure = { buildSystem.cancel() }
- 
-@@ -650,7 +660,7 @@ public class SwiftTool<Options: ToolOptions> {
+         buildDelegate.isVerbose = verbosity != .concise
+         buildDelegate.onCommmandFailure = { [weak buildSystem] in buildSystem?.cancel() }
+@@ -649,7 +656,7 @@ public class SwiftTool<Options: ToolOptions> {
          guard success else { throw Diagnostics.fatalError }
      }
  
@@ -144,7 +65,7 @@ index 42d033333..396b65efb 100644
          // Create a temporary directory for the build process.
          let tempDirName = "org.swift.swiftpm.\(NSUserName())"
          let tempDir = try determineTempDirectory().appending(component: tempDirName)
-@@ -677,6 +687,9 @@ public class SwiftTool<Options: ToolOptions> {
+@@ -676,6 +683,9 @@ public class SwiftTool<Options: ToolOptions> {
          if verbosity != .concise {
              args.append("-v")
          }
@@ -154,7 +75,7 @@ index 42d033333..396b65efb 100644
  
          // Create the environment for llbuild.
          var env = Process.env
-@@ -723,7 +736,8 @@ public class SwiftTool<Options: ToolOptions> {
+@@ -722,7 +732,8 @@ public class SwiftTool<Options: ToolOptions> {
                  sanitizers: options.sanitizers,
                  enableCodeCoverage: options.shouldEnableCodeCoverage,
                  indexStoreMode: options.indexStoreMode,
