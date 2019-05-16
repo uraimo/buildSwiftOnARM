@@ -1,34 +1,28 @@
 diff --git a/Sources/Build/Triple.swift b/Sources/Build/Triple.swift
-index 4a9d2e5f..57bc7658 100644
+index 1a0e3095..39eff944 100644
 --- a/Sources/Build/Triple.swift
 +++ b/Sources/Build/Triple.swift
-@@ -35,6 +35,7 @@ public struct Triple {
-         case ppc64le
-         case s390x
-         case aarch64
-+        case armv6
-         case armv7
-         case arm
-     }
-@@ -111,7 +112,7 @@ public struct Triple {
+@@ -127,7 +127,7 @@ public struct Triple {
      public static let ppc64leLinux = try! Triple("powerpc64le-unknown-linux")
      public static let s390xLinux = try! Triple("s390x-unknown-linux")
      public static let arm64Linux = try! Triple("aarch64-unknown-linux")
 -    public static let armLinux = try! Triple("armv7-unknown-linux-gnueabihf")
-+    public static let armLinux = try! Triple("armv6-unknown-linux-gnueabihf")
++    public static let armLinux = try! Triple("arm-unknown-linux-gnueabihf")
      public static let android = try! Triple("armv7-unknown-linux-androideabi")
+     public static let windows = try! Triple("x86_64-unknown-windows-msvc")
  
-   #if os(macOS)
 diff --git a/Utilities/bootstrap b/Utilities/bootstrap
-index b04ad7fa..1b767864 100755
+index de47f92f..27fcfbf0 100755
 --- a/Utilities/bootstrap
 +++ b/Utilities/bootstrap
-@@ -907,6 +907,8 @@ def main():
+@@ -1015,8 +1015,8 @@ def main():
+             build_target = "s390x-unknown-linux"
+         elif platform.machine() == 'ppc64le':
              build_target = 'powerpc64le-unknown-linux'
-         elif platform.machine().startswith("armv7"):
-             build_target = 'armv7-unknown-linux-gnueabihf'
-+        elif platform.machine().startswith("armv6"):
-+            build_target = 'armv6-unknown-linux-gnueabihf'
+-        elif platform.machine().startswith("armv7"):
+-            build_target = 'armv7-unknown-linux-gnueabihf'
++        elif platform.machine().startswith("arm"):
++            build_target = 'arm-unknown-linux-gnueabihf'
          elif platform.machine() == 'aarch64':
              build_target = 'aarch64-unknown-linux'
          else:
