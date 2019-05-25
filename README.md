@@ -40,6 +40,8 @@ In order to use the provided prebuilt binaries you'll need to install the follow
 **Ubuntu 16.04 and Raspbian**
 
     sudo apt install clang-3.8 libicu-dev libcurl4-nss-dev
+    sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.8 100
+    sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.8 100
 
 **Ubuntu 18.04 and newer**
 
