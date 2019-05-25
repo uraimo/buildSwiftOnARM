@@ -6,7 +6,6 @@
 ### Summary
 
 - [Supported Architectures](#supported-architectures)
-- [Usage](#usage)
 - [Prebuilt binaries](#prebuilt-binaries)
     - [Dependencies](#dependencies) 
 - [Building on ARM](#building-on-arm)
@@ -22,15 +21,6 @@
 * ✅  ARMv7/8 32bit: _All versions of RaspberryPi 2/3, OrangePi, ODroid, CHIP, etc..._
 * ✅  aarch64: _RaspberryPis or other ARMv8 boards with a 64 bit OS, Pine64, etc..._
 
-
-## Usage
-
-When using the Swift package manager on these memory/cpu contrained platforms, you'll need to use the newly added `-j` option to limit the number of threads spawned by the tool and be able to compile.
-For example, when building an SPM project:
-
-```
-    pi@raspberrypi:> swift build -j 1 
-```
 
 ## Prebuilt binaries
 
