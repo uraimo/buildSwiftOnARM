@@ -9,7 +9,7 @@ sudo apt-get install git cmake ninja-build clang-$CLANG_VERSION python uuid-dev 
 sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-$CLANG_VERSION 100
 sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-$CLANG_VERSION 100
 
-if [[ $PLATFORM = "Raspbian" ]]; then
+if [[ $PLATFORM = "raspbian" ]]; then
    ./distro-scripts/raspbianstretch.sh
 fi
 

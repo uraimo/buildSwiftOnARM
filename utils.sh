@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # Set PLATFORM and ARCH
-PLATFORM="Unknown"
+PLATFORM="unknown"
 if [[ $(cat /etc/os-release) = *"Ubuntu"* ]]; then
-  PLATFORM="Ubuntu"
+  PLATFORM="ubuntu"
 elif [[ $(cat /etc/os-release) = *"Raspbian"* ]]; then
-  PLATFORM="Raspbian"
+  PLATFORM="raspbian"
 fi
 
 case `uname -m` in
