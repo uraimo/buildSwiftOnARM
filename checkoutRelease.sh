@@ -13,4 +13,4 @@ find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs ] && e
 echo "✅ \033[1m Applying the required $ARCH patches...\033[0m"
 find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs/$ARCH ] && echo \\* Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/$ARCH/*.diff; do patch -p1 < \$f; done;" \;
 echo "✅ \033[1m Applying the required $PLATFORM patches...\033[0m"
-find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs/$ARCH ] && echo \\* Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/$PLATFORM/*.diff; do patch -p1 < \$f; done;" \;
+find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs/$PLATFORM ] && echo \\* Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/$PLATFORM/*.diff; do patch -p1 < \$f; done;" \;
