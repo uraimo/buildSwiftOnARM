@@ -1,6 +1,6 @@
 <p align="center" style="margin-bottom:30px;">
 <img src="https://raw.githubusercontent.com/uraimo/buildSwiftOnARM/master/logo.svg?sanitize=true"/>
-<i>Scripts to clone, configure, patch and build Swift 5.0 on Linux ARM devices.</i> 
+<i>Scripts to clone, configure, patch and build Swift 5.0.1 on Linux ARM devices.</i> 
 </p>
 
 ### Summary
@@ -36,13 +36,13 @@ For example, when building an SPM project:
 
 | OS | Architecture | Boards | Download |                                                                          
 | -- | ------------ | ------ | -------- |
-| Raspbian Stretch | ARMv6 | RaspberryPi Classic, All versions of Pi Zero |  [4.2.3](https://github.com/uraimo/buildSwiftOnARM/releases/download/4.2.3/swift-4.2.3-RPi01-RaspbianStretch.tgz) - [5.0](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0/swift-5.0-RPi01-RaspbianStretch.tgz) |
-| Raspbian Stretch | ARMv7 | All versions of RaspberryPi 2/3 | [4.2.3](https://github.com/uraimo/buildSwiftOnARM/releases/download/4.2.3/swift-4.2.3-RPi23-RaspbianStretch.tgz) - [5.0-hotfix1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0/swift-5.0-threads_hotfix-RPi23-RaspbianStretch.tgz) |  
-| Ubuntu 16.04 | ARMv7 | All versions of RaspberryPi 2/3 | [4.2.3](https://github.com/uraimo/buildSwiftOnARM/releases/download/4.2.3/swift-4.2.3-RPi23-Ubuntu1604.tgz) - [5.0-hotfix1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0/swift-5.0-threads_hotfix-RPi23-Ubuntu1604.tgz) |
-| Ubuntu 18.04 | ARMv7 | All versions of RaspberryPi 2/3 | [4.2.3](https://github.com/uraimo/buildSwiftOnARM/releases/download/4.2.3/swift-4.2.3-RPi23-Ubuntu1804.tgz) - [5.0-hotfix1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0/swift-5.0-threads_hotfix-RPi23-Ubuntu1804.tgz) |
-| Ubuntu 18.10 | ARMv7 | All versions of RaspberryPi 2/3 | [4.2.3](https://github.com/uraimo/buildSwiftOnARM/releases/download/4.2.3/swift-4.2.3-RPi23-Ubuntu1810.tgz) - [5.0-hotfix1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0/swift-5.0-threads_hotfix-RPi23-Ubuntu1810.tgz) |
-| Ubuntu 18.04/aarch64 | aarch64 | All versions of RaspberryPi 2/3 | [4.2.3](https://github.com/uraimo/buildSwiftOnARM/releases/download/4.2.3/swift-4.2.3-RPi23-Ubuntu1804_aarch64.tgz) |
+| Raspbian Stretch | ARMv6 | All RaspberryPis: Classic, Zero, 2, 3 | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-RPi0123-RaspbianStretch.tgz) |
+| Ubuntu 16.04 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-RPi23-Ubuntu1604.tgz) |
+| Ubuntu 18.04 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-RPi23-Ubuntu1804.tgz) |
+| Ubuntu 18.10 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-RPi23-Ubuntu1810.tgz) |
  
+For binaries of older releases, check out the [releases page](https://github.com/uraimo/buildSwiftOnARM/releases).
+
 ### Dependencies 
 
 In order to use the provided prebuilt binaries you'll need to install the following dependencies:
@@ -69,7 +69,7 @@ Verify the swift version is setup:
 
     $ swift --version
     
-    Swift version 5.0 (swift-5.0-RELEASE)
+    Swift version 5.0.1 (swift-5.0.1-RELEASE)
     Target: armv7-unknown-linux-gnueabihf
 
 ## Building on ARM
@@ -82,7 +82,7 @@ The scripts that buildSwiftOnARM provides:
 
 - clone.sh - Install dependencies and clones the main Swift repository and all the related projects
 
-- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (5.0 at the moment) and apply the patches.
+- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (5.0.1 at the moment) and apply the patches.
 
 - build.sh - Builds Swift producing a tgz archive with the Swift distributions. 
 
@@ -116,15 +116,15 @@ Now, call the included scripts as follows:
 
 1. Launch `clone.sh` that will install the required dependencies (_git cmake ninja-build clang-3.8 python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev libcurl4-openssl-dev libz-dev_), fix clang links and clone apple/swift with all its dependecies.
 
-2. Run `checkoutRelease.sh` that will select the current release (5.0) and apply the needed patches. These patches cover the basic Raspi2/3 with Xenial case, but I've had many reports of successful build on different setups, but beware, additional patches could  be needed on different boards/OSs.
+2. Run `checkoutRelease.sh` that will select the current release (5.0.1) and apply the needed patches.
 
 3. Once done, start the build with `build.sh`.
 
-4. Once the build completes a few hours later, you'll have a `swift-5.0.tgz` archive containing the whole Swift compiler distribution. Once decompressed you'll find the Swift binaries under `usr/bin`.
+4. Once the build completes a few hours later, you'll have a `swift-5.0.1.tgz` archive containing the whole Swift compiler distribution. Once decompressed you'll find the Swift binaries under `usr/bin`.
 
 I recommend to perform all these operations in a permanent background `tmux` or `screen` session (`CTRL+B d` to detach from the session and `tmux a` to reattach to it when you ssh again into the RaspberryPi).
 
-Additional steps could be required in some cases (on a RaspberryPi 1 or for Raspbian) [check the latest ARM posts on my blog for additional info](https://www.uraimo.com/category/raspberry/).
+Additional steps could be required in some cases [check the latest ARM posts on my blog for additional info](https://www.uraimo.com/category/raspberry/).
 
 To build a different release than the one currently configured in the script, open `checkoutRelease.sh` and `build.sh` and modify the variables on top, with the branch name for the release and the release name for the tgz respectively.
 
@@ -151,6 +151,8 @@ The community can be reached at the [swift-arm](https://launchpass.com/swift-arm
 
 You can compile old releases checking out the specific tag:
 
+
+* [Swift 5.0](https://github.com/uraimo/buildSwiftOnARM/tree/5.0)
 * [Swift 4.2.3](https://github.com/uraimo/buildSwiftOnARM/tree/4.2.3)
 * [Swift 4.2.2](https://github.com/uraimo/buildSwiftOnARM/tree/4.2.2)
 * [Swift 4.2.1](https://github.com/uraimo/buildSwiftOnARM/tree/4.2.1)
