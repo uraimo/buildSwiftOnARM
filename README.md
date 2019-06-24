@@ -64,7 +64,13 @@ Decompress the archive on the RaspberryPi, you'll find the Swift binaries in `us
 
 Ensure that the path you decompressed to is in your `PATH` environment variable: `echo $PATH`. If it's not then add it to your path for your shell.
 
-    PATH='$HOME/usr/bin:$PATH'
+    PATH="$HOME/usr/bin:$PATH"
+
+To permanently add this to your `PATH` variable, you can add the following block of code to the end of your `~/.profile` file:
+
+    if [ -d "$HOME/usr/bin" ] ; then
+        PATH="$HOME/usr/bin:$PATH"
+    fi
 
 Verify the swift version is setup: 
 
@@ -72,6 +78,8 @@ Verify the swift version is setup:
     
     Swift version 5.0.1 (swift-5.0.1-RELEASE)
     Target: armv7-unknown-linux-gnueabihf
+
+
 
 ## Building on ARM
 
