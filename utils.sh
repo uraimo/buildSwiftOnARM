@@ -10,14 +10,14 @@ if [[ $(cat /etc/os-release) = *"Ubuntu"* ]]; then
     VERSION=`cat /etc/os-release | sed -n 's/VERSION_ID=\"\([0-9].*\)\"/\1/p'`
 elif [[ $(cat /etc/os-release) = *"Raspbian"* ]]; then
     OS="raspbian"
-    if [[ $(cat /etc/os-release) = *"strech"* ]]; then
-        VERSION="strech"
+    if [[ $(cat /etc/os-release) = *"stretch"* ]]; then
+        VERSION="stretch"
     elif [[ $(cat /etc/os-release) = *"buster"* ]]; then
         VERSION="buster"
     fi
-elif [[ $(cat /etc/os-release) = *"strech"* ]]; then
+elif [[ $(cat /etc/os-release) = *"stretch"* ]]; then
     OS="debian"
-    VERSION="strech"
+    VERSION="stretch"
 elif [[ $(cat /etc/os-release) = *"buster"* ]]; then
     OS="debian"
     VERSION="buster"
