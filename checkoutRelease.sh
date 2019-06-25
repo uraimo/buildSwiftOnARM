@@ -16,6 +16,6 @@ find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs ] && e
 # and OS version go in their own subdirectory
 for VARIANT in $ARCH $OS $VERSION $OS$VERSION
 do 
-    echo "✅ Applying the required $VARIANT patches..."
-    find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs/$VARIANT ] && echo \\* Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/$VARIANT/*.diff; do patch -p1 < \$f; done;" \;
+    echo "✳️  Searching for required $VARIANT patches..."
+    find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs/$VARIANT ] && echo ✅ Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/$VARIANT/*.diff; do patch -p1 < \$f; done;" \;
 done
