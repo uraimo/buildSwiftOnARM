@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🍓 \033[1m Installing Raspbian dependencies...\033[0m"
+echo "🍓 \033[1m Installing Strech dependencies...\033[0m"
 
 sudo apt remove swig swig3.0
 sudo apt-get install libpcre3 libpcre3-dev
