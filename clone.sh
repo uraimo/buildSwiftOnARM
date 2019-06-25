@@ -7,6 +7,7 @@ if [ $VERSION = "stretch" ] || [ $VERSION = "16.04" ]; then
 fi
 
 # Basic dependencies
+echo "✅ Installing dependencies..."
 sudo apt-get install make rsync git cmake ninja-build clang$CLANG_VERSION python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev libcurl4-openssl-dev libz-dev
 
 # Fix clang links
