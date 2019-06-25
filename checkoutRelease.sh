@@ -9,7 +9,7 @@ find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'/.git ] && ec
 echo "✳️  Switching all the repositories to ${BRANCH} @ ${TAG}..."
 ./swift/utils/update-checkout --scheme ${BRANCH} --tag ${TAG}
 echo "✅ Applying the required cross-platform patches..."
-find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs ] && echo \\* Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/*.diff; do patch -p1 < \$f; done;" \;
+find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs ] && echo \\* Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/*.diff; do [ -e \"\$f\" ] || continue; patch -p1 < \"\$f\"; done;" \;
 
 
 # Patches for a specific arch, OS, shared version(debian and raspbian can share patches) 
