@@ -8,7 +8,7 @@ fi
 
 # Basic dependencies
 echo "✅ Installing dependencies..."
-sudo apt-get install make rsync git cmake ninja-build clang$CLANG_VERSION python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev libcurl4-openssl-dev libz-dev
+sudo apt-get install make patch rsync git cmake ninja-build clang$CLANG_VERSION python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev libcurl4-openssl-dev libz-dev
 
 # Fix clang links
 sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++$CLANG_VERSION 100
