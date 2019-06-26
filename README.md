@@ -37,7 +37,8 @@ For example, when building an SPM project:
 | OS | Architecture | Boards | Download |                                                                          
 | -- | ------------ | ------ | -------- |
 | Raspbian Stretch | ARMv6 | All RaspberryPis: Classic, Zero, 2, 3 | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-RPi0123-RaspbianStretch.tgz) |
-| Debian Stretch | ARMv7 | Every ARMv7 board, RaspberryPis 2/3 included | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-armv7-DebianStretch.tgz) |
+| Debian Stretch | ARMv7 | Every ARMv7 board, RaspberryPis 2, 3 included | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-armv7-DebianStretch.tgz) |
+| Debian Buster | ARMv7 | Every ARMv7 board, RaspberryPis 2, 3, 4 included | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-armv7-DebianBuster.tgz) |
 | Ubuntu 16.04 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-RPi23-Ubuntu1604.tgz) |
 | Ubuntu 18.04 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-RPi23-Ubuntu1804.tgz) |
 | Ubuntu 18.10 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-RPi23-Ubuntu1810.tgz) |
