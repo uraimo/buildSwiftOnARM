@@ -5,11 +5,11 @@ BRANCH=swift-5.0-branch
 TAG=swift-5.0.1-RELEASE
 
 echo "♻️  Resetting the repositories..."
-find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'/.git ] && echo \\* Cleaning '{}' && cd '{}' && git reset --hard HEAD && git clean -fd" \;
+find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'/.git ] && echo ■ Cleaning '{}' && cd '{}' && git reset --hard HEAD && git clean -fd" \;
 echo "✳️  Switching all the repositories to ${BRANCH} @ ${TAG}..."
 ./swift/utils/update-checkout --scheme ${BRANCH} --tag ${TAG}
 echo "✅ Applying the required cross-platform patches..."
-find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs ] && echo \\* Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/*.diff; do [ -e \"\$f\" ] || continue; patch -p1 < \"\$f\"; done;" \;
+find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs ] && echo ■ Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/*.diff; do [ -e \"\$f\" ] || continue; patch -p1 < \"\$f\"; done;" \;
 
 
 # Patches for a specific arch, OS, shared version(debian and raspbian can share patches) 
@@ -17,5 +17,5 @@ find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs ] && e
 for VARIANT in $ARCH $OS $VERSION $OS$VERSION $ARCH$OS$VERSION
 do 
     echo "✳️  Searching for required $VARIANT patches..."
-    find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs/$VARIANT ] && echo ✅ Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/$VARIANT/*.diff; do patch -p1 < \$f; done;" \;
+    find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs/$VARIANT ] && echo ■ Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/$VARIANT/*.diff; do patch -p1 < \$f; done;" \;
 done
