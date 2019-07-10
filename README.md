@@ -3,11 +3,15 @@
 <i>Scripts to clone, configure, patch and build Swift 5.0.1 on Linux ARM devices.</i> 
 </p>
 
+
+
+For precompiled Swift 5.0.1 binaries see the *[Prebuilt binaries](#prebuilt-binaries)* section, if you want to build Swift on your own instead, check out the *[Building on ARM](#building-on-arm)* section and the step-by-step instructions.
+
 ### Summary
 
 - [Supported Architectures](#supported-architectures)
-- [Usage](#usage)
 - [Prebuilt binaries](#prebuilt-binaries)
+- [Usage](#usage)
     - [Dependencies](#dependencies) 
 - [Building on ARM](#building-on-arm)
     - [Step by step instructions](#step-by-step-instructions)
@@ -23,15 +27,6 @@
 * ✅  aarch64: _RaspberryPis or other ARMv8 boards with a 64 bit OS, Pine64, etc..._
 
 
-## Usage
-
-When using the Swift package manager on these memory/cpu contrained platforms, you'll need to use the newly added `-j` option to limit the number of threads spawned by the tool and be able to compile.
-For example, when building an SPM project:
-
-```
-    pi@raspberrypi:> swift build -j 1 
-```
-
 ## Prebuilt binaries
 
 | OS | Architecture | Boards | Download |                                                                          
@@ -46,6 +41,15 @@ For example, when building an SPM project:
 | Ubuntu 18.10 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-RPi23-Ubuntu1810.tgz) |
  
 For binaries of older releases, check out the [releases page](https://github.com/uraimo/buildSwiftOnARM/releases).
+
+## Usage
+
+When using the Swift Package Manager on one of these boards, that usually have limited memory/cpu, you'll need to use the new `-j` option to reduce the number of threads spawned by the tool and be able to compile (this option will be officially available in a future release of SPM).
+For example, when building an SPM project most of the times we'll limit the number of jobs to one:
+
+```
+    pi@raspberrypi:> swift build -j 1 
+```
 
 ### Dependencies 
 
