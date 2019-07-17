@@ -1,6 +1,6 @@
 <p align="center" style="margin-bottom:30px;">
 <img src="https://raw.githubusercontent.com/uraimo/buildSwiftOnARM/master/logo.svg?sanitize=true"/>
-<i>Scripts to clone, configure, patch and build Swift 5.0.1 on Linux ARM devices.</i> 
+<i>Scripts to clone, configure, patch and build Swift 5.0.2 on Linux ARM devices.</i> 
 </p>
 
 
@@ -168,6 +168,7 @@ The community can be reached at the [swift-arm](https://launchpass.com/swift-arm
 You can compile old releases checking out the specific tag:
 
 
+* [Swift 5.0.1](https://github.com/uraimo/buildSwiftOnARM/tree/5.0.1)
 * [Swift 5.0](https://github.com/uraimo/buildSwiftOnARM/tree/5.0)
 * [Swift 4.2.3](https://github.com/uraimo/buildSwiftOnARM/tree/4.2.3)
 * [Swift 4.2.2](https://github.com/uraimo/buildSwiftOnARM/tree/4.2.2)
