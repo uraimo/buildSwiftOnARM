@@ -5,7 +5,7 @@
 
 
 
-For precompiled Swift 5.0.1 binaries see the *[Prebuilt binaries](#prebuilt-binaries)* section, if you want to build Swift on your own instead, check out the *[Building on ARM](#building-on-arm)* section and the step-by-step instructions.
+For precompiled Swift 5.0.2 binaries see the *[Prebuilt binaries](#prebuilt-binaries)* section, if you want to build Swift on your own instead, check out the *[Building on ARM](#building-on-arm)* section and the step-by-step instructions.
 
 ### Summary
 
@@ -31,12 +31,12 @@ For precompiled Swift 5.0.1 binaries see the *[Prebuilt binaries](#prebuilt-bina
 
 | OS | Architecture | Boards | Download |                                                                          
 | -- | ------------ | ------ | -------- |
-| Raspbian Stretch | ARMv6 | All RaspberryPis: Classic, Zero, 2, 3 | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-RPi0123-RaspbianStretch.tgz) |
-| Raspbian Buster | ARMv6 | All RaspberryPis: Classic, Zero, 2, 3, 4 | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-armv6-RPi01234-RaspbianBuster.tgz) |
-| Debian Stretch | ARMv7 | Every ARMv7 board, RaspberryPis 2, 3 included | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-armv7-DebianStretch.tgz) |
-| Debian Buster | ARMv7 | Every ARMv7 board, RaspberryPis 2, 3, 4 included | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-armv7-DebianBuster.tgz) |
-| Ubuntu 16.04 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-RPi23-Ubuntu1604.tgz) |
-| Ubuntu 18.04 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-RPi23-Ubuntu1804.tgz) |
+| Raspbian Stretch | ARMv6 | All RaspberryPis: Classic, Zero, 2, 3 | [5.0.2](https://github.com/uraimo/buildSwiftOnARM/releases/download/v5.0.2/swift-5.0.2-armv6-RPi0123-RaspbianStretch.tgz) |
+| Raspbian Buster | ARMv6 | All RaspberryPis: Classic, Zero, 2, 3, 4 | [5.0.2](https://github.com/uraimo/buildSwiftOnARM/releases/download/v5.0.2/swift-5.0.2-armv6-RPi01234-RaspbianBuster.tgz) |
+| Debian Stretch | ARMv7 | Every ARMv7 board, RaspberryPis 2, 3 included | [5.0.2](https://github.com/uraimo/buildSwiftOnARM/releases/download/v5.0.2/swift-5.0.2-armv7-DebianStretch.tgz) |
+| Debian Buster | ARMv7 | Every ARMv7 board, RaspberryPis 2, 3, 4 included | [5.0.2](https://github.com/uraimo/buildSwiftOnARM/releases/download/v5.0.2/swift-5.0.2-armv7-DebianBuster.tgz) |
+| Ubuntu 16.04 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.2](https://github.com/uraimo/buildSwiftOnARM/releases/download/v5.0.2/swift-5.0.2-RPi23-Ubuntu1604.tgz) |
+| Ubuntu 18.04 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.2](https://github.com/uraimo/buildSwiftOnARM/releases/download/v5.0.2/swift-5.0.2-RPi23-Ubuntu1804.tgz) |
 | Ubuntu 18.04 | aarch64 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-aarch64-RPi234-Ubuntu1804_64.tgz) |
 | Ubuntu 18.10 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-RPi23-Ubuntu1810.tgz) |
  
@@ -98,7 +98,7 @@ The scripts that buildSwiftOnARM provides:
 
 - clone.sh - Install dependencies and clones the main Swift repository and all the related projects
 
-- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (5.0.1 at the moment) and apply the patches.
+- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (5.0.2 at the moment) and apply the patches.
 
 - build.sh - Builds Swift producing a tgz archive with the Swift distributions. 
 
@@ -136,7 +136,7 @@ Now, call the included scripts as follows:
 
 3. Once done, start the build with `build.sh`.
 
-4. Once the build completes a few hours later, you'll have a `swift-5.0.1.tgz` archive containing the whole Swift compiler distribution. Once decompressed you'll find the Swift binaries under `usr/bin`.
+4. Once the build completes a few hours later, you'll have a `swift-5.0.2-armv7.tgz` archive containing the whole Swift compiler distribution. Once decompressed you'll find the Swift binaries under `usr/bin`.
 
 I recommend to perform all these operations in a permanent background `tmux` or `screen` session (`CTRL+B d` to detach from the session and `tmux a` to reattach to it when you ssh again into the RaspberryPi).
 
