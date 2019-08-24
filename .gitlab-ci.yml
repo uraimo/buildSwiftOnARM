@@ -12,7 +12,7 @@ build-debian:
     - debian9
   artifacts:
     paths:
-      - swift-4.2.3.tgz
+      - swift-*.tgz
       
 build-ubuntu:
   stage: build
@@ -25,4 +25,4 @@ build-ubuntu:
     - ubuntu1604
   artifacts:
     paths:
-      - swift-4.2.3.tgz
+      - swift-*.tgz
