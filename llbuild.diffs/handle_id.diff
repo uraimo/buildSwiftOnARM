@@ -1,0 +1,13 @@
+diff --git a/include/llbuild/Basic/Subprocess.h b/include/llbuild/Basic/Subprocess.h
+index c589691..89bed60 100644
+--- a/include/llbuild/Basic/Subprocess.h
++++ b/include/llbuild/Basic/Subprocess.h
+@@ -58,7 +58,7 @@ namespace llbuild {
+     /// Handle used to communicate information about a launched process.
+     struct ProcessHandle {
+       /// Opaque ID.
+-      uint64_t id;
++      uintptr_t id;
+     };
+ 
+     struct ProcessInfo {

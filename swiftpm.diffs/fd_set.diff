@@ -1,0 +1,81 @@
+diff --git a/Sources/SPMUtility/FSWatch.swift b/Sources/SPMUtility/FSWatch.swift
+index a4752f4..7da4517 100644
+--- a/Sources/SPMUtility/FSWatch.swift
++++ b/Sources/SPMUtility/FSWatch.swift
+@@ -441,12 +441,23 @@ public final class Inotify {
+ // FIXME: <rdar://problem/45794219> Swift should provide shims for FD_ macros
+ 
+ private func FD_ZERO(_ set: inout fd_set) {
+-	set.__fds_bits = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
++   #if os(Linux) && arch(arm)
++   set.__fds_bits = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
++	             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
++   #else
++   set.__fds_bits = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
++   #endif
+ }
+ 
+ private func FD_SET(_ fd: Int32, _ set: inout fd_set) {
+-    let intOffset = Int(fd / 16)
+-    let bitOffset = Int(fd % 16)
++    #if os(Linux) && arch(arm) 
++    let sz: Int32 = 32 //Could this be only 32?
++    #else
++    let sz = 16
++    #endif
++    
++    let intOffset = Int(fd / sz)
++    let bitOffset = Int(fd % sz)
+     let mask = 1 << bitOffset
+     switch intOffset {
+         case 0: set.__fds_bits.0 = set.__fds_bits.0 | mask
+@@ -465,6 +476,24 @@ private func FD_SET(_ fd: Int32, _ set: inout fd_set) {
+         case 13: set.__fds_bits.13 = set.__fds_bits.13 | mask
+         case 14: set.__fds_bits.14 = set.__fds_bits.14 | mask
+         case 15: set.__fds_bits.15 = set.__fds_bits.15 | mask
++      	#if os(Linux) && arch(arm)
++        case 16: set.__fds_bits.16 = set.__fds_bits.16 | mask
++        case 17: set.__fds_bits.17 = set.__fds_bits.17 | mask
++        case 18: set.__fds_bits.18 = set.__fds_bits.18 | mask
++        case 19: set.__fds_bits.19 = set.__fds_bits.19 | mask
++        case 20: set.__fds_bits.20 = set.__fds_bits.20 | mask
++        case 21: set.__fds_bits.21 = set.__fds_bits.21 | mask
++        case 22: set.__fds_bits.22 = set.__fds_bits.22 | mask
++        case 23: set.__fds_bits.23 = set.__fds_bits.23 | mask
++        case 24: set.__fds_bits.24 = set.__fds_bits.24 | mask
++        case 25: set.__fds_bits.25 = set.__fds_bits.25 | mask
++        case 26: set.__fds_bits.26 = set.__fds_bits.26 | mask
++        case 27: set.__fds_bits.27 = set.__fds_bits.27 | mask
++        case 28: set.__fds_bits.28 = set.__fds_bits.28 | mask
++        case 29: set.__fds_bits.29 = set.__fds_bits.29 | mask
++        case 30: set.__fds_bits.30 = set.__fds_bits.30 | mask
++        case 31: set.__fds_bits.31 = set.__fds_bits.31 | mask
++	#endif
+         default: break
+     }
+ }
+@@ -490,6 +519,24 @@ private func FD_ISSET(_ fd: Int32, _ set: inout fd_set) -> Bool {
+         case 13: return set.__fds_bits.13 & mask != 0
+         case 14: return set.__fds_bits.14 & mask != 0
+         case 15: return set.__fds_bits.15 & mask != 0
++      	#if os(Linux) && arch(arm)
++        case 16: return set.__fds_bits.16 & mask != 0
++        case 17: return set.__fds_bits.17 & mask != 0
++        case 18: return set.__fds_bits.18 & mask != 0
++        case 19: return set.__fds_bits.19 & mask != 0
++        case 20: return set.__fds_bits.20 & mask != 0
++        case 21: return set.__fds_bits.21 & mask != 0
++        case 22: return set.__fds_bits.22 & mask != 0
++        case 23: return set.__fds_bits.23 & mask != 0
++        case 24: return set.__fds_bits.24 & mask != 0
++        case 25: return set.__fds_bits.25 & mask != 0
++        case 26: return set.__fds_bits.26 & mask != 0
++        case 27: return set.__fds_bits.27 & mask != 0
++        case 28: return set.__fds_bits.28 & mask != 0
++        case 29: return set.__fds_bits.29 & mask != 0
++        case 30: return set.__fds_bits.30 & mask != 0
++        case 31: return set.__fds_bits.31 & mask != 0
++	#endif 
+         default: return false
+     }
+ }

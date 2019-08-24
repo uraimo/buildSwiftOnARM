@@ -1,0 +1,30 @@
+diff --git a/src/shims/yield.c b/src/shims/yield.c
+index 43f0017..c0b8111 100644
+--- a/src/shims/yield.c
++++ b/src/shims/yield.c
+@@ -36,17 +36,6 @@ void *
+ _dispatch_wait_for_enqueuer(void **ptr)
+ {
+ #if !DISPATCH_HW_CONFIG_UP
+-#if defined(__arm__) || defined(__arm64__)
+-	int spins = DISPATCH_WAIT_SPINS_WFE;
+-	void *value;
+-	while (unlikely(spins-- > 0)) {
+-		if (likely(value = __builtin_arm_ldrex(ptr))) {
+-			__builtin_arm_clrex();
+-			return value;
+-		}
+-		__builtin_arm_wfe();
+-	}
+-#else
+ 	int spins = DISPATCH_WAIT_SPINS;
+ 	void *value;
+ 	while (unlikely(spins-- > 0)) {
+@@ -55,7 +44,6 @@ _dispatch_wait_for_enqueuer(void **ptr)
+ 		}
+ 		dispatch_hardware_pause();
+ 	}
+-#endif
+ #endif // DISPATCH_HW_CONFIG_UP
+ 	return __DISPATCH_WAIT_FOR_ENQUEUER__(ptr);
+ }

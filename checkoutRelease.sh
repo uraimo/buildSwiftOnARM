@@ -1,12 +1,21 @@
-#!/bin/sh
+#!/bin/bash
+. "$(dirname $0)/utils.sh"
 
-BRANCH=swift-4.1.1-RELEASE
+BRANCH=swift-5.0-branch
+TAG=swift-5.0.2-RELEASE
 
-echo "♻️ \033[1m Resetting the repositories...\033[0m"
-find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'/.git ] && echo \\* Cleaning '{}' && cd '{}' && git reset --hard HEAD && git clean -fd" \;
-echo "📡 \033[1m Pulling remote updates..\033[0m"
-find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'/.git ] && echo \\* Updating '{}' && cd '{}' && git pull --all && git fetch --tags" \;
-echo "✳️ \033[1m Switching all the repositories to ${BRANCH}...\033[0m"
-find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'/.git ] && echo \\* Switching '{}' to ${BRANCH} && cd '{}' && git checkout ${BRANCH}" \;
-echo "✅ \033[1m Applying the required patches...\033[0m"
-find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs ] && echo \\* Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/*.diff; do patch -p1 < \$f; done;" \;
+echo "♻️  Resetting the repositories..."
+find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'/.git ] && echo ■ Cleaning '{}' && cd '{}' && git reset --hard HEAD && git clean -fd" \;
+echo "✳️  Switching all the repositories to ${BRANCH} @ ${TAG}..."
+./swift/utils/update-checkout --scheme ${BRANCH} --tag ${TAG}
+echo "✅ Applying the required cross-platform patches..."
+find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs ] && echo ■ Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/*.diff; do [ -e \"\$f\" ] || continue; patch -p1 < \"\$f\"; done;" \;
+
+
+# Patches for a specific arch, OS, shared version(debian and raspbian can share patches) 
+# and OS version go in their own subdirectory
+for VARIANT in $ARCH $OS $VERSION $OS$VERSION $ARCH$OS$VERSION
+do 
+    echo "✳️  Searching for required $VARIANT patches..."
+    find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs/$VARIANT ] && echo ■ Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/$VARIANT/*.diff; do patch -p1 < \$f; done;" \;
+done
