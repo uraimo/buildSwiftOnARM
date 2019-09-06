@@ -6,8 +6,6 @@ REL=5.0.3
 INSTALL_DIR=`pwd`/install
 PACKAGE=`pwd`/swift-${REL}_${ARCH}.tgz
 
-rm -rf $INSTALL_DIR $PACKAGE
-
 ./swift/utils/build-script \
     -R --test \
     --build-subdir buildbot_linux --install-prefix=/usr \
