@@ -14,7 +14,7 @@ find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs ] && e
 
 # Patches for a specific arch, OS, shared version(debian and raspbian can share patches) 
 # and OS version go in their own subdirectory
-for VARIANT in $ARCH $OS $VERSION $OS$VERSION $ARCH$OS$VERSION
+for VARIANT in $ARCH $ARCHFAMILY $OS $VERSION $OS$VERSION $ARCH$OS$VERSION
 do 
     echo "✳️  Searching for required $VARIANT patches..."
     find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'.diffs/$VARIANT ] && echo ■ Applying patches to '{}' && cd '{}'  && for f in ../'{}'.diffs/$VARIANT/*.diff; do patch -p1 < \$f; done;" \;
