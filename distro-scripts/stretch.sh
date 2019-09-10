@@ -1,6 +1,11 @@
 #!/bin/bash
 
-echo "🍓 \033[1m Installing Strech dependencies...\033[0m"
+echo "🍓 Fixing clang links..."
+
+sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.8 100
+sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.8 100
+
+echo "🍓 Installing Stretch dependencies..."
 
 sudo apt remove swig swig3.0
 sudo apt-get install libpcre3 libpcre3-dev
