@@ -15,6 +15,7 @@ For precompiled Swift 5.0.3 binaries see the *[Prebuilt binaries](#prebuilt-bina
     - [Dependencies](#dependencies) 
 - [Building on ARM](#building-on-arm)
     - [Step by step instructions](#step-by-step-instructions)
+- [GitHub CI on ARM](#github-ci-on-arm)
 - [REPL Issues](#repl-issues)
 - [Acknowledgments](#acknowledgments) 
 - [Previous Releases](#previous-releases)
@@ -143,7 +144,10 @@ Additional steps could be required in some cases [check the latest ARM posts on 
 
 To build a different release than the one currently configured in the script, open `checkoutRelease.sh` and `build.sh` and modify the variables on top, with the branch name for the release and the release name for the tgz respectively.
 
+## GitHub CI on ARM
 
+ARM projects can be tested in an environment simulated through QEMU on GitHub using the [Run-On-Architecture](https://github.com/uraimo/run-on-arch-action) action.
+While you will not be able to use hardware interfaces available on real ARM boards, this environment should be more than enough to perform some basic testing or even build your projects and deploy them directly to your target ARM board (with considerable time savings).
 
 ## REPL Issues
 
