@@ -1,0 +1,12 @@
+diff --git a/include/swift/SIL/SILConstants.h b/include/swift/SIL/SILConstants.h
+--- a/include/swift/SIL/SILConstants.h
++++ b/include/swift/SIL/SILConstants.h
+@@ -556,7 +556,7 @@
+   void dump() const;
+ };
+
+-static_assert(sizeof(SymbolicValue) == 2 * sizeof(uint64_t),
++static_assert(sizeof(SymbolicValue) == 2 * sizeof(void *),
+               "SymbolicValue should stay small");
+ static_assert(std::is_pod<SymbolicValue>::value,
+               "SymbolicValue should stay POD");
