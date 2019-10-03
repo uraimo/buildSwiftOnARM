@@ -42,6 +42,10 @@ For precompiled Swift 5.1 binaries see the *[Prebuilt binaries](#prebuilt-binari
  
 For binaries of older releases, check out the [releases page](https://github.com/uraimo/buildSwiftOnARM/releases).
 
+For alternative ways to install these Swift binaries on your ARM board, check out [Swift on Balena](https://github.com/wlisac/swift-on-balena/) by Will Lisac, Helge Heß's [dockSwiftOnARM](https://github.com/helje5/dockSwiftOnARM), both based on Docker, and the [Swift Deb Repository](https://swift-arm.com/install-swift/) maintained by Neil Jones.
+
+To quickly cross-compile your Swift applications for ARM on a Mac (a time saver) check out the [Swift Cross Compilation Toolchains](https://github.com/CSCIX65G/SwiftCrossCompilers) project built by Van Simmons.
+
 ## Usage
 
 When using the Swift Package Manager on one of these boards, that usually have limited memory/cpu, you'll need to use the new `-j` option to reduce the number of threads spawned by the tool and be able to compile.
@@ -102,7 +106,7 @@ The scripts that buildSwiftOnARM provides:
 
 - build.sh - Builds Swift producing a tgz archive with the Swift distributions. 
 
-- clean.sh - Cleans all build artifacts, only needed when you want to start again from scratch. 
+- clean.sh - Cleans all build artifacts, only needed when you want to start again from scratch.
 
 
 
