@@ -39,6 +39,7 @@ For precompiled Swift 5.1 binaries see the *[Prebuilt binaries](#prebuilt-binari
 | Ubuntu 16.04 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.3](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.3/swift-5.0.3-armv7-Ubuntu1604.tgz) |
 | Ubuntu 18.04 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.3](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.3/swift-5.0.3-armv7-Ubuntu1804.tgz) |
 | Ubuntu 18.04 | aarch64 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.0.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.0.1/swift-5.0.1-aarch64-RPi234-Ubuntu1804_64.tgz) |
+| Fedora/CentOS/RHEL | aarch64 | All versions of RaspberryPi 3 or later, other ARMv7 boards | `sudo dnf install swift-lang` |
  
 For binaries of older releases, check out the [releases page](https://github.com/uraimo/buildSwiftOnARM/releases).
 
