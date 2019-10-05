@@ -1,5 +1,6 @@
 import XCTest
 import Foundation
+import FoundationNetworking
 import Dispatch
 
 class DispatchTests: XCTestCase {
