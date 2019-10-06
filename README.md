@@ -1,11 +1,11 @@
 <p align="center" style="margin-bottom:30px;">
 <img src="https://raw.githubusercontent.com/uraimo/buildSwiftOnARM/master/logo.svg?sanitize=true"/>
-<i>Scripts to clone, configure, patch and build Swift 5.1 on Linux ARM devices.</i> 
+<i>Scripts to clone, configure, patch and build Swift 5.1.1 on Linux ARM devices.</i> 
 </p>
 
 
 
-For precompiled Swift 5.1 binaries see the *[Prebuilt binaries](#prebuilt-binaries)* section, if you want to build Swift on your own instead, check out the *[Building on ARM](#building-on-arm)* section and the step-by-step instructions.
+For precompiled Swift 5.1.1 binaries see the *[Prebuilt binaries](#prebuilt-binaries)* section, if you want to build Swift on your own instead, check out the *[Building on ARM](#building-on-arm)* section and the step-by-step instructions.
 
 ### Summary
 
@@ -32,12 +32,12 @@ For precompiled Swift 5.1 binaries see the *[Prebuilt binaries](#prebuilt-binari
 
 | OS | Architecture | Boards | Download |                                                                          
 | -- | ------------ | ------ | -------- |
-| Raspbian Stretch | ARMv6 | All RaspberryPis: Classic, Zero, 2, 3 | [5.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1/swift-5.1-armv6-RPi0123-RaspbianStretch.tgz) |
-| Raspbian Buster | ARMv6 | All RaspberryPis: Classic, Zero, 2, 3, 4 | [5.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1/swift-5.1-armv6-RPi01234-RaspbianBuster.tgz) |
-| Debian Stretch | ARMv7 | Every ARMv7 board, RaspberryPis 2/3 included | [5.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1/swift-5.1-armv7-DebianStretch.tgz) |
-| Debian Buster | ARMv7 | Every ARMv7 board, RaspberryPis 2/3/4 included | [5.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1/swift-5.1-armv7-DebianBuster.tgz) |
-| Ubuntu 16.04 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1/swift-5.1-armv7-Ubuntu1604.tgz) |
-| Ubuntu 18.04 | ARMv7 | All versions of RaspberryPi 2/3/4, other ARMv7 boards | [5.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1/swift-5.1-armv7-Ubuntu1804.tgz) |
+| Raspbian Stretch | ARMv6 | All RaspberryPis: Classic, Zero, 2, 3 | [5.1.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1.1/swift-5.1.1-armv6-RPi0123-RaspbianStretch.tgz) |
+| Raspbian Buster | ARMv6 | All RaspberryPis: Classic, Zero, 2, 3, 4 | [5.1.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1.1/swift-5.1.1-armv6-RPi01234-RaspbianBuster.tgz) |
+| Debian Stretch | ARMv7 | Every ARMv7 board, RaspberryPis 2/3 included | [5.1.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1.1/swift-5.1.1-armv7-DebianStretch.tgz) |
+| Debian Buster | ARMv7 | Every ARMv7 board, RaspberryPis 2/3/4 included | [5.1.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1.1/swift-5.1.1-armv7-DebianBuster.tgz) |
+| Ubuntu 16.04 | ARMv7 | All versions of RaspberryPi 2/3, other ARMv7 boards | [5.1.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1.1/swift-5.1.1-armv7-Ubuntu1604.tgz) |
+| Ubuntu 18.04 | ARMv7 | All versions of RaspberryPi 2/3/4, other ARMv7 boards | [5.1.1](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1.1/swift-5.1.1-armv7-Ubuntu1804.tgz) |
 | Ubuntu 16.04/18.04 | aarch64 | All versions of RaspberryPi 3/4, other ARMv7 boards | 5.1: [swift-arm64](https://github.com/futurejones/swift-arm64/releases/tag/v5.1-RELEASE) |
 | Fedora/CentOS/RHEL | aarch64 | All versions of RaspberryPi 3/4, other ARMv7 boards | 5.1: `sudo dnf install swift-lang` |
  
@@ -88,7 +88,7 @@ Verify the swift version is setup:
 
     $ swift --version
     
-    Swift version 5.1 (swift-5.1-RELEASE)
+    Swift version 5.1.1 (swift-5.1.1-RELEASE)
     Target: armv7-unknown-linux-gnueabihf
 
 
@@ -103,7 +103,7 @@ The scripts that buildSwiftOnARM provides:
 
 - clone.sh - Install dependencies and clones the main Swift repository and all the related projects
 
-- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (5.1 at the moment) and apply the patches.
+- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (5.1.1 at the moment) and apply the patches.
 
 - build.sh - Builds Swift producing a tgz archive with the Swift distributions. 
 
@@ -137,11 +137,11 @@ Now, call the included scripts as follows:
 
 1. Launch `clone.sh` that will install the required dependencies (_git cmake ninja-build clang-3.8 python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev libcurl4-openssl-dev libz-dev_), fix clang links and clone apple/swift with all its dependecies.
 
-2. Run `checkoutRelease.sh` that will select the current release (5.1) and apply the needed patches.
+2. Run `checkoutRelease.sh` that will select the current release (5.1.1) and apply the needed patches.
 
 3. Once done, start the build with `build.sh`.
 
-4. Once the build completes a few hours later, you'll have a `swift-5.1-armv7.tgz` archive containing the whole Swift compiler distribution. Once decompressed you'll find the Swift binaries under `usr/bin`.
+4. Once the build completes a few hours later, you'll have a `swift-5.1.1-armv7.tgz` archive containing the whole Swift compiler distribution. Once decompressed you'll find the Swift binaries under `usr/bin`.
 
 I recommend to perform all these operations in a permanent background `tmux` or `screen` session (`CTRL+B d` to detach from the session and `tmux a` to reattach to it when you ssh again into the RaspberryPi).
 
@@ -176,6 +176,7 @@ The community can be reached at the [swift-arm](https://launchpass.com/swift-arm
 You can compile old releases checking out the specific tag:
 
 
+* [Swift 5.1](https://github.com/uraimo/buildSwiftOnARM/tree/5.1)
 * [Swift 5.0.3](https://github.com/uraimo/buildSwiftOnARM/tree/5.0.3)
 * [Swift 5.0.2](https://github.com/uraimo/buildSwiftOnARM/tree/5.0.2)
 * [Swift 5.0.1](https://github.com/uraimo/buildSwiftOnARM/tree/5.0.1)
