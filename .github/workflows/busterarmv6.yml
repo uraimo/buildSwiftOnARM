@@ -15,7 +15,7 @@ jobs:
           apt update
           apt install -y libatomic1 libbsd0 clang libicu-dev libcurl4-nss-dev
           apt install -y curl git
-          curl -OkL https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1/swift-5.1-armv6-RPi01234-RaspbianBuster.tgz
-          tar xzf swift-5.1-armv6-RPi01234-RaspbianBuster.tgz
+          curl -OkL https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1.1/swift-5.1.1-armv6-RPi01234-RaspbianBuster.tgz
+          tar xzf swift-5.1.1-armv6-RPi01234-RaspbianBuster.tgz
           cd Crashers
           ../usr/bin/swift test
