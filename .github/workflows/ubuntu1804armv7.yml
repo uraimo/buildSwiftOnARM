@@ -10,7 +10,7 @@ jobs:
       uses: uraimo/run-on-arch-action@v1.0.5
       with:
         architecture: armv7
-        distribution: ubuntu1804
+        distribution: ubuntu18.04
         run: |
           apt update
           apt install -y libatomic1 libbsd0 clang libicu-dev libcurl4-nss-dev
