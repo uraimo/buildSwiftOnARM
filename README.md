@@ -15,6 +15,7 @@ For precompiled Swift 5.1.1 binaries see the *[Prebuilt binaries](#prebuilt-bina
     - [Dependencies](#dependencies) 
 - [Building on ARM](#building-on-arm)
     - [Step by step instructions](#step-by-step-instructions)
+    - [Setup your own build infrastructure](#setup-your-own-build-infrastructure)
 - [GitHub CI on ARM](#github-ci-on-arm)
 - [REPL Issues](#repl-issues)
 - [Acknowledgments](#acknowledgments) 
@@ -148,6 +149,10 @@ I recommend to perform all these operations in a permanent background `tmux` or 
 Additional steps could be required in some cases [check the latest ARM posts on my blog for additional info](https://www.uraimo.com/category/raspberry/).
 
 To build a different release than the one currently configured in the script, open `checkoutRelease.sh` and `build.sh` and modify the variables on top, with the branch name for the release and the release name for the tgz respectively.
+
+### Setup your own build infrastructure
+
+If you need to replicate a setup like the one I use to build all the Swift binaries you can find above, using only a single Raspberry Pi 4 or a similar board ARMv7 board as build machine, check out [buildSwiftOnARMInfra](https://github.com/uraimo/buildSwiftOnARMInfra) with its docker containers.
 
 ## GitHub CI on ARM
 
