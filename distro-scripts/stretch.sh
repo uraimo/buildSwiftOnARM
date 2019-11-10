@@ -7,8 +7,8 @@ sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.8 100
 
 echo "🍓 Installing Stretch dependencies..."
 
-sudo apt remove swig swig3.0
-sudo apt-get install libpcre3 libpcre3-dev
+sudo apt remove -y swig swig3.0
+sudo apt install -y libpcre3 libpcre3-dev
 wget http://prdownloads.sourceforge.net/swig/swig-3.0.12.tar.gz
 
 tar xzf swig-3.0.12.tar.gz
