@@ -1,11 +1,11 @@
 <p align="center" style="margin-bottom:30px;">
 <img src="https://raw.githubusercontent.com/uraimo/buildSwiftOnARM/master/logo.svg?sanitize=true"/>
-<i>Scripts to clone, configure, patch and build Swift 5.1.1 on Linux ARM devices.</i> 
+<i>Scripts to clone, configure, patch and build Swift 5.1.2 on Linux ARM devices.</i> 
 </p>
 
 
 
-For precompiled Swift 5.1.1 binaries see the *[Prebuilt binaries](#prebuilt-binaries)* section, if you want to build Swift on your own instead, check out the *[Building on ARM](#building-on-arm)* section and the step-by-step instructions.
+For precompiled Swift 5.1.2 binaries see the *[Prebuilt binaries](#prebuilt-binaries)* section, if you want to build Swift on your own instead, check out the *[Building on ARM](#building-on-arm)* section and the step-by-step instructions.
 
 ### Summary
 
@@ -104,7 +104,7 @@ The scripts that buildSwiftOnARM provides:
 
 - clone.sh - Install dependencies and clones the main Swift repository and all the related projects
 
-- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (5.1.1 at the moment) and apply the patches.
+- checkoutRelease.sh - Resets all repos, updates them, checks out a specific tag (5.1.2 at the moment) and apply the patches.
 
 - build.sh - Builds Swift producing a tgz archive with the Swift distributions. 
 
@@ -142,7 +142,7 @@ Now, call the included scripts as follows:
 
 3. Once done, start the build with `build.sh`.
 
-4. Once the build completes a few hours later, you'll have a `swift-5.1.1-armv7.tgz` archive containing the whole Swift compiler distribution. Once decompressed you'll find the Swift binaries under `usr/bin`.
+4. Once the build completes a few hours later, you'll have a `swift-5.1.2-armv7.tgz` archive containing the whole Swift compiler distribution. Once decompressed you'll find the Swift binaries under `usr/bin`.
 
 I recommend to perform all these operations in a permanent background `tmux` or `screen` session (`CTRL+B d` to detach from the session and `tmux a` to reattach to it when you ssh again into the RaspberryPi).
 
@@ -181,6 +181,7 @@ The community can be reached at the [swift-arm](https://launchpass.com/swift-arm
 You can compile old releases checking out the specific tag:
 
 
+* [Swift 5.1.1](https://github.com/uraimo/buildSwiftOnARM/tree/5.1.1)
 * [Swift 5.1](https://github.com/uraimo/buildSwiftOnARM/tree/5.1)
 * [Swift 5.0.3](https://github.com/uraimo/buildSwiftOnARM/tree/5.0.3)
 * [Swift 5.0.2](https://github.com/uraimo/buildSwiftOnARM/tree/5.0.2)
