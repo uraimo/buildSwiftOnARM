@@ -1,7 +1,7 @@
-diff --git a/lib/ExecutionEngine/RuntimeDyld/RuntimeDyldELF.cpp b/lib/ExecutionEngine/RuntimeDyld/RuntimeDyldELF.cpp
+diff --git a/llvm/lib/ExecutionEngine/RuntimeDyld/RuntimeDyldELF.cpp b/llvm/lib/ExecutionEngine/RuntimeDyld/RuntimeDyldELF.cpp
 index 2c57eee..c28da00 100644
---- a/lib/ExecutionEngine/RuntimeDyld/RuntimeDyldELF.cpp
-+++ b/lib/ExecutionEngine/RuntimeDyld/RuntimeDyldELF.cpp
+--- a/llvm/lib/ExecutionEngine/RuntimeDyld/RuntimeDyldELF.cpp
++++ b/llvm/lib/ExecutionEngine/RuntimeDyld/RuntimeDyldELF.cpp
 @@ -505,6 +505,9 @@ void RuntimeDyldELF::resolveARMRelocation(const SectionEntry &Section,
          (support::ulittle32_t::ref{TargetPtr} & ~0x000F0FFF) | (Value & 0xFFF) |
          (((Value >> 12) & 0xF) << 16);
