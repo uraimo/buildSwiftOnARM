@@ -1,0 +1,14 @@
+diff --git a/utils/swift_build_support/swift_build_support/targets.py b/utils/swift_build_support/swift_build_support/targets.
+py
+index 2859677fac..b7d65c4f9a 100644
+--- a/utils/swift_build_support/swift_build_support/targets.py
++++ b/utils/swift_build_support/swift_build_support/targets.py
+@@ -156,7 +156,7 @@ class StdlibDeploymentTarget(object):
+         the recognized targets. Otherwise, throw a NotImplementedError.
+         """
+         system = platform.system()
+-        machine = platform.machine()
++        machine = "armv6l" #platform.machine()
+
+         if system == 'Linux':
+             if machine == 'x86_64':
