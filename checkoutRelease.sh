@@ -2,7 +2,7 @@
 . "$(dirname $0)/utils.sh"
 
 BRANCH=swift-5.1-branch
-TAG=swift-5.1.3-RELEASE
+TAG=swift-5.1.5-RELEASE
 
 echo "♻️  Resetting the repositories..."
 find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "[ -d '{}'/.git ] && echo ■ Cleaning '{}' && cd '{}' && git reset --hard HEAD && git clean -fd" \;
