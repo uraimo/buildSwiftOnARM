@@ -180,7 +180,7 @@ The community can be reached at the [swift-arm](https://launchpass.com/swift-arm
 
 You can compile old releases checking out the specific tag:
 
-
+* [Swift 5.1.3](https://github.com/uraimo/buildSwiftOnARM/tree/5.1.3)
 * [Swift 5.1.2](https://github.com/uraimo/buildSwiftOnARM/tree/5.1.2)
 * [Swift 5.1.1](https://github.com/uraimo/buildSwiftOnARM/tree/5.1.1)
 * [Swift 5.1](https://github.com/uraimo/buildSwiftOnARM/tree/5.1)
