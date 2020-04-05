@@ -2,12 +2,12 @@ diff --git a/lldb/source/Plugins/ExpressionParser/Clang/ClangModulesDeclVendor.c
 index 027f8f59b1..db191e0aea 100644
 --- a/lldb/source/Plugins/ExpressionParser/Clang/ClangModulesDeclVendor.cpp
 +++ b/lldb/source/Plugins/ExpressionParser/Clang/ClangModulesDeclVendor.cpp
-@@ -111,7 +111,7 @@ private:
+@@ -110,7 +110,7 @@
    typedef std::set<ModuleID> ImportedModuleSet;
    ImportedModuleMap m_imported_modules;
    ImportedModuleSet m_user_imported_modules;
 -  const clang::ExternalASTMerger::OriginMap m_origin_map;
 +  const clang::ExternalASTMerger::OriginMap m_origin_map{};
- };
- } // anonymous namespace
- 
+   // We assume that every ASTContext has an ClangASTContext, so we also store
+   // a custom ClangASTContext for our internal ASTContext.
+   std::unique_ptr<ClangASTContext> m_ast_context;
