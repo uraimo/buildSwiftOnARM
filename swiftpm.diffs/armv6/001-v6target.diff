@@ -1,7 +1,7 @@
-diff --git a/Sources/Build/Triple.swift b/Sources/Build/Triple.swift
+diff --git a/Sources/SPMBuildCore/Triple.swift b/Sources/SPMBuildCore/Triple.swift
 index e41efaec..d32c4ffe 100644
---- a/Sources/Build/Triple.swift
-+++ b/Sources/Build/Triple.swift
+--- a/Sources/SPMBuildCore/Triple.swift
++++ b/Sources/SPMBuildCore/Triple.swift
 @@ -36,6 +36,7 @@ public struct Triple: Encodable {
          case powerpc64le
          case s390x
@@ -10,12 +10,3 @@ index e41efaec..d32c4ffe 100644
          case armv7
          case arm
      }
-@@ -137,7 +138,7 @@ public struct Triple: Encodable {
-     public static let ppc64leLinux = try! Triple("powerpc64le-unknown-linux")
-     public static let s390xLinux = try! Triple("s390x-unknown-linux")
-     public static let arm64Linux = try! Triple("aarch64-unknown-linux-gnu")
--    public static let armLinux = try! Triple("armv7-unknown-linux-gnueabihf")
-+    public static let armLinux = try! Triple("armv6-unknown-linux-gnueabihf")
-     public static let armAndroid = try! Triple("armv7a-unknown-linux-androideabi")
-     public static let arm64Android = try! Triple("aarch64-unknown-linux-android")
-     public static let x86_64Android = try! Triple("x86_64-unknown-linux-android")
