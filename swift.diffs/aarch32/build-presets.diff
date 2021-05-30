@@ -1,0 +1,56 @@
+diff --git a/utils/build-presets.ini b/utils/build-presets.ini
+index 5d5b45c6413..18c1ac83034 100644
+--- a/swift/utils/build-presets.ini
++++ b/swift/utils/build-presets.ini
+@@ -917,6 +917,51 @@ mixin-preset=buildbot_linux_crosscompile_android,tools=RA,stdlib=RD,build
+ 
+ android-arch=aarch64
+ 
++#===------------------------------------------------------------------------===#
++# Linux swiftlang-min
++#===------------------------------------------------------------------------===#
++[preset: buildbot_linux,swiftlang-min]
++assertions
++no-swift-stdlib-assertions
++swift-enable-ast-verifier=0
++
++swift-install-components=autolink-driver;compiler;clang-builtin-headers;stdlib;swift-remote-mirror;sdk-overlay;parser-lib;license
++llvm-install-components=llvm-cov;llvm-profdata;clang;clang-resource-headers;compiler-rt;clangd
++
++build-ninja
++release
++
++
++
++install-prefix=/usr
++build-subdir=buildbot_linux
++install-destdir=%(install_destdir)s
++installable-package=%(installable_package)s
++
++build-swift-static-stdlib
++build-swift-static-sdk-overlay
++
++xctest
++
++llbuild
++swiftpm
++foundation
++libdispatch
++libicu
++
++install-xctest
++install-llbuild
++install-swiftpm
++install-swift
++install-foundation
++install-libdispatch
++install-libicu
++reconfigure
++#===------------------------------------------------------------------------===#
++# End
++#===------------------------------------------------------------------------===#
++
++
+ # Ubuntu 18.04 preset for backwards compat and future customizations.
+ [preset: buildbot_linux_1804]
+ mixin-preset=buildbot_linux

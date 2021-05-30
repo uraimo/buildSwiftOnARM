@@ -1,8 +1,8 @@
 diff --git a/src/shims/yield.c b/src/shims/yield.c
-15e9f55..bea000c
---- a/swift-corelibs-libdispatch/src/shims/yield.c	2021-05-30 09:02:50.773811517 +0000
-+++ b/swift-corelibs-libdispatch/src/shims/yield.c	2021-05-30 09:03:18.773260339 +0000
-@@ -36,17 +36,6 @@
+index 43f0017..c0b8111 100644
+--- a/src/shims/yield.c
++++ b/src/shims/yield.c
+@@ -36,17 +36,6 @@ void *
  _dispatch_wait_for_enqueuer(void **ptr)
  {
  #if !DISPATCH_HW_CONFIG_UP
@@ -20,7 +20,7 @@ diff --git a/src/shims/yield.c b/src/shims/yield.c
  	int spins = DISPATCH_WAIT_SPINS;
  	void *value;
  	while (unlikely(spins-- > 0)) {
-@@ -55,7 +44,6 @@
+@@ -55,7 +44,6 @@ _dispatch_wait_for_enqueuer(void **ptr)
  		}
  		dispatch_hardware_pause();
  	}

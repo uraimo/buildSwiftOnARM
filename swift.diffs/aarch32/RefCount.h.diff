@@ -1,0 +1,18 @@
+diff --git a/stdlib/public/SwiftShims/RefCount.h b/stdlib/public/SwiftShims/RefCount.h
+index 5c8211f5e9f..fe54839aaae 100644
+--- a/swift/stdlib/public/SwiftShims/RefCount.h
++++ b/swift/stdlib/public/SwiftShims/RefCount.h
+@@ -1319,7 +1319,12 @@ class HeapObjectSideTableEntry {
+ 
+   public:
+   HeapObjectSideTableEntry(HeapObject *newObject)
+-    : object(newObject), refCounts()
++    : object(newObject), 
++#if __arm__ // https://bugs.swift.org/browse/SR-5846
++   refCounts(SideTableRefCounts::Initialized)
++#else
++   refCounts()
++#endif
+   { }
+ 
+ #pragma clang diagnostic push
