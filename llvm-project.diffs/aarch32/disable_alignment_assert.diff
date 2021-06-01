@@ -1,7 +1,7 @@
 diff --git a/llvm/include/llvm/ADT/PointerIntPair.h b/llvm/include/llvm/ADT/PointerIntPair.h
 index cb8b202c48b7..8b845dfab0fb 100644
---- a/llvm-project/llvm/include/llvm/ADT/PointerIntPair.h
-+++ b/llvm-project/llvm/include/llvm/ADT/PointerIntPair.h
+--- a/llvm/include/llvm/ADT/PointerIntPair.h
++++ b/llvm/include/llvm/ADT/PointerIntPair.h
 @@ -175,8 +175,8 @@ struct PointerIntPairInfo {
    static intptr_t updatePointer(intptr_t OrigValue, PointerT Ptr) {
      intptr_t PtrWord =
