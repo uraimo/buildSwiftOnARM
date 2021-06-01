@@ -1,7 +1,7 @@
 diff --git a/src/benchmark.c b/src/benchmark.c
 index 15e9f55..bea000c 100644
---- a/swift-corelibs-libdispatch/src/benchmark.c
-+++ b/swift-corelibs-libdispatch/src/benchmark.c
+--- a/src/benchmark.c
++++ b/src/benchmark.c
 @@ -20,6 +20,10 @@
  
  #include "internal.h"

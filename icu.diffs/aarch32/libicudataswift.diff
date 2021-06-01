@@ -1,7 +1,7 @@
 diff --git a/icu4c/source/config/mh-linux b/icu4c/source/config/mh-linux
 index 53d6780d68..c375aeb96c 100644
---- a/icu/icu4c/source/config/mh-linux
-+++ b/icu/icu4c/source/config/mh-linux
+--- a/icu4c/source/config/mh-linux
++++ b/icu4c/source/config/mh-linux
 @@ -23,7 +23,8 @@ LD_RPATH= -Wl,-zorigin,-rpath,'$$'ORIGIN
  LD_RPATH_PRE = -Wl,-rpath,
  
