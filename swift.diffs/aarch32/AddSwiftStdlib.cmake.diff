@@ -1,7 +1,7 @@
 diff --git a/stdlib/cmake/modules/AddSwiftStdlib.cmake b/stdlib/cmake/modules/AddSwiftStdlib.cmake
 index 38191b01a64..5bd9ea7cead 100644
---- a/swift/stdlib/cmake/modules/AddSwiftStdlib.cmake
-+++ b/swift/stdlib/cmake/modules/AddSwiftStdlib.cmake
+--- a/stdlib/cmake/modules/AddSwiftStdlib.cmake
++++ b/stdlib/cmake/modules/AddSwiftStdlib.cmake
 @@ -372,6 +372,9 @@ function(_add_target_variant_link_flags)
      MACCATALYST_BUILD_FLAVOR  "${LFLAGS_MACCATALYST_BUILD_FLAVOR}")
    if("${LFLAGS_SDK}" STREQUAL "LINUX")

@@ -1,7 +1,7 @@
 diff --git a/swift/lib/ClangImporter/ImportType.cpp b/swift/lib/ClangImporter/ImportType.cpp
 index 08238b491c2..7bafbbac38b 100644
---- a/swift/lib/ClangImporter/ImportType.cpp
-+++ b/swift/lib/ClangImporter/ImportType.cpp
+--- a/lib/ClangImporter/ImportType.cpp
++++ b/lib/ClangImporter/ImportType.cpp
 @@ -506,7 +506,7 @@ namespace {
        if (size > 4096)
          return Type();

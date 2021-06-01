@@ -1,7 +1,7 @@
 diff --git a/cmake/modules/AddSwift.cmake b/cmake/modules/AddSwift.cmake
 index fb4ba732dc7..f02c170de36 100644
---- a/swift/cmake/modules/AddSwift.cmake
-+++ b/swift/cmake/modules/AddSwift.cmake
+--- a/cmake/modules/AddSwift.cmake
++++ b/cmake/modules/AddSwift.cmake
 @@ -302,6 +302,9 @@ function(_add_host_variant_link_flags target)
      target_link_libraries(${target} PRIVATE
        pthread
