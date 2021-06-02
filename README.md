@@ -34,13 +34,12 @@ For precompiled Swift 5.4 binaries see the *[Prebuilt binaries](#prebuilt-binari
 | OS | Architecture | Boards | Download |                                                                          
 | -- | ------------ | ------ | -------- |
 | Raspbian Buster | ARMv6 | All RaspberryPis: Classic, Zero, 2, 3, 4 | [5.4](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.4/swift-5.4-armv6-RPi01234-RaspbianBuster.tgz) |
-| Raspbian Bullseye | ARMv6 | All RaspberryPis: Classic, Zero, 2, 3, 4 | [5.4](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.4/swift-5.4-armv6-RPi01234-RaspbianBullseye.tgz) |
-| Debian Buster | ARMv7 | Every ARMv7 board, RaspberryPis 2/3/4 included | [5.1.5](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1.5/swift-5.1.5-armv7-DebianBuster.tgz) |
-| Debian Bullseye | ARMv7 | Every ARMv7 board, RaspberryPis 2/3/4 included | [5.4](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.4/swift-5.4-armv7-DebianBullseye.tgz) |
-| Ubuntu 18.04 | ARMv7 | All versions of RaspberryPi 2/3/4, other ARMv7 boards | [5.1.5](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.1.5/swift-5.1.5-armv7-Ubuntu1804.tgz) |
-| Ubuntu 20.04 | ARMv7 | All versions of RaspberryPi 2/3/4, other ARMv7 boards | [5.4](https://github.com/uraimo/buildSwiftOnARM/releases/download/5.4/swift-5.4-armv7-Ubuntu2004.tgz) |
-| Ubuntu 16.04/18.04 | aarch64 | All versions of RaspberryPi 3/4, other ARMv7 boards | 5.1.3: [swift-arm64](https://github.com/futurejones/swift-arm64/releases/tag/v5.1.3-RELEASE) |
-| Fedora/CentOS/RHEL | aarch64 | All versions of RaspberryPi 3/4, other ARMv7 boards | 5.1.4: `sudo dnf install swift-lang` |
+| Raspbian Bullseye | ARMv6 | All RaspberryPis: Classic, Zero, 2, 3, 4 | [5.4]() |
+| Debian Buster | ARMv7 | Every ARMv7 board, RaspberryPis 2/3/4 included | [5.4]() |
+| Debian Bullseye | ARMv7 | Every ARMv7 board, RaspberryPis 2/3/4 included | [5.4]() |
+| Ubuntu 18.04 | ARMv7 | All versions of RaspberryPi 2/3/4, other ARMv7 boards | [5.4]() |
+| Ubuntu 20.04 | ARMv7 | All versions of RaspberryPi 2/3/4, other ARMv7 boards | [5.4]() |
+| Ubuntu 16.04/18.04 | aarch64 | All versions of RaspberryPi 3/4, other ARMv7 boards | 5.4.1: [swift-arm64](https://github.com/futurejones/swift-arm64/releases/tag/v5.4.1-RELEASE) |
  
 For binaries of older releases, check out the [releases page](https://github.com/uraimo/buildSwiftOnARM/releases).
 
