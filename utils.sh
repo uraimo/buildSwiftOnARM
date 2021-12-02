@@ -15,6 +15,8 @@ elif [[ $(cat /etc/os-release) = *"Raspbian"* ]]; then
         VERSION="stretch"
     elif [[ $(cat /etc/os-release) = *"buster"* ]]; then
         VERSION="buster"
+    elif [[ $(cat /etc/os-release) = *"bullseye"* ]]; then
+        VERSION="bullseye"
     fi
 elif [[ $(cat /etc/os-release) = *"stretch"* ]]; then
     OS="debian"
@@ -22,6 +24,9 @@ elif [[ $(cat /etc/os-release) = *"stretch"* ]]; then
 elif [[ $(cat /etc/os-release) = *"buster"* ]]; then
     OS="debian"
     VERSION="buster"
+elif [[ $(cat /etc/os-release) = *"bullseye"* ]]; then
+    OS="debian"
+    VERSION="bullseye"
 fi
 
 case `uname -m` in
