@@ -8,7 +8,13 @@ fi
 
 # Basic dependencies
 echo "✅ Installing dependencies..."
-sudo apt-get -q install -y git cmake ninja-build clang python python3 uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev systemtap-sdt-dev tzdata rsync python-six python3-dev python3-pip python3-tk python3-lxml python3-six
+sudo apt-get -q install -y git cmake ninja-build clang python python3 uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev systemtap-sdt-dev tzdata rsync python-six python3-dev python3-pip python3-tk python3-lxml python3-six build-essential vim
+
+
+if [ $VERSION = "bullseye" ]; then
+    sudo apt install -y patch
+fi
+
 
 # Some OS or specific versions could have additional requirements, if they do
 # a script will be present in distro-scripts and we'll run it right after the more generic configuration
